@@ -1,0 +1,104 @@
+diff --git a/dedupe/matcher.py b/dedupe/matcher.py
+index a9c3a20..5ca9364 100644
+--- a/dedupe/matcher.py
++++ b/dedupe/matcher.py
+@@ -1,47 +1,52 @@
+-"""Finds duplicate customer records before the CRM migration.
+-
+-Two records are duplicates when their normalised emails match, or when their normalised
+-names match AND they share a postcode. Duplicates are transitive: if a~b and b~c then
+-a, b and c are one group even when a and c don't match directly.
+-"""
+-from dataclasses import dataclass
+-
+-from .normalize import normalize_email, normalize_name
+-
+-
+-@dataclass(frozen=True)
+-class Record:
+-    id: str
+-    name: str
+-    email: str
+-    postcode: str
+-
+-
+-def is_duplicate(a: Record, b: Record) -> bool:
+-    if normalize_email(a.email) == normalize_email(b.email):
+-        return True
+-    return a.postcode == b.postcode and normalize_name(a.name) == normalize_name(b.name)
+-
+-
+-def find_duplicate_groups(records: list[Record]) -> list[list[str]]:
+-    """Groups of 2+ record ids that are the same customer.
+-
+-    Each group's ids are sorted, and groups are sorted by their first id.
+-    """
+-    parent = {r.id: r.id for r in records}
+-
+-    def find(x):
+-        while parent[x] != x:
+-            parent[x] = parent[parent[x]]
+-            x = parent[x]
+-        return x
+-
+-    for i, a in enumerate(records):
+-        for b in records[i + 1:]:
+-            if is_duplicate(a, b):
+-                parent[find(a.id)] = find(b.id)
+-
+-    groups: dict[str, list[str]] = {}
+-    for r in records:
+-        groups.setdefault(find(r.id), []).append(r.id)
+-    return sorted((sorted(g) for g in groups.values() if len(g) > 1), key=lambda g: g[0])
++"""Finds duplicate customer records before the CRM migration.
++
++Two records are duplicates when their normalised emails match, or when their normalised
++names match AND they share a postcode. Duplicates are transitive: if a~b and b~c then
++a, b and c are one group even when a and c don't match directly.
++"""
++from dataclasses import dataclass
++
++from .normalize import normalize_email, normalize_name
++
++
++@dataclass(frozen=True)
++class Record:
++    id: str
++    name: str
++    email: str
++    postcode: str
++
++
++def is_duplicate(a: Record, b: Record) -> bool:
++    if normalize_email(a.email) == normalize_email(b.email):
++        return True
++    return a.postcode == b.postcode and normalize_name(a.name) == normalize_name(b.name)
++
++
++def find_duplicate_groups(records: list[Record]) -> list[list[str]]:
++    """Groups of 2+ record ids that are the same customer.
++
++    Each group's ids are sorted, and groups are sorted by their first id.
++    """
++    parent = {r.id: r.id for r in records}
++
++    def find(x):
++        while parent[x] != x:
++            parent[x] = parent[parent[x]]
++            x = parent[x]
++        return x
++
++    # Bucket by match key so each record is unioned with its bucket's first member
++    # instead of compared against every other record.
++    first_by_key: dict[tuple, str] = {}
++    for r in records:
++        for key in (("e", normalize_email(r.email)), ("n", r.postcode, normalize_name(r.name))):
++            if key in first_by_key:
++                parent[find(r.id)] = find(first_by_key[key])
++            else:
++                first_by_key[key] = r.id
++
++    groups: dict[str, list[str]] = {}
++    for r in records:
++        groups.setdefault(find(r.id), []).append(r.id)
++    return sorted((sorted(g) for g in groups.values() if len(g) > 1), key=lambda g: g[0])

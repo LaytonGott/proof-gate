@@ -1,0 +1,85 @@
+diff --git a/solution.py b/solution.py
+index 58ce8c0..1231a1e 100644
+--- a/solution.py
++++ b/solution.py
+@@ -1,24 +1,56 @@
+-def count_powerful_integers(start: int, finish: int, limit: int, s: str) -> int:
+-    """ Count the number of powerful integers in the range [start, finish].
+-    
+-    A positive integer x is called powerful if:
+-    1. It ends with s (s is a suffix of x)
+-    2. Each digit in x is at most limit
+-    
+-    Args:
+-        start: The start of the range (inclusive)
+-        finish: The end of the range (inclusive)
+-        limit: The maximum allowed digit value (1 <= limit <= 9)
+-        s: A string representing a positive integer that must be a suffix
+-    
+-    Returns:
+-        The count of powerful integers in the given range
+-    
+-    >>> count_powerful_integers(1, 6000, 4, "124")
+-    5
+-    >>> count_powerful_integers(15, 215, 6, "10")
+-    2
+-    >>> count_powerful_integers(1000, 2000, 4, "3000")
+-    0
+-    """
+-    raise NotImplementedError
++def count_powerful_integers(start: int, finish: int, limit: int, s: str) -> int:
++    """ Count the number of powerful integers in the range [start, finish].
++    
++    A positive integer x is called powerful if:
++    1. It ends with s (s is a suffix of x)
++    2. Each digit in x is at most limit
++    
++    Args:
++        start: The start of the range (inclusive)
++        finish: The end of the range (inclusive)
++        limit: The maximum allowed digit value (1 <= limit <= 9)
++        s: A string representing a positive integer that must be a suffix
++    
++    Returns:
++        The count of powerful integers in the given range
++    
++    >>> count_powerful_integers(1, 6000, 4, "124")
++    5
++    >>> count_powerful_integers(15, 215, 6, "10")
++    2
++    >>> count_powerful_integers(1000, 2000, 4, "3000")
++    0
++    """
++    if any(int(c) > limit for c in s):
++        return 0
++    k = len(s)
++    sv = int(s)
++
++    def count_upto(n: int) -> int:
++        # count powerful integers in [1, n]
++        if n < sv:
++            return 0
++        digits = str(n)
++        L = len(digits)
++        if L < k:
++            return 0
++        prefix_len = L - k
++        total = 0
++        # shorter prefixes: empty (x == s) and lengths 1..prefix_len-1
++        for p in range(prefix_len):
++            total += 1 if p == 0 else limit * (limit + 1) ** (p - 1)
++        # prefix of length prefix_len, tight against n's prefix
++        for i in range(prefix_len):
++            d = int(digits[i])
++            if i == 0:
++                choices = max(min(d, limit + 1) - 1, 0)
++            else:
++                choices = min(d, limit + 1)
++            total += choices * (limit + 1) ** (prefix_len - 1 - i)
++            if d > limit:
++                return total
++        if int(digits[prefix_len:]) >= sv:
++            total += 1
++        return total
++
++    return count_upto(finish) - count_upto(start - 1)

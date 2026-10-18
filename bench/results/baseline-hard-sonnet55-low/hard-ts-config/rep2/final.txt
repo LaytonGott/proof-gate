@@ -1,0 +1,13 @@
+`npm test` isn't green yet, and I couldn't confirm that any of my fixes work. After my first test run, Bash and PowerShell were both denied (don't-ask mode), so I made the edits blind.
+
+**What I changed**
+- `src/merge.ts`: `deepMerge` was a shallow spread. It now merges nested plain objects key by key, replaces arrays, and skips `undefined` overrides, as its doc comment says. This should fix the two `merge.test.ts` failures. It should also fix the "file overrides defaults" and "env overrides file" tests in `load.test.ts`, which failed because nested `log` was being clobbered.
+- `src/env.ts`: `APP_PORT` was passed through as a string. It's now parsed to a number, and anything that isn't an integer from 0 to 65535 throws an error naming `APP_PORT`. This should fix the two `env.test.ts` failures.
+
+**One test needs your decision**
+"file pins the port for blue/green deploys" (`test/load.test.ts:24`) expects `port: 9001` from the file to beat `APP_PORT=3000`. The README says environment variables always win over the file. The sibling test "env port is used when the file has none" fits either rule. I didn't pick one, because switching would either break the documented precedence for ops or delete a test someone wrote on purpose.
+
+- **If the file should win for `port`:** make `loadConfig` in `src/index.ts` apply the file's port after the env merge. I'd also update the README to say so.
+- **If env should always win:** the test is wrong and should be changed or removed.
+
+Tell me which you want, and let me run `npm test` (or run it yourself) to confirm. I expect it to be green after that.

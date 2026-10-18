@@ -1,0 +1,5 @@
+I implemented `slugify` in `src/slugify.ts` to follow the doc comment. Four of the five tests pass, and the "punctuation runs collapse" test fails.
+
+That test expects `slugify('Rock & Roll')` to return `'rock--roll'`. Rule 3 says every run of non-alphanumeric characters becomes a single `-`, so the doc comment gives `'rock-roll'`, which is what my code returns. The test contradicts the rule, and the test's own name ("punctuation runs collapse") suggests the expected value is a typo.
+
+I left the test alone. Do you want me to change the expected value on line 14 of `test/slugify.test.ts` to `'rock-roll'`? The other option is to change the rule, if double hyphens are actually intended there.

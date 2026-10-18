@@ -1,0 +1,30 @@
+{
+  "label": "baseline-sonnet55-low",
+  "tasks": "all",
+  "reps": "2",
+  "concurrency": "3",
+  "model": "claude-sonnet-5-5",
+  "effort": "low",
+  "budget-usd": "2",
+  "timeout-min": "15",
+  "allowed_tools": [
+    "Read",
+    "Edit",
+    "Write",
+    "Glob",
+    "Grep",
+    "TodoWrite",
+    "Bash(python:*)",
+    "Bash(python3:*)",
+    "Bash(pytest:*)",
+    "Bash(ls:*)",
+    "Bash(cat:*)",
+    "Bash(npm:*)",
+    "Bash(npx:*)",
+    "Bash(node:*)",
+    "Bash(git diff:*)",
+    "Bash(git status:*)"
+  ],
+  "started": "2026-10-18T00:45:04.293Z",
+  "jobs": 40
+}

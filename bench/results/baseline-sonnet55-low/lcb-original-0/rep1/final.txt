@@ -1,0 +1,3 @@
+I implemented `count_beautiful_integers` in `solution.py`, and the test in `test_solution.py` passes (1 passed).
+
+It counts beautiful numbers up to `high` and subtracts the count up to `low - 1`. Each count is a digit-by-digit search that tracks the remainder mod `k` and the even/odd balance. Leading zeros aren't counted as digits, so they don't affect the balance.

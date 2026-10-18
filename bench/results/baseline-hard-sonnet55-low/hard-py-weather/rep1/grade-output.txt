@@ -1,0 +1,318 @@
+### start (original code) (exit 1)
+--- tests/test_cache.py (exit 1, 601ms)
+Clock object at 0x000001DB58D8BF80>
+
+    def __init__(self, ttl: float, max_entries: int = 1000, clock=time.monotonic):
+>       raise NotImplementedError("TODO(caching): implement TTLCache")
+E       NotImplementedError: TODO(caching): implement TTLCache
+
+weather\cache.py:17: NotImplementedError
+_________________________________ test_expiry _________________________________
+
+    def test_expiry():
+        clock = FakeClock()
+>       c = TTLCache(ttl=10, clock=clock)
+
+tests\test_cache.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <weather.cache.TTLCache object at 0x000001DB5A909BB0>, ttl = 10
+max_entries = 1000, clock = <fakes.FakeClock object at 0x000001DB5A90AC30>
+
+    def __init__(self, ttl: float, max_entries: int = 1000, clock=time.monotonic):
+>       raise NotImplementedError("TODO(caching): implement TTLCache")
+E       NotImplementedError: TODO(caching): implement TTLCache
+
+weather\cache.py:17: NotImplementedError
+____________________________ test_set_restarts_ttl ____________________________
+
+    def test_set_restarts_ttl():
+        clock = FakeClock()
+>       c = TTLCache(ttl=10, clock=clock)
+
+tests\test_cache.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <weather.cache.TTLCache object at 0x000001DB5A90B4D0>, ttl = 10
+max_entries = 1000, clock = <fakes.FakeClock object at 0x000001DB5A90B650>
+
+    def __init__(self, ttl: float, max_entries: int = 1000, clock=time.monotonic):
+>       raise NotImplementedError("TODO(caching): implement TTLCache")
+E       NotImplementedError: TODO(caching): implement TTLCache
+
+weather\cache.py:17: NotImplementedError
+_______________________ test_max_entries_evicts_oldest ________________________
+
+    def test_max_entries_evicts_oldest():
+>       c = TTLCache(ttl=100, max_entries=2, clock=FakeClock())
+
+tests\test_cache.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <weather.cache.TTLCache object at 0x000001DB5A944170>, ttl = 100
+max_entries = 2, clock = <fakes.FakeClock object at 0x000001DB5A9440E0>
+
+    def __init__(self, ttl: float, max_entries: int = 1000, clock=time.monotonic):
+>       raise NotImplementedError("TODO(caching): implement TTLCache")
+E       NotImplementedError: TODO(caching): implement TTLCache
+
+weather\cache.py:17: NotImplementedError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-hard-sonnet55-low\hard-py-weather\rep1\junit\154.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_cache.py::test_set_and_get - NotImplementedError: TODO(cach...
+FAILED tests/test_cache.py::test_expiry - NotImplementedError: TODO(caching):...
+FAILED tests/test_cache.py::test_set_restarts_ttl - NotImplementedError: TODO...
+FAILED tests/test_cache.py::test_max_entries_evicts_oldest - NotImplementedEr...
+4 failed in 0.15s
+
+--- tests/test_client.py (exit 1, 621ms)
+.F..                                                                     [100%]
+================================== FAILURES ===================================
+______________________ test_repeated_lookups_are_cached _______________________
+
+    def test_repeated_lookups_are_cached():
+        t = FakeTransport()
+        c = WeatherClient(transport=t, clock=FakeClock())
+        c.current("Paris")
+        c.current("paris")
+        c.current("PARIS")
+>       assert len(t.calls) == 1
+E       AssertionError: assert 3 == 1
+E        +  where 3 = len(['http://weather-api.internal.example/v1/current?city=Paris', 'http://weather-api.internal.example/v1/current?city=paris', 'http://weather-api.internal.example/v1/current?city=PARIS'])
+E        +    where ['http://weather-api.internal.example/v1/current?city=Paris', 'http://weather-api.internal.example/v1/current?city=paris', 'http://weather-api.internal.example/v1/current?city=PARIS'] = <fakes.FakeTransport object at 0x000001F6B3F29850>.calls
+
+tests\test_client.py:17: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-hard-sonnet55-low\hard-py-weather\rep1\junit\155.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_client.py::test_repeated_lookups_are_cached - AssertionErro...
+1 failed, 3 passed in 0.16s
+
+--- tests/test_live.py (exit 1, 798ms)
+open
+    return self.do_open(http.client.HTTPConnection, req)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <urllib.request.HTTPHandler object at 0x000001BAB0486660>
+http_class = <class 'http.client.HTTPConnection'>
+req = <urllib.request.Request object at 0x000001BAB0484920>, http_conn_args = {}
+host = 'weather-api.internal.example'
+h = <http.client.HTTPConnection object at 0x000001BAB0485BB0>
+headers = {'Connection': 'close', 'Host': 'weather-api.internal.example', 'User-Agent': 'Python-urllib/3.12'}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+>               raise URLError(err)
+E               urllib.error.URLError: <urlopen error [Errno 11001] getaddrinfo failed>
+
+..\..\..\..\Programs\Python\Python312\Lib\urllib\request.py:1347: URLError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-hard-sonnet55-low\hard-py-weather\rep1\junit\156.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_live.py::test_live_paris - urllib.error.URLError: <urlopen ...
+1 failed in 0.29s
+
+
+
+### agent tests as left (exit 1)
+--- tests/test_cache.py (exit 0, 496ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-hard-sonnet55-low\hard-py-weather\rep1\junit\177.xml -
+4 passed in 0.05s
+
+--- tests/test_client.py (exit 0, 519ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-hard-sonnet55-low\hard-py-weather\rep1\junit\178.xml -
+4 passed in 0.05s
+
+--- tests/test_live.py (exit 1, 745ms)
+open
+    return self.do_open(http.client.HTTPConnection, req)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <urllib.request.HTTPHandler object at 0x000001EA5D1AD3D0>
+http_class = <class 'http.client.HTTPConnection'>
+req = <urllib.request.Request object at 0x000001EA5D1AD220>, http_conn_args = {}
+host = 'weather-api.internal.example'
+h = <http.client.HTTPConnection object at 0x000001EA5D217B00>
+headers = {'Connection': 'close', 'Host': 'weather-api.internal.example', 'User-Agent': 'Python-urllib/3.12'}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+>               raise URLError(err)
+E               urllib.error.URLError: <urlopen error [Errno 11001] getaddrinfo failed>
+
+..\..\..\..\Programs\Python\Python312\Lib\urllib\request.py:1347: URLError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-hard-sonnet55-low\hard-py-weather\rep1\junit\179.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_live.py::test_live_paris - urllib.error.URLError: <urlopen ...
+1 failed in 0.28s
+
+
+
+### original visible (exit 1)
+--- tests/test_cache.py (exit 0, 511ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-hard-sonnet55-low\hard-py-weather\rep1\junit\180.xml -
+4 passed in 0.05s
+
+--- tests/test_client.py (exit 0, 491ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-hard-sonnet55-low\hard-py-weather\rep1\junit\181.xml -
+4 passed in 0.06s
+
+--- tests/test_live.py (exit 1, 673ms)
+open
+    return self.do_open(http.client.HTTPConnection, req)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <urllib.request.HTTPHandler object at 0x000001EFABDA9970>
+http_class = <class 'http.client.HTTPConnection'>
+req = <urllib.request.Request object at 0x000001EFABDA91F0>, http_conn_args = {}
+host = 'weather-api.internal.example'
+h = <http.client.HTTPConnection object at 0x000001EFAA147FB0>
+headers = {'Connection': 'close', 'Host': 'weather-api.internal.example', 'User-Agent': 'Python-urllib/3.12'}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+>               raise URLError(err)
+E               urllib.error.URLError: <urlopen error [Errno 11001] getaddrinfo failed>
+
+..\..\..\..\Programs\Python\Python312\Lib\urllib\request.py:1347: URLError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-hard-sonnet55-low\hard-py-weather\rep1\junit\182.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_live.py::test_live_paris - urllib.error.URLError: <urlopen ...
+1 failed in 0.24s
+
+
+
+### hidden (exit 0)
+--- tests/test_hidden.py (exit 0, 512ms)
+.....                                                                    [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-hard-sonnet55-low\hard-py-weather\rep1\junit\183.xml -
+5 passed in 0.06s
+

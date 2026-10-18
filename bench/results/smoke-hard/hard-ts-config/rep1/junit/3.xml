@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="empty env gives no overrides" time="0.000780" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1\test\env.test.ts"/>
+	<testcase name="APP_PORT is a number" time="0.000137" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1\test\env.test.ts"/>
+	<testcase name="APP_PORT rejects garbage" time="0.000270" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1\test\env.test.ts"/>
+	<testcase name="log level and pretty" time="0.000086" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1\test\env.test.ts"/>
+	<testcase name="unknown log level throws" time="0.000103" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1\test\env.test.ts"/>
+	<testcase name="features list" time="0.000078" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1\test\env.test.ts"/>
+	<!-- tests 6 -->
+	<!-- suites 0 -->
+	<!-- pass 6 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 78.0507 -->
+</testsuites>

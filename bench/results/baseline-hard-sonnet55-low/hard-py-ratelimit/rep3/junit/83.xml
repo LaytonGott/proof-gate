@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="8" time="0.108" timestamp="2026-10-17T20:08:30.213070-05:00" hostname="laytons-pc"><testcase classname="tests.test_bucket" name="test_starts_full" time="0.000" /><testcase classname="tests.test_bucket" name="test_burst_is_capped_at_capacity" time="0.000" /><testcase classname="tests.test_bucket" name="test_whole_second_refill" time="0.000" /><testcase classname="tests.test_bucket" name="test_fractional_refill" time="0.000"><failure message="assert 0 == 2&#10; +  where 0 = available()&#10; +    where available = &lt;ratelimit.bucket.TokenBucket object at 0x000002632AACA030&gt;.available">def test_fractional_refill():
+        clock = FakeClock()
+        b = TokenBucket(5, 4, clock)
+        for _ in range(5):
+            b.consume()
+        clock.advance(0.5)
+&gt;       assert b.available() == 2
+E       assert 0 == 2
+E        +  where 0 = available()
+E        +    where available = &lt;ratelimit.bucket.TokenBucket object at 0x000002632AACA030&gt;.available
+
+tests\test_bucket.py:32: AssertionError</failure></testcase><testcase classname="tests.test_bucket" name="test_many_small_steps_add_up" time="0.001"><failure message="assert 0 == 5 ± 5.0e-06&#10;  &#10;  comparison failed&#10;  Obtained: 0&#10;  Expected: 5 ± 5.0e-06">def test_many_small_steps_add_up():
+        clock = FakeClock()
+        b = TokenBucket(10, 10, clock)
+        for _ in range(10):
+            b.consume()
+        for _ in range(10):
+            clock.advance(0.05)
+            b.available()
+&gt;       assert b.available() == pytest.approx(5)
+E       assert 0 == 5 ± 5.0e-06
+E         
+E         comparison failed
+E         Obtained: 0
+E         Expected: 5 ± 5.0e-06
+
+tests\test_bucket.py:43: AssertionError</failure></testcase><testcase classname="tests.test_bucket" name="test_never_exceeds_capacity" time="0.000" /><testcase classname="tests.test_bucket" name="test_failed_consume_takes_nothing" time="0.000" /><testcase classname="tests.test_bucket" name="test_rejects_bad_config" time="0.000" /></testsuite></testsuites>

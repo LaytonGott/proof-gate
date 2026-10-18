@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="6.121" timestamp="2026-10-17T20:07:12.685113-05:00" hostname="laytons-pc"><testcase classname="tests.test_integration" name="test_end_to_end_plain" time="6.001" /><testcase classname="tests.test_integration" name="test_end_to_end_loyalty" time="0.000"><failure message="ValueError: discount rate must be between 0 and 1, got 25">warehouse = {'A': Decimal('20.00'), 'C': Decimal('4.00')}
+
+    def test_end_to_end_loyalty(warehouse):
+        c = from_crm_row({"id": "c10", "name": "Barbara", "loyalty_pct": "25"})
+        inv = Invoice(c, [Line("C", warehouse["C"], 12)])
+        # 4.00 -&gt; bulk 3.80 -&gt; loyalty 2.85, x12 = 34.20, tax 36.94
+&gt;       assert inv.total() == Decimal("36.94")
+
+tests\test_integration.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+shop\invoice.py:33: in total
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:33: in &lt;genexpr&gt;
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:29: in line_total
+    unit = apply_discount(unit, self.customer.discount_pct)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+price = Decimal('3.80'), rate = Decimal('25')
+
+    def apply_discount(price: Decimal, rate: Decimal) -&gt; Decimal:
+        """Price after a discount.
+    
+        `rate` is a fraction between 0 and 1: Decimal("0.15") means 15% off. Anything outside
+        that range is a caller bug and raises ValueError, so a percent passed by mistake
+        (15 instead of 0.15) can never silently zero out a price.
+        """
+        rate = Decimal(str(rate))
+        if not (Decimal(0) &lt;= rate &lt;= Decimal(1)):
+&gt;           raise ValueError(f"discount rate must be between 0 and 1, got {rate}")
+E           ValueError: discount rate must be between 0 and 1, got 25
+
+shop\pricing.py:23: ValueError</failure></testcase></testsuite></testsuites>

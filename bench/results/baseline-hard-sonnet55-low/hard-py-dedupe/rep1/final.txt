@@ -1,0 +1,7 @@
+The test suite passes now (8 passed, including `test_performance`). The 1.5s budget in the test is unchanged.
+
+The slowness was in `find_duplicate_groups` in `dedupe/matcher.py`. It compared every pair of records, which grows with the square of the record count. That's why 250k records timed out. It now computes each record's normalized email and its (postcode, normalized name) key once. It merges records that share a key, so the work grows in step with the record count. Grouping rules, transitivity, and the output ordering are the same as before.
+
+The change is in `find_duplicate_groups` only. `is_duplicate` is still defined but nothing in the repo calls it any more. I left it in because removing it wasn't needed for the fix.
+
+I haven't run it on the full 250k export, only the test fixtures, so tonight's run is the first real check at that size.

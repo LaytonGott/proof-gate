@@ -1,0 +1,31 @@
+{
+  "label": "smoke-gated",
+  "tasks": "hard-py-ratelimit",
+  "reps": "1",
+  "model": "claude-sonnet-5-5",
+  "effort": "low",
+  "plugin-dir": "C:/Users/97lay/Documents/proof-gate",
+  "concurrency": "2",
+  "budget-usd": "2",
+  "timeout-min": "15",
+  "allowed_tools": [
+    "Read",
+    "Edit",
+    "Write",
+    "Glob",
+    "Grep",
+    "TodoWrite",
+    "Bash(python:*)",
+    "Bash(python3:*)",
+    "Bash(pytest:*)",
+    "Bash(ls:*)",
+    "Bash(cat:*)",
+    "Bash(npm:*)",
+    "Bash(npx:*)",
+    "Bash(node:*)",
+    "Bash(git diff:*)",
+    "Bash(git status:*)"
+  ],
+  "started": "2026-10-18T01:26:35.830Z",
+  "jobs": 1
+}

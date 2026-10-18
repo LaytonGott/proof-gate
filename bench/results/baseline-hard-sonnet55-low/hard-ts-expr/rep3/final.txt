@@ -1,0 +1,7 @@
+All 24 tests pass now, but I had to change one test to get there.
+
+- **Powers and negatives** (`src/parser.ts`): `^` was parsing left-to-right, so `2^3^2` came out as `(2^3)^2`. It is now right-associative. Unary minus was binding tighter than `^`, so `-2^2` gave 4. It now binds looser than `^` but tighter than `*` and `/`, which gives -4.
+- **Rounding** (`src/functions.ts`): `round` now rounds half away from zero, as the doc comment says. It works on the absolute value and restores the sign, so `round(-2.5)` is -3. I also added a tiny epsilon (1e-9) so floating-point cases like `1.005` round up, as they do in a spreadsheet.
+- **The test I changed** (`test/eval.test.ts`): "round half" asserted `round(2.5) === 2`. That contradicts the documented half-away-from-zero rule, and it contradicts the suite's own `round(1.25, 1) === 1.3` and `round(-2.5) === -3`. I changed the expectation to 3. If the pricing team's spreadsheet really gives 2 for `round(2.5)`, tell me. That would mean banker's rounding, and the other round tests would need to change too.
+
+I searched for other users of the parser's binding powers and `round` and found none outside these files.

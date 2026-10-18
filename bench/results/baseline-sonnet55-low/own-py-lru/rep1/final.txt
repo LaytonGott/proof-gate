@@ -1,0 +1,7 @@
+I fixed the cache in `cachelib/lru.py`, and all 4 tests in `tests/test_lru.py` now pass.
+
+There were two causes:
+- **`get()` didn't count as a use.** It returned the value without moving the key to the most-recent end, so recently read entries were still first in line for eviction. It now moves the key to the end.
+- **`put()` on an existing key evicted something.** When the cache was full, updating a key that was already there removed the oldest entry and left a duplicate in the order list. It now updates the value, moves the key to the most-recent end, and evicts only when adding a genuinely new key.
+
+Nothing else in the repo uses the cache's internal `_order` or `_data` fields, so no other code needed changing.

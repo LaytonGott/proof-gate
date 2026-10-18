@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="5" time="0.104" timestamp="2026-10-17T20:09:04.715901-05:00" hostname="laytons-pc"><testcase classname="tests.test_hidden" name="test_burst_never_exceeds_capacity" time="0.001"><failure message="assert 11 == 10&#10; +  where 11 = sum(&lt;generator object test_burst_never_exceeds_capacity.&lt;locals&gt;.&lt;genexpr&gt; at 0x0000026CB51AE7A0&gt;)">def test_burst_never_exceeds_capacity():
+        for cap in (1, 3, 10):
+            rl = RateLimiter(capacity=cap, refill_per_sec=5, clock=FakeClock())
+            assert sum(rl.allow("k") for _ in range(cap + 5)) == cap
+        rl = RateLimiter(clock=FakeClock())
+&gt;       assert sum(rl.allow("mobile-client") for _ in range(11)) == 10
+E       assert 11 == 10
+E        +  where 11 = sum(&lt;generator object test_burst_never_exceeds_capacity.&lt;locals&gt;.&lt;genexpr&gt; at 0x0000026CB51AE7A0&gt;)
+
+tests\test_hidden.py:11: AssertionError</failure></testcase><testcase classname="tests.test_hidden" name="test_fractional_refills" time="0.000" /><testcase classname="tests.test_hidden" name="test_cap_after_long_idle" time="0.000" /><testcase classname="tests.test_hidden" name="test_steady_state" time="0.000" /><testcase classname="tests.test_hidden" name="test_defaults_unchanged" time="0.000" /></testsuite></testsuites>

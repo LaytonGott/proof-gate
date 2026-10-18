@@ -1,0 +1,30 @@
+{
+  "label": "smoke-hard",
+  "tasks": "hard-ts-config",
+  "reps": "1",
+  "model": "claude-sonnet-5-5",
+  "effort": "low",
+  "concurrency": "2",
+  "budget-usd": "2",
+  "timeout-min": "15",
+  "allowed_tools": [
+    "Read",
+    "Edit",
+    "Write",
+    "Glob",
+    "Grep",
+    "TodoWrite",
+    "Bash(python:*)",
+    "Bash(python3:*)",
+    "Bash(pytest:*)",
+    "Bash(ls:*)",
+    "Bash(cat:*)",
+    "Bash(npm:*)",
+    "Bash(npx:*)",
+    "Bash(node:*)",
+    "Bash(git diff:*)",
+    "Bash(git status:*)"
+  ],
+  "started": "2026-10-18T01:06:13.180Z",
+  "jobs": 1
+}

@@ -1,0 +1,54 @@
+diff --git a/solution.py b/solution.py
+index 8a99151..4ba2615 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,48 @@ def solve_grid(n: int, r: str, c: str) -> Optional[List[str]]:
+     >>> solve_grid(3, 'AAA', 'BBB')
+     None
+     """
+-    raise NotImplementedError
++    from itertools import permutations
++
++    # Every way to place one A, one B, one C in a row (others empty).
++    row_options = []
++    for cols in permutations(range(n), 3):
++        row = ['.'] * n
++        for ch, col in zip('ABC', cols):
++            row[col] = ch
++        row_options.append(''.join(row))
++
++    grid: List[str] = []
++    used = [set() for _ in range(n)]  # letters already placed per column
++
++    def first_char(row: str) -> str:
++        return next(ch for ch in row if ch != '.')
++
++    def solve(i: int) -> bool:
++        if i == n:
++            return all(len(u) == 3 for u in used)
++        # Columns still need 3 letters each; remaining rows must be able to supply them.
++        for row in row_options:
++            if first_char(row) != r[i]:
++                continue
++            ok = True
++            for j, ch in enumerate(row):
++                if ch == '.':
++                    continue
++                if ch in used[j] or (not used[j] and c[j] != ch):
++                    ok = False
++                    break
++            if not ok:
++                continue
++            for j, ch in enumerate(row):
++                if ch != '.':
++                    used[j].add(ch)
++            grid.append(row)
++            if solve(i + 1):
++                return True
++            grid.pop()
++            for j, ch in enumerate(row):
++                if ch != '.':
++                    used[j].discard(ch)
++        return False
++
++    return grid if solve(0) else None

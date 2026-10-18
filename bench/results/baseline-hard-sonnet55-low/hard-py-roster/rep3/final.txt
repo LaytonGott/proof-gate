@@ -1,0 +1,11 @@
+I fixed the flakiness in `roster/teams.py`, but I couldn't re-run the suite to confirm. Both Bash and PowerShell were denied in this session after my first command, so the fix is untested.
+
+The flakiness came from `clean_names`, which returned `list(set(seen.values()))`. A set of strings has no stable order, because Python randomizes string hashing on each run. `assign_teams` then dealt names out in that order, even though its docstring says it sorts alphabetically. So the teams changed from run to run. `tests/test_export.py::test_csv_is_stable` failed for the same reason, and it failed on my one earlier run.
+
+I made two changes:
+- `clean_names` now returns `list(seen.values())`, which keeps first-seen order. Its own test sorts the result, so it isn't affected.
+- `assign_teams` now deals out `sorted(clean_names(names), key=str.lower)`, which is the case-insensitive alphabetical order its docstring promises.
+
+By my trace, the expected teams in `test_teams.py` and the expected CSV in `test_export.py` both match the new output. Nothing else in the repo calls `clean_names` or `assign_teams` except `roster/export.py`, which only uses the sorted result.
+
+To check it, run `python -m pytest tests` a few times, ideally with different `PYTHONHASHSEED` values (for example 1 to 5). If you allow shell commands, I can run that myself.

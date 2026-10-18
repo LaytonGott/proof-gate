@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.029" timestamp="2026-10-17T20:09:48.449777-05:00" hostname="laytons-pc"><testcase classname="tests.test_performance" name="test_dedupe_fits_time_budget" time="0.016" /></testsuite></testsuites>

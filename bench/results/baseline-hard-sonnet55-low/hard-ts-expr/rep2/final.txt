@@ -1,0 +1,9 @@
+I made three fixes, but I couldn't run `npm test` afterwards, so none of them is verified. Both the Bash and PowerShell tools were denied in this session. Before the edits, 5 of the 24 tests were failing: `powers`, `round half`, `round negative half`, `power is right-associative` and `unary minus binds looser than power`.
+
+- **Power associativity** (`src/parser.ts`): `^` now binds to the right, so `2^3^2` parses as `2^(3^2)`. I changed its binding powers from `[40, 41]` to `[41, 40]`.
+- **Unary minus** (`src/parser.ts`): unary minus now binds looser than `^` but tighter than `*`, so `-2^2` is `-(2^2)`, which is -4. I lowered `PREFIX_MINUS` from 50 to 30. `2^-3` should still parse, because the right side of `^` goes through the prefix handler.
+- **Rounding** (`src/functions.ts`): `round` now rounds half away from zero, like the spreadsheet, so `round(-2.5)` is -3. It rounds the absolute value and reapplies the sign, instead of calling `Math.round(x * f)` directly, which rounds halves toward +∞.
+
+Floating-point cases like `round(1.005, 2)` may still differ from the spreadsheet, because `1.005 * 100` is slightly under 100.5. I didn't check whether any test covers that.
+
+Please run `npm test` to confirm. If you'd rather I run it, allow Bash or PowerShell for this session and I'll do it and fix anything that's left.

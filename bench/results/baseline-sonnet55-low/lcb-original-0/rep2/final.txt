@@ -1,0 +1,5 @@
+I implemented `count_beautiful_integers` in `solution.py`, and the test in `test_solution.py` passes (1 passed).
+
+It uses a digit DP that counts beautiful numbers up to `high` and subtracts the count up to `low - 1`. Leading zeros aren't counted as digits.
+
+I didn't run the docstring examples separately; the pytest run only covers `test_solution.py`.

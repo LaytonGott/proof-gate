@@ -1,0 +1,5 @@
+I implemented `slugify` in `src/slugify.ts`, but `npm test` shows 4 of 5 tests passing. The failing one is `punctuation runs collapse`.
+
+That test expects `slugify('Rock & Roll')` to return `'rock--roll'`. Rule 3 in the doc comment says every run of non-alphanumeric characters becomes a single `-`, so the function returns `'rock-roll'`. The test contradicts the rule, and the doc's own example (`"  Crème brûlée -- 101 "` → `"creme-brulee-101"`) collapses a run the same way.
+
+I followed the doc comment and left the test alone. I think the test's expected value is a typo, and `'rock-roll'` is correct. If you agree, I'll change the test. If you want `' & '` to produce a double dash, the rule needs rewording, and I'd need to know what the rule should be.

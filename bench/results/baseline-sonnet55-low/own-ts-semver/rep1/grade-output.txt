@@ -1,0 +1,46 @@
+### agent tests (exit 0)
+✔ equal versions (0.5418ms)
+✔ major/minor/patch ordering (0.1406ms)
+✔ numeric, not lexical, comparison (0.0733ms)
+✔ a prerelease sorts before its release (0.0767ms)
+✔ sortVersions (0.4601ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 89.3477
+
+
+### original visible (exit 0)
+✔ equal versions (0.5971ms)
+✔ major/minor/patch ordering (0.165ms)
+✔ numeric, not lexical, comparison (0.0768ms)
+✔ a prerelease sorts before its release (0.088ms)
+✔ sortVersions (0.5447ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 83.2725
+
+
+### hidden (exit 0)
+✔ semver.org 11.4 precedence chain (0.7223ms)
+✔ numeric fields compared numerically everywhere (0.1183ms)
+✔ build metadata is ignored (0.0763ms)
+✔ release vs prerelease both directions (0.0676ms)
+✔ sortVersions is stable on a mixed list (0.464ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 91.0522

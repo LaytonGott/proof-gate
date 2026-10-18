@@ -1,0 +1,75 @@
+### agent tests (exit 1)
+F
+================================== FAILURES ===================================
+______________________ test_min_operations_to_rearrange _______________________
+
+    def test_min_operations_to_rearrange():
+>       check(min_operations_to_rearrange)
+
+test_solution.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = <function min_operations_to_rearrange at 0x0000022DBABB0220>
+
+    def check(candidate):
+        # Sample test cases
+        assert candidate(6, 'BWBWBW', 'WWWBBB') == 4
+        assert candidate(6, 'BBBBBB', 'WWWWWW') == -1
+        assert candidate(14, 'BBBWBWWWBBWWBW', 'WBWWBBWWWBWBBB') == 7
+    
+        # Additional test cases
+        assert candidate(10, 'BBBBBWBWWW', 'BBWWWWWBBB') == -1
+        assert candidate(14, 'WBWBWBWBWBWBWB', 'WWWWWWWBBBBBBB') == 8
+        assert candidate(14, 'BWBBBWBBWBBWBB', 'WWWWBBBBBBBBBB') == 8
+        assert candidate(14, 'BWBBBBBBBBBBBB', 'WBBBBBBBBBBBBB') == 4
+        assert candidate(4, 'WWBB', 'BBWW') == 3
+>       assert candidate(12, 'WBWWWWBWBBBB', 'BBBBBBWWWWWW') == 7
+E       AssertionError: assert 8 == 7
+E        +  where 8 = <function min_operations_to_rearrange at 0x0000022DBABB0220>(12, 'WBWWWWBWBBBB', 'BBBBBBWWWWWW')
+
+test_solution.py:16: AssertionError
+=========================== short test summary info ===========================
+FAILED test_solution.py::test_min_operations_to_rearrange - AssertionError: a...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 0.46s
+
+
+### original visible (exit 1)
+F
+================================== FAILURES ===================================
+______________________ test_min_operations_to_rearrange _______________________
+
+    def test_min_operations_to_rearrange():
+>       check(min_operations_to_rearrange)
+
+test_solution.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = <function min_operations_to_rearrange at 0x0000015E3AA50220>
+
+    def check(candidate):
+        # Sample test cases
+        assert candidate(6, 'BWBWBW', 'WWWBBB') == 4
+        assert candidate(6, 'BBBBBB', 'WWWWWW') == -1
+        assert candidate(14, 'BBBWBWWWBBWWBW', 'WBWWBBWWWBWBBB') == 7
+    
+        # Additional test cases
+        assert candidate(10, 'BBBBBWBWWW', 'BBWWWWWBBB') == -1
+        assert candidate(14, 'WBWBWBWBWBWBWB', 'WWWWWWWBBBBBBB') == 8
+        assert candidate(14, 'BWBBBWBBWBBWBB', 'WWWWBBBBBBBBBB') == 8
+        assert candidate(14, 'BWBBBBBBBBBBBB', 'WBBBBBBBBBBBBB') == 4
+        assert candidate(4, 'WWBB', 'BBWW') == 3
+>       assert candidate(12, 'WBWWWWBWBBBB', 'BBBBBBWWWWWW') == 7
+E       AssertionError: assert 8 == 7
+E        +  where 8 = <function min_operations_to_rearrange at 0x0000015E3AA50220>(12, 'WBWWWWBWBBBB', 'BBBBBBWWWWWW')
+
+test_solution.py:16: AssertionError
+=========================== short test summary info ===========================
+FAILED test_solution.py::test_min_operations_to_rearrange - AssertionError: a...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 0.47s
+
+
+### hidden (exit 0)
+.                                                                        [100%]
+1 passed in 0.78s

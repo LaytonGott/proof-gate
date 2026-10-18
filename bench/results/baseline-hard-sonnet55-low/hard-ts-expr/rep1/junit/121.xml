@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="multiplication binds tighter than addition" time="0.000916" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep1-grade\test\parser.test.ts"/>
+	<testcase name="subtraction is left-associative" time="0.000142" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep1-grade\test\parser.test.ts"/>
+	<testcase name="power is right-associative" time="0.000088" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep1-grade\test\parser.test.ts"/>
+	<testcase name="unary minus binds looser than power" time="0.000082" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep1-grade\test\parser.test.ts"/>
+	<testcase name="unary minus binds tighter than multiplication" time="0.000078" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep1-grade\test\parser.test.ts"/>
+	<testcase name="negative exponent" time="0.000063" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep1-grade\test\parser.test.ts"/>
+	<testcase name="parentheses" time="0.000096" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep1-grade\test\parser.test.ts"/>
+	<testcase name="function calls with expressions as arguments" time="0.000654" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep1-grade\test\parser.test.ts"/>
+	<testcase name="syntax errors" time="0.000274" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep1-grade\test\parser.test.ts"/>
+	<!-- tests 9 -->
+	<!-- suites 0 -->
+	<!-- pass 9 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 85.8536 -->
+</testsuites>

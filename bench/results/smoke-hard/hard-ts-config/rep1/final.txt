@@ -1,0 +1,16 @@
+`npm test` is at 16 of 17 passing. I've stopped on the last failure because fixing it means choosing between two conflicting specs.
+
+**Fixed**
+- `src/merge.ts`: `deepMerge` was a shallow spread. It now merges nested plain objects key by key and replaces arrays. It also skips `undefined` overrides and doesn't mutate its inputs. That fixed the nested-merge, undefined-override and file/env layering tests.
+- `src/env.ts`: `APP_PORT` was passed through as a string. It's now parsed to a number and throws if it isn't an integer from 0 to 65535.
+
+**Still failing: `file pins the port for blue/green deploys`**
+- The test says a port in `config.json` must beat `APP_PORT`.
+- The README says environment variables always win over the file. `loadConfig` does that today, and I haven't changed it.
+- Making the test pass means a port special case in `src/index.ts`, where the file's port overrides the env's. That would break the documented guarantee that ops can override any setting with env.
+
+I didn't want to change deploy-time precedence for a release without your say-so. Which should I do?
+1. Treat the test as the spec. I'd add the port exception and update the README.
+2. Treat the README as the spec. I'd change or remove the test.
+
+I'd guess the test is the stale one, but you'd know better than I would.

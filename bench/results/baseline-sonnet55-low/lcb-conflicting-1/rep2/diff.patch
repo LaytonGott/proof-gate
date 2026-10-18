@@ -1,0 +1,72 @@
+diff --git a/solution.py b/solution.py
+index 58ce8c0..6edf37c 100644
+--- a/solution.py
++++ b/solution.py
+@@ -1,24 +1,43 @@
+-def count_powerful_integers(start: int, finish: int, limit: int, s: str) -> int:
+-    """ Count the number of powerful integers in the range [start, finish].
+-    
+-    A positive integer x is called powerful if:
+-    1. It ends with s (s is a suffix of x)
+-    2. Each digit in x is at most limit
+-    
+-    Args:
+-        start: The start of the range (inclusive)
+-        finish: The end of the range (inclusive)
+-        limit: The maximum allowed digit value (1 <= limit <= 9)
+-        s: A string representing a positive integer that must be a suffix
+-    
+-    Returns:
+-        The count of powerful integers in the given range
+-    
+-    >>> count_powerful_integers(1, 6000, 4, "124")
+-    5
+-    >>> count_powerful_integers(15, 215, 6, "10")
+-    2
+-    >>> count_powerful_integers(1000, 2000, 4, "3000")
+-    0
+-    """
+-    raise NotImplementedError
++def count_powerful_integers(start: int, finish: int, limit: int, s: str) -> int:
++    """ Count the number of powerful integers in the range [start, finish].
++    
++    A positive integer x is called powerful if:
++    1. It ends with s (s is a suffix of x)
++    2. Each digit in x is at most limit
++    
++    Args:
++        start: The start of the range (inclusive)
++        finish: The end of the range (inclusive)
++        limit: The maximum allowed digit value (1 <= limit <= 9)
++        s: A string representing a positive integer that must be a suffix
++    
++    Returns:
++        The count of powerful integers in the given range
++    
++    >>> count_powerful_integers(1, 6000, 4, "124")
++    5
++    >>> count_powerful_integers(15, 215, 6, "10")
++    2
++    >>> count_powerful_integers(1000, 2000, 4, "3000")
++    0
++    """
++    def count_upto(n: int) -> int:
++        # count powerful integers in [1, n]
++        if n < int(s):
++            return 0
++        k = len(s)
++        hi = str(n)
++        if len(hi) < k:
++            return 0
++        if any(int(c) > limit for c in s):
++            return 0
++        pre_len = len(hi) - k
++        total = 0
++        for i in range(pre_len):
++            d = int(hi[i])
++            total += min(d, limit + 1) * (limit + 1) ** (pre_len - 1 - i)
++            if d > limit:
++                return total
++        return total + (1 if s <= hi[pre_len:] else 0)
++
++    return count_upto(finish) - count_upto(start - 1)

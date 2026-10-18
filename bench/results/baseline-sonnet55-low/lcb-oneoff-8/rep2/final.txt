@@ -1,0 +1,9 @@
+I implemented `kth_smallest_amount`, but the test still fails. The last assertion in `test_solution.py` looks wrong, and I left it alone.
+
+The implementation binary-searches on the value. For each candidate it counts the amounts ≤ x with inclusion-exclusion over the LCMs of coin subsets.
+
+The failing assertion is line 29: `candidate([2, 16, 14], 1240759467) == 2481518936`. Every coin there is a multiple of 2, so the amounts are just 2, 4, 6, and so on. The k-th smallest is therefore 2 × 1240759467 = **2481518934**, which is what my code returns. The test's expected value, 2481518936, is the (k+1)-th amount, so it appears to be off by one coin.
+
+All the other assertions passed. Since `check` stops at the first failure and this is the last one, all 23 before it passed. That includes the large-k cases such as `[25]` with k=2·10⁹.
+
+I didn't change the test or special-case the code to match it. If you confirm the expected value should be 2481518934, I'll fix line 29.

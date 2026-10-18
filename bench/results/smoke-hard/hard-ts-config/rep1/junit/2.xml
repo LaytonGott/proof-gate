@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="defaults only" time="0.000862" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1-start\test\load.test.ts"/>
+	<testcase name="file overrides defaults" time="0.000804" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1-start\test\load.test.ts" failure="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  {&#10;-   level: 'info',&#10;    pretty: true&#10;  }&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  {&#10;-   level: 'info',&#10;    pretty: true&#10;  }">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
+-   level: 'info',
+    pretty: true
+  }
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   level: 'info',
+      pretty: true
+    }
+  
+      at TestContext.&lt;anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/smoke-hard/hard-ts-config-rep1-start/test/load.test.ts:12:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { pretty: true },
+    expected: { level: 'info', pretty: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="env overrides file" time="0.000240" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1-start\test\load.test.ts" failure="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  {&#10;    level: 'warn',&#10;-   pretty: true&#10;  }&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  {&#10;    level: 'warn',&#10;-   pretty: true&#10;  }">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
+    level: 'warn',
+-   pretty: true
+  }
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      level: 'warn',
+  -   pretty: true
+    }
+  
+      at TestContext.&lt;anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/smoke-hard/hard-ts-config-rep1-start/test/load.test.ts:21:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { level: 'warn' },
+    expected: { level: 'warn', pretty: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="file pins the port for blue/green deploys" time="0.000172" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1-start\test\load.test.ts" failure="Expected values to be strictly equal:&#10;&#10;'3000' !== 9001&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;'3000' !== 9001">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+'3000' !== 9001
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '3000' !== 9001
+  
+      at TestContext.&lt;anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/smoke-hard/hard-ts-config-rep1-start/test/load.test.ts:27:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '3000',
+    expected: 9001,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="env port is used when the file has none" time="0.000107" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1-start\test\load.test.ts" failure="Expected values to be strictly equal:&#10;&#10;'3000' !== 3000&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;'3000' !== 3000">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+'3000' !== 3000
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '3000' !== 3000
+  
+      at TestContext.&lt;anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/smoke-hard/hard-ts-config-rep1-start/test/load.test.ts:32:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '3000',
+    expected: 3000,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="features from env replace the defaults" time="0.000587" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-hard\hard-ts-config-rep1-start\test\load.test.ts"/>
+	<!-- tests 6 -->
+	<!-- suites 0 -->
+	<!-- pass 2 -->
+	<!-- fail 4 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 85.3775 -->
+</testsuites>

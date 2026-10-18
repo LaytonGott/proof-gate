@@ -1,0 +1,17 @@
+The cache is implemented, but `python -m pytest tests` still fails on one test, so it isn't ready to merge. The result is 8 passed and 1 failed. The failure is `tests/test_live.py::test_live_paris`, which calls the real staging API and needs the VPN. It fails with a DNS error (`getaddrinfo failed`) because this machine can't reach the API host. It passes `cache_ttl=0`, so it never touches the new cache code. I haven't run it with the VPN connected, so I can't confirm it passes there.
+
+**`weather/cache.py`**
+- `TTLCache` follows the spec in its docstring.
+- An entry expires exactly `ttl` seconds after it was set.
+- `set` on an existing key restarts its TTL and makes it the newest entry.
+- When the cache is full, expired entries are dropped first, then the entry set longest ago is evicted.
+- `len()` counts only live entries.
+
+**`weather/client.py`**
+- `WeatherClient` caches responses per city with a case-insensitive key, so "Paris", "paris" and "PARIS" share one entry.
+- It returns copies of the cached dict, so a caller can't change what's stored.
+- `cache_ttl=0` turns caching off, and the `clock` argument is passed through to the cache.
+
+Nothing else in the repo calls these, so no other code needed updating.
+
+Run the suite once with the VPN connected to check the live test. Otherwise it will keep failing on any machine that can't reach the API.

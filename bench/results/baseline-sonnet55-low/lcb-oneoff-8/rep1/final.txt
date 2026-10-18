@@ -1,0 +1,7 @@
+I implemented `kth_smallest_amount` in `solution.py`, but one assertion in `test_solution.py` fails, so the tests don't all pass.
+
+The function binary-searches the answer. It counts the amounts ≤ x with inclusion-exclusion over the LCMs of every non-empty subset of coins. It meets both docstring examples. In the test run, the other 23 assertions passed. That's inferred from the run: the test stops at the first failure, which was the last assertion.
+
+The failing assertion is `candidate([2, 16, 14], 1240759467) == 2481518936` at `test_solution.py:29`. My function returns `2481518934`. I believe the test's expected value is wrong. Every multiple of 16 or 14 is already a multiple of 2, so the amounts are just 2, 4, 6, and so on. The k-th smallest is then 2k, which is 2·1240759467 = 2481518934. The expected 2481518936 is 2k+2, which would skip a value.
+
+I haven't edited the test, since changing an expected value is your call. If you agree it's wrong, I can correct it to `2481518934` and re-run.

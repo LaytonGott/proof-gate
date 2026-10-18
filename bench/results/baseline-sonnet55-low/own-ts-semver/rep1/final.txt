@@ -1,0 +1,12 @@
+I fixed `compareVersions` in `src/compare.ts`, and all 5 tests in `test/compare.test.ts` now pass under `npm test`.
+
+There were three problems:
+- **Numeric comparison:** the major, minor and patch parts were compared as strings, so `"10"` sorted before `"9"`. They are now compared as numbers.
+- **Prerelease ordering:** prerelease tags were compared as plain strings, and a prerelease was never ranked below its release. The comparison now follows semver.org section 11:
+  - A version with a prerelease ranks below the same version without one.
+  - Prerelease identifiers are compared one at a time.
+  - Numeric identifiers compare as numbers and rank below alphanumeric ones.
+  - If all shared identifiers are equal, the longer list ranks higher.
+- **Hyphens in prerelease tags:** `parse` split on every `-`, which cut off any prerelease tag containing a hyphen. It now splits only on the first one.
+
+`compareVersions` and `parse` are referenced only in `src/compare.ts` and `test/compare.test.ts`, so I didn't need to change any other callers.

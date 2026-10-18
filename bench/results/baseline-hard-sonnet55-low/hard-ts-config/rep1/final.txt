@@ -1,0 +1,10 @@
+I fixed what I believe caused the failures, but I couldn't run `npm test` to confirm. PowerShell and Bash were both denied partway through, so the suite is unverified after my edits.
+
+Before the denial, the first run showed 8 of 17 tests failing. I made two changes:
+
+- **`src/merge.ts`:** `deepMerge` was a stub that only did a shallow spread. It now merges nested plain objects key by key, replaces arrays and other values, and skips `undefined` overrides. That should fix the "nested objects" and "undefined override" tests. It should also fix the config-loading failures that depend on the merge, though I didn't read `test/load.test.ts`, so those are a guess.
+- **`src/env.ts`:** `APP_PORT` was cast to a number without being parsed, so it stayed a string. It's now parsed as a number. It throws an error mentioning `APP_PORT` if the value isn't all digits or is above 65535. That should fix the two `APP_PORT` tests.
+
+I haven't checked the "file pins the port for blue/green deploys" and "env port is used when the file has none" tests. They may pass now, or they may expect something different from the merge or the loader.
+
+Please run `npm test` and send me any remaining failures, or allow a shell command and I'll run it myself. I haven't committed anything.

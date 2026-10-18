@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="arithmetic" time="0.000930" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-start\test\eval.test.ts"/>
+	<testcase name="variables" time="0.000160" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-start\test\eval.test.ts"/>
+	<testcase name="unknown variable" time="0.000280" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-start\test\eval.test.ts"/>
+	<testcase name="powers" time="0.000571" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-start\test\eval.test.ts" failure="Expected values to be strictly equal:&#10;&#10;64 !== 512&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;64 !== 512">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+64 !== 512
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  64 !== 512
+  
+      at TestContext.&lt;anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/baseline-hard-sonnet55-low/hard-ts-expr-rep3-start/test/eval.test.ts:19:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 64,
+    expected: 512,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="min, max, abs, sqrt" time="0.000708" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-start\test\eval.test.ts"/>
+	<testcase name="round to digits" time="0.000143" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-start\test\eval.test.ts"/>
+	<testcase name="round half" time="0.000156" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-start\test\eval.test.ts" failure="Expected values to be strictly equal:&#10;&#10;3 !== 2&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;3 !== 2">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+3 !== 2
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  3 !== 2
+  
+      at TestContext.&lt;anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/baseline-hard-sonnet55-low/hard-ts-expr-rep3-start/test/eval.test.ts:38:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="round negative half" time="0.000147" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-start\test\eval.test.ts" failure="Expected values to be strictly equal:&#10;&#10;-2 !== -3&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;-2 !== -3">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+-2 !== -3
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -2 !== -3
+  
+      at TestContext.&lt;anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/baseline-hard-sonnet55-low/hard-ts-expr-rep3-start/test/eval.test.ts:42:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -2,
+    expected: -3,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="function errors" time="0.000141" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-start\test\eval.test.ts"/>
+	<testcase name="division by zero" time="0.000129" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-start\test\eval.test.ts"/>
+	<!-- tests 10 -->
+	<!-- suites 0 -->
+	<!-- pass 7 -->
+	<!-- fail 3 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 91.7911 -->
+</testsuites>

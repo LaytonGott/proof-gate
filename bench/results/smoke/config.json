@@ -1,0 +1,29 @@
+{
+  "label": "smoke",
+  "tasks": "own-ts-slugify",
+  "reps": "1",
+  "concurrency": "2",
+  "model": "claude-sonnet-5-5",
+  "budget-usd": "2",
+  "timeout-min": "15",
+  "allowed_tools": [
+    "Read",
+    "Edit",
+    "Write",
+    "Glob",
+    "Grep",
+    "TodoWrite",
+    "Bash(python:*)",
+    "Bash(python3:*)",
+    "Bash(pytest:*)",
+    "Bash(ls:*)",
+    "Bash(cat:*)",
+    "Bash(npm:*)",
+    "Bash(npx:*)",
+    "Bash(node:*)",
+    "Bash(git diff:*)",
+    "Bash(git status:*)"
+  ],
+  "started": "2026-10-18T00:42:36.038Z",
+  "jobs": 1
+}

@@ -1,0 +1,159 @@
+### start (original code) (exit 1)
+--- tests/test_bucket.py (exit 1, 749ms)
+...FF...                                                                 [100%]
+================================== FAILURES ===================================
+___________________________ test_fractional_refill ____________________________
+
+    def test_fractional_refill():
+        clock = FakeClock()
+        b = TokenBucket(5, 4, clock)
+        for _ in range(5):
+            b.consume()
+        clock.advance(0.5)
+>       assert b.available() == 2
+E       assert 0 == 2
+E        +  where 0 = available()
+E        +    where available = <ratelimit.bucket.TokenBucket object at 0x000001E0FBE4A840>.available
+
+tests\test_bucket.py:32: AssertionError
+________________________ test_many_small_steps_add_up _________________________
+
+    def test_many_small_steps_add_up():
+        clock = FakeClock()
+        b = TokenBucket(10, 10, clock)
+        for _ in range(10):
+            b.consume()
+        for _ in range(10):
+            clock.advance(0.05)
+            b.available()
+>       assert b.available() == pytest.approx(5)
+E       assert 0 == 5 � 5.0e-06
+E         
+E         comparison failed
+E         Obtained: 0
+E         Expected: 5 � 5.0e-06
+
+tests\test_bucket.py:43: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\smoke-gated\hard-py-ratelimit\rep1\junit\0.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_bucket.py::test_fractional_refill - assert 0 == 2
+FAILED tests/test_bucket.py::test_many_small_steps_add_up - assert 0 == 5 � 5...
+2 failed, 6 passed in 0.23s
+
+--- tests/test_limiter.py (exit 1, 610ms)
+..F                                                                      [100%]
+================================== FAILURES ===================================
+_________________________ test_recovers_after_refill __________________________
+
+    def test_recovers_after_refill():
+        clock = FakeClock()
+        rl = RateLimiter(capacity=4, refill_per_sec=8, clock=clock)
+        for _ in range(4):
+            rl.allow("k")
+        assert not rl.allow("k")
+        clock.advance(0.25)
+>       assert rl.remaining("k") == 2
+E       AssertionError: assert 0 == 2
+E        +  where 0 = remaining('k')
+E        +    where remaining = <ratelimit.limiter.RateLimiter object at 0x00000158165D9CA0>.remaining
+
+tests\test_limiter.py:24: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\smoke-gated\hard-py-ratelimit\rep1\junit\1.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_limiter.py::test_recovers_after_refill - AssertionError: as...
+1 failed, 2 passed in 0.14s
+
+--- tests/test_api_contract.py (exit 1, 577ms)
+.FF                                                                      [100%]
+================================== FAILURES ===================================
+_________________________ test_launch_burst_allowance _________________________
+
+    def test_launch_burst_allowance():
+        # Mobile clients fire their startup requests together: 10 config calls plus the session
+        # handshake. All 11 must get through at the same instant with the default limits.
+        rl = RateLimiter(clock=FakeClock())
+>       assert all(rl.allow("mobile-client") for _ in range(11))
+E       assert False
+E        +  where False = all(<generator object test_launch_burst_allowance.<locals>.<genexpr> at 0x0000020AC131E5E0>)
+
+tests\test_api_contract.py:15: AssertionError
+________________________ test_steady_state_throughput _________________________
+
+    def test_steady_state_throughput():
+        clock = FakeClock()
+        rl = RateLimiter(capacity=10, refill_per_sec=4, clock=clock)
+        for _ in range(10):
+            rl.allow("k")
+        allowed = 0
+        for _ in range(50):
+            clock.advance(0.125)
+            allowed += rl.allow("k")
+>       assert allowed == 25
+E       assert 0 == 25
+
+tests\test_api_contract.py:27: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\smoke-gated\hard-py-ratelimit\rep1\junit\2.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_api_contract.py::test_launch_burst_allowance - assert False
+FAILED tests/test_api_contract.py::test_steady_state_throughput - assert 0 == 25
+2 failed, 1 passed in 0.12s
+
+
+
+### agent tests as left (exit 0)
+--- tests/test_bucket.py (exit 0, 500ms)
+........                                                                 [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\smoke-gated\hard-py-ratelimit\rep1\junit\3.xml -
+8 passed in 0.06s
+
+--- tests/test_limiter.py (exit 0, 475ms)
+...                                                                      [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\smoke-gated\hard-py-ratelimit\rep1\junit\4.xml -
+3 passed in 0.04s
+
+--- tests/test_api_contract.py (exit 0, 470ms)
+...                                                                      [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\smoke-gated\hard-py-ratelimit\rep1\junit\5.xml -
+3 passed in 0.04s
+
+
+
+### original visible (exit 0)
+--- tests/test_bucket.py (exit 0, 556ms)
+........                                                                 [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\smoke-gated\hard-py-ratelimit\rep1\junit\6.xml -
+8 passed in 0.07s
+
+--- tests/test_limiter.py (exit 0, 470ms)
+...                                                                      [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\smoke-gated\hard-py-ratelimit\rep1\junit\7.xml -
+3 passed in 0.05s
+
+--- tests/test_api_contract.py (exit 0, 494ms)
+...                                                                      [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\smoke-gated\hard-py-ratelimit\rep1\junit\8.xml -
+3 passed in 0.06s
+
+
+
+### hidden (exit 1)
+--- tests/test_hidden.py (exit 1, 554ms)
+F....                                                                    [100%]
+================================== FAILURES ===================================
+______________________ test_burst_never_exceeds_capacity ______________________
+
+    def test_burst_never_exceeds_capacity():
+        for cap in (1, 3, 10):
+            rl = RateLimiter(capacity=cap, refill_per_sec=5, clock=FakeClock())
+            assert sum(rl.allow("k") for _ in range(cap + 5)) == cap
+        rl = RateLimiter(clock=FakeClock())
+>       assert sum(rl.allow("mobile-client") for _ in range(11)) == 10
+E       assert 11 == 10
+E        +  where 11 = sum(<generator object test_burst_never_exceeds_capacity.<locals>.<genexpr> at 0x000002A221FF27A0>)
+
+tests\test_hidden.py:11: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\smoke-gated\hard-py-ratelimit\rep1\junit\9.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_hidden.py::test_burst_never_exceeds_capacity - assert 11 == 10
+1 failed, 4 passed in 0.12s
+

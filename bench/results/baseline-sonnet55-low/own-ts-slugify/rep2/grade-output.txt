@@ -1,0 +1,98 @@
+### agent tests (exit 1)
+✔ basic (0.5612ms)
+✔ accents and whitespace (0.121ms)
+✖ punctuation runs collapse (0.6024ms)
+✔ max length cuts at a word boundary (0.0938ms)
+✔ no boundary means hard cut (0.0728ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 90.9528
+
+✖ failing tests:
+
+test at test\slugify.test.ts:13:1
+✖ punctuation runs collapse (0.6024ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'rock-roll'
+  - 'rock--roll'
+          ^
+  
+      at TestContext.<anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/baseline-sonnet55-low/own-ts-slugify-rep2/test/slugify.test.ts:14:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'rock-roll',
+    expected: 'rock--roll',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+
+### original visible (exit 1)
+✔ basic (0.5655ms)
+✔ accents and whitespace (0.1379ms)
+✖ punctuation runs collapse (0.6169ms)
+✔ max length cuts at a word boundary (0.0822ms)
+✔ no boundary means hard cut (0.0703ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78.4999
+
+✖ failing tests:
+
+test at test\slugify.test.ts:13:1
+✖ punctuation runs collapse (0.6169ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'rock-roll'
+  - 'rock--roll'
+          ^
+  
+      at TestContext.<anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/baseline-sonnet55-low/own-ts-slugify-rep2-grade/test/slugify.test.ts:14:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'rock-roll',
+    expected: 'rock--roll',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+
+### hidden (exit 0)
+✔ spec examples (0.6048ms)
+✔ runs of separators collapse to one dash (0.1088ms)
+✔ accents (0.0773ms)
+✔ length limits (0.1294ms)
+✔ empty and symbol-only input (0.0828ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.3604

@@ -1,0 +1,5 @@
+I rewrote `parse_line` in `importer/parse.py` so quoted fields keep their commas, and all 4 tests in `tests/test_parse.py` now pass.
+
+The old version split on every comma and then stripped quotes, so a name like `"Smith, John"` came out as two columns. The new version reads the line character by character. Commas inside quotes are literal, a doubled quote (`""`) becomes one quote character, and the surrounding quotes are removed. Unquoted fields are returned as they are, and an empty line gives a single empty field, as the docstring says.
+
+`parse_line` is only called from the tests, so nothing else in the repo needed updating.

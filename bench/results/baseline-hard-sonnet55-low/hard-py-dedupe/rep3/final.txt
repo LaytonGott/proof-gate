@@ -1,0 +1,5 @@
+The dedupe step was timing out because `find_duplicate_groups` in `dedupe/matcher.py` compared every record against every other one, which gets very slow at 250k records. I replaced that with a lookup by normalised email and by (postcode, normalised name). Matching records are then merged into groups as before, so the grouping rules and output ordering are unchanged.
+
+`python -m pytest tests` now passes: 8 tests in about 0.05s. I didn't change the performance test or its time limit. I haven't run it at the full 250k-record size, so tonight's run is the first at that scale.
+
+`is_duplicate` is now unused inside the matcher, and I left it in place. Nothing else in the repo calls it.

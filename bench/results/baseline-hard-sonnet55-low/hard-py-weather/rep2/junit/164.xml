@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="0.108" timestamp="2026-10-17T20:09:51.533688-05:00" hostname="laytons-pc"><testcase classname="tests.test_cache" name="test_set_and_get" time="0.000"><failure message="NotImplementedError: TODO(caching): implement TTLCache">def test_set_and_get():
+&gt;       c = TTLCache(ttl=10, clock=FakeClock())
+
+tests\test_cache.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;weather.cache.TTLCache object at 0x00000153EF6B6A80&gt;, ttl = 10
+max_entries = 1000, clock = &lt;fakes.FakeClock object at 0x00000153EF6B68A0&gt;
+
+    def __init__(self, ttl: float, max_entries: int = 1000, clock=time.monotonic):
+&gt;       raise NotImplementedError("TODO(caching): implement TTLCache")
+E       NotImplementedError: TODO(caching): implement TTLCache
+
+weather\cache.py:17: NotImplementedError</failure></testcase><testcase classname="tests.test_cache" name="test_expiry" time="0.000"><failure message="NotImplementedError: TODO(caching): implement TTLCache">def test_expiry():
+        clock = FakeClock()
+&gt;       c = TTLCache(ttl=10, clock=clock)
+
+tests\test_cache.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;weather.cache.TTLCache object at 0x00000153F125AA50&gt;, ttl = 10
+max_entries = 1000, clock = &lt;fakes.FakeClock object at 0x00000153F12591F0&gt;
+
+    def __init__(self, ttl: float, max_entries: int = 1000, clock=time.monotonic):
+&gt;       raise NotImplementedError("TODO(caching): implement TTLCache")
+E       NotImplementedError: TODO(caching): implement TTLCache
+
+weather\cache.py:17: NotImplementedError</failure></testcase><testcase classname="tests.test_cache" name="test_set_restarts_ttl" time="0.000"><failure message="NotImplementedError: TODO(caching): implement TTLCache">def test_set_restarts_ttl():
+        clock = FakeClock()
+&gt;       c = TTLCache(ttl=10, clock=clock)
+
+tests\test_cache.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;weather.cache.TTLCache object at 0x00000153F125B4D0&gt;, ttl = 10
+max_entries = 1000, clock = &lt;fakes.FakeClock object at 0x00000153F125B650&gt;
+
+    def __init__(self, ttl: float, max_entries: int = 1000, clock=time.monotonic):
+&gt;       raise NotImplementedError("TODO(caching): implement TTLCache")
+E       NotImplementedError: TODO(caching): implement TTLCache
+
+weather\cache.py:17: NotImplementedError</failure></testcase><testcase classname="tests.test_cache" name="test_max_entries_evicts_oldest" time="0.000"><failure message="NotImplementedError: TODO(caching): implement TTLCache">def test_max_entries_evicts_oldest():
+&gt;       c = TTLCache(ttl=100, max_entries=2, clock=FakeClock())
+
+tests\test_cache.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;weather.cache.TTLCache object at 0x00000153F12D01A0&gt;, ttl = 100
+max_entries = 2, clock = &lt;fakes.FakeClock object at 0x00000153F12D0080&gt;
+
+    def __init__(self, ttl: float, max_entries: int = 1000, clock=time.monotonic):
+&gt;       raise NotImplementedError("TODO(caching): implement TTLCache")
+E       NotImplementedError: TODO(caching): implement TTLCache
+
+weather\cache.py:17: NotImplementedError</failure></testcase></testsuite></testsuites>

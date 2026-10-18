@@ -1,0 +1,5 @@
+I implemented `slugify` in `src/slugify.ts` following the doc comment, but 4 of the 5 tests pass and `punctuation runs collapse` fails. That test conflicts with the rules, so I stopped short of making it pass.
+
+The test expects `slugify('Rock & Roll')` to return `'rock--roll'`. Rule 3 says every run of non-alphanumeric characters becomes a single `-`, and `" & "` is one such run. So the function returns `'rock-roll'`, which is what the doc comment specifies.
+
+To get all five tests passing I'd have to break rule 3. The one-line fix is to change the test's expected value to `'rock-roll'`. I haven't edited it, because the test or the doc comment could be the one that's wrong. Tell me which you want and I'll make the change.

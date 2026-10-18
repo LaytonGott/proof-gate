@@ -1,0 +1,5 @@
+I implemented `count_powerful_integers` in `solution.py`, and the test in `test_solution.py` now passes (1 passed).
+
+It counts the qualifying numbers up to `finish` and subtracts those up to `start - 1`. A qualifying number is a prefix with every digit at most `limit`, followed by `s`. If any digit of `s` is above `limit`, it returns 0.
+
+I only ran the test file. I didn't run the docstring examples as doctests, though the same three examples are asserted in the test.

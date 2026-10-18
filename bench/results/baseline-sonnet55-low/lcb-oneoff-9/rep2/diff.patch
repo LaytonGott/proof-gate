@@ -1,0 +1,19 @@
+diff --git a/solution.py b/solution.py
+index 3592bdd..9779cfd 100644
+--- a/solution.py
++++ b/solution.py
+@@ -20,4 +20,13 @@ def count_ways_to_stair(k: int) -> int:
+     >>> count_ways_to_stair(512)
+     1
+     """
+-    raise NotImplementedError
++    from math import comb
++
++    total = 0
++    for j in range(32):
++        # After j up-moves, at most j + 1 down-moves can be placed (none adjacent),
++        # and the position is 2^j - d for d down-moves.
++        d = (1 << j) - k
++        if 0 <= d <= j + 1:
++            total += comb(j + 1, d)
++    return total

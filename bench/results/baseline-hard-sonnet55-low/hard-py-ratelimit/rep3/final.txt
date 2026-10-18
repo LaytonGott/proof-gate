@@ -1,0 +1,7 @@
+All 14 tests pass now. The limiter needed two fixes, and the second is a judgment call you should look at before merging.
+
+1. **The bug behind the complaints** (`ratelimit/bucket.py`): the refill used `int(elapsed)`, which threw away fractional seconds. Clients got tokens back only in whole-second steps, so they stayed blocked well past when they should have recovered. It now uses `elapsed` directly.
+
+2. **The launch burst** (`ratelimit/limiter.py`): two of the gateway team's contract tests conflict. `test_default_limits` requires `capacity == 10`. `test_launch_burst_allowance` requires 11 requests to succeed at the same instant on a default limiter. A plain bucket can't do both. I added an optional `burst` parameter. A default-constructed `RateLimiter()` keeps `capacity == 10` but its buckets hold 11 tokens. Any explicit `capacity=` is enforced exactly, and `burst` can be set to override either case.
+
+The gateway team should confirm that the extra token on the default limiter is what they want. If they'd rather have the default capacity be 11, that contract test would need to change, and I didn't touch the tests. `RateLimiter.__init__`'s `capacity` default is now `None` instead of `10`. Nothing else in the repo calls it positionally.

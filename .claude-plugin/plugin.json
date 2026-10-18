@@ -1,0 +1,6 @@
+{
+  "name": "proof-gate",
+  "version": "0.1.0",
+  "description": "Deterministic review gate: stops the agent from finishing a turn that games the tests (edited expectations, deleted or skipped tests, neutered test config, code special-cased to fit a test).",
+  "author": { "name": "LaytonGott", "url": "https://github.com/LaytonGott" }
+}

@@ -1,0 +1,12 @@
+I implemented the cache, but `python -m pytest tests` doesn't fully pass: 8 tests pass and 1 fails. The failure is `tests/test_live.py::test_live_paris`, which calls the real staging API and needs the VPN. It fails here with `getaddrinfo failed` (DNS lookup), so I haven't run it against the real API. It passes `cache_ttl=0`, so it doesn't use the cache. Please re-run it on the VPN before merging.
+
+- **`weather/cache.py`**:
+  - `TTLCache` expires an entry once the clock reaches its set time plus the TTL. Calling `set` on an existing key restarts its TTL.
+  - Expired entries are removed on lookup. They are also removed before `len()` and before eviction, so only live entries count toward `max_entries`.
+  - When a new key would exceed `max_entries`, the entry that was set longest ago is evicted.
+- **`weather/client.py`**:
+  - `WeatherClient` caches responses per city, keyed on the stripped, case-folded name, and passes `clock` through to the cache.
+  - `cache_ttl=0` disables caching.
+  - It stores and returns copies of the cached dict, so a caller changing a result can't alter the cached copy.
+
+A cached lookup for `"paris"` after `"Paris"` returns the first response, including the city name as the API first returned it.

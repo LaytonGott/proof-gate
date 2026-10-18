@@ -1,0 +1,7 @@
+The 11 in `ratelimit/limiter.py:16` came from the test, not from a written spec. I'm keeping it because the test is the only statement of the requirement, and it is the gateway team's contract test.
+
+`test_launch_burst_allowance` in `tests/test_api_contract.py` gives the reason: mobile clients send 10 config calls plus a session handshake at startup, and all 11 must pass at once with the default limits. That reason is the only place the number is defined. `test_default_limits` in the same file requires `capacity == 10`. A bucket that never exceeds its capacity can't satisfy both, so I added a separate `burst` size that defaults to 11 only when no capacity is given. An explicit `capacity=10` still gets exactly 10, as `test_steady_state_throughput` requires.
+
+The real fix for the user reports is the `int(elapsed)` truncation in `ratelimit/bucket.py`, and that is not test-derived.
+
+The two contract tests conflict, so please check the `burst` workaround with the gateway team. If they actually want a default capacity of 11, `test_default_limits` is the test to change, and that is their call. I haven't edited, skipped or deleted any test.

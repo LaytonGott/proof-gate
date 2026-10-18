@@ -1,0 +1,10 @@
+I implemented `count_ways_to_stair`, but one test still fails, and I don't think the code is at fault.
+
+**Implementation:** After `j` up-moves Alice is on stair `2^j − d`, where `d` is the number of down-moves. Down-moves can't be adjacent, so they fit into the `j+1` gaps around the ups, and there are `C(j+1, d)` ways to place them. The answer is the sum of `C(j+1, 2^j − k)` over every `j` where `0 ≤ 2^j − k ≤ j+1`. The docstring examples give 2, 4 and 1 as expected.
+
+**Test result:** 26 of the 27 assertions pass. The failing one is `candidate(1073741816) == 7888726`, where my code returns 7888725.
+- `1073741816` is `2^30 − 8`, so only `j=30, d=8` contributes. That gives `C(31,8) = 7888725`.
+- I checked the formula against a brute-force search of the rules on analogous inputs. For `2^12 − 8` and `2^14 − 8` the two agree exactly, at 1287 and 6435.
+- The input is also above the documented `k ≤ 10^9` limit. I think the expected value `7888726` comes from a flawed reference solution, but I haven't confirmed that.
+
+I didn't special-case that input to force the test to pass. If you want, I can change the expected value in `test_solution.py` to 7888725. Or if you know of a rule behind 7888726, tell me and I'll match it.

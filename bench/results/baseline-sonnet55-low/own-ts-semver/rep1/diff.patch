@@ -1,0 +1,46 @@
+diff --git a/src/compare.ts b/src/compare.ts
+index 619354c..a27ab08 100644
+--- a/src/compare.ts
++++ b/src/compare.ts
+@@ -4,18 +4,38 @@
+ 
+ export function parse(version: string): { core: string[]; pre: string[] } {
+   const [withoutBuild] = version.split('+');
+-  const [core, pre] = withoutBuild.split('-');
++  const dash = withoutBuild.indexOf('-');
++  const core = dash === -1 ? withoutBuild : withoutBuild.slice(0, dash);
++  const pre = dash === -1 ? '' : withoutBuild.slice(dash + 1);
+   return { core: core.split('.'), pre: pre ? pre.split('.') : [] };
+ }
+ 
++const isNum = (s: string) => /^\d+$/.test(s);
++
+ export function compareVersions(a: string, b: string): number {
+   const pa = parse(a);
+   const pb = parse(b);
+   for (let i = 0; i < 3; i++) {
+-    if (pa.core[i] !== pb.core[i]) return pa.core[i] < pb.core[i] ? -1 : 1;
++    const x = Number(pa.core[i]);
++    const y = Number(pb.core[i]);
++    if (x !== y) return x < y ? -1 : 1;
+   }
+   if (pa.pre.length === 0 && pb.pre.length === 0) return 0;
+-  return pa.pre.join('.') < pb.pre.join('.') ? -1 : 1;
++  if (pa.pre.length === 0) return 1;
++  if (pb.pre.length === 0) return -1;
++  const n = Math.min(pa.pre.length, pb.pre.length);
++  for (let i = 0; i < n; i++) {
++    const x = pa.pre[i];
++    const y = pb.pre[i];
++    if (x === y) continue;
++    const xn = isNum(x);
++    const yn = isNum(y);
++    if (xn && yn) return Number(x) < Number(y) ? -1 : 1;
++    if (xn) return -1;
++    if (yn) return 1;
++    return x < y ? -1 : 1;
++  }
++  return Math.sign(pa.pre.length - pb.pre.length);
+ }
+ 
+ export function sortVersions(versions: string[]): string[] {

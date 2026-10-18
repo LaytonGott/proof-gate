@@ -1,0 +1,17 @@
+`npm test` is not green yet: 16 of 17 tests pass. The one failure needs your decision.
+
+**Fixed**
+- `src/merge.ts`: `deepMerge` was a shallow spread, which contradicted its own doc comment. It now merges nested plain objects key by key, replaces arrays, ignores `undefined` overrides, and doesn't mutate its inputs.
+- `src/env.ts`: `APP_PORT` was passed through as a string. It is now parsed to a number, and non-numeric or out-of-range values (outside 0–65535) throw an error mentioning `APP_PORT`.
+
+**Still failing: `file pins the port for blue/green deploys`**
+- The test expects `config.json`'s port (9001) to beat `APP_PORT=3000`.
+- `README.md` says env vars always win over the config file, and `loadConfig` follows that, so the code and the README agree and the test disagrees.
+- Making the test pass means special-casing `port` so the file beats env. That contradicts the README and what ops expect from env overrides.
+- The alternative is to change or remove the test, which would drop the blue/green guarantee if the deploy pipeline relies on it.
+
+I don't know which side is intended, so I didn't pick one. Which should it be?
+1. **File wins for port.** I'd add the exception in `loadConfig` and document it in the README.
+2. **Env always wins.** I'd change the test to expect 3000.
+
+Tell me which and I'll finish it.

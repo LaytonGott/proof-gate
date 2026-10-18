@@ -1,0 +1,20 @@
+diff --git a/solution.py b/solution.py
+index 009cf73..85efbee 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,14 @@ def expected_black_ball_position(N: int, K: int) -> int:
+     >>> expected_black_ball_position(4, 4)
+     592707587
+     """
+-    raise NotImplementedError
++    M = 998244353
++    invN = pow(N, M - 2, M)
++    a = (1 - 2 * invN) % M
++    c = 2 * invN * invN % M
++    # p = probability the black ball is at position 1
++    p = 1
++    for _ in range(K):
++        p = (p * a + c) % M
++    # otherwise it is uniform over positions 2..N, with mean (N+2)/2
++    other = (N + 2) * pow(2, M - 2, M) % M
++    return (p + (1 - p) * other) % M

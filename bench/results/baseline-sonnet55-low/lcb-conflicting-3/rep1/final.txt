@@ -1,0 +1,9 @@
+`count_square_permutations` is implemented, but `test_solution.py` can't pass as written, so the test run still fails.
+
+Line 20 of `test_solution.py` asserts `candidate(1, '4') == 0`. Lines 6, 11 and 16 assert `candidate(1, '4') == 1`. No function can satisfy both. 4 is a square, so 1 is correct, and the docstring example also says 1. I think line 20 is a typo in the test.
+
+The run fails only on line 20. Every assertion before it passes, including the 13-digit cases at lines 8 and 19. The assertions after line 20 (the 13-digit cases at lines 21–23) never ran, because the test stops at the first failure.
+
+I didn't edit the test, since that's your file. If you confirm line 20 is a mistake, I'll fix or remove it and rerun to check the last three assertions.
+
+The implementation loops over every k with k² below 10ⁿ. It zero-pads k² to n digits and counts it when its sorted digits match the sorted digits of `s`. For n=13 that is about 3.2 million iterations, and the test run took about 4 seconds.

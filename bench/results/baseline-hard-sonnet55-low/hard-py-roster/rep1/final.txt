@@ -1,0 +1,9 @@
+I fixed the flakiness, but I couldn't run the tests. Both Bash and PowerShell were denied in this session, so the fix is unverified.
+
+**Cause:** `clean_names` in `roster/teams.py` returned `list(set(seen.values()))`. Set order changes between runs because of Python's string hash randomization. `assign_teams` deals names round-robin from that list, so the team layout changed from run to run. `test_assign_teams_round_robin_alphabetical` passed only when the order happened to come out alphabetical. That matches "fails most runs, sometimes passes".
+
+**Fix:** `clean_names` now returns `sorted(seen.values(), key=lambda n: (n.lower(), n))`. The result is alphabetical, case-insensitive and fixed. I also updated its docstring to say so.
+
+I searched the repo, and the only callers of `clean_names` are `assign_teams` and `test_clean_names_dedupes_case_insensitively`. That test already sorts its result, so neither is affected.
+
+To confirm, run `python -m pytest tests` a few times, or with different seeds (for example `PYTHONHASHSEED=1`, `2` and so on). If you'd like me to run it, allow a shell tool and I'll do it.

@@ -1,0 +1,5 @@
+The dedupe step was comparing every record against every other record, which is quadratic. That is why it timed out at 250k records. I replaced it in `dedupe/matcher.py` with a single pass that groups records by normalised email and by (postcode, normalised name). Records that share either key are then merged into one group. The results are the same as before, including transitive grouping and group ordering.
+
+`python -m pytest tests` now passes: 8 tests in 0.04s, against the 1.5s budget in `test_performance`. I did not change the test or its limit. I did not run the migration itself or time it at 250k records.
+
+`is_duplicate` is still in the file but `find_duplicate_groups` no longer calls it, and nothing else in the repo does either.

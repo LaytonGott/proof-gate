@@ -1,0 +1,42 @@
+diff --git a/solution.py b/solution.py
+index 7a74f3e..071df43 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,36 @@ def find_cube_placement(V1: int, V2: int, V3: int) -> Optional[Tuple[int, int, i
+     >>> find_cube_placement(343, 34, 3)
+     None
+     """
+-    raise NotImplementedError
++    if V1 + 2 * V2 + 3 * V3 != 3 * 7 ** 3:
++        return None
++
++    def ov(p, q):
++        r = 1
++        for i in range(3):
++            r *= max(0, 7 - abs(p[i] - q[i]))
++        return r
++
++    def ov3(p, q, s):
++        r = 1
++        for i in range(3):
++            r *= max(0, min(p[i], q[i], s[i]) + 7 - max(p[i], q[i], s[i]))
++        return r
++
++    rng = range(-7, 8)
++    c1 = (0, 0, 0)
++    for a2 in rng:
++        for b2 in rng:
++            for c2 in rng:
++                c2_ = (a2, b2, c2)
++                o12 = ov(c1, c2_)
++                for a3 in rng:
++                    for b3 in rng:
++                        for c3 in rng:
++                            c3_ = (a3, b3, c3)
++                            t = ov3(c1, c2_, c3_)
++                            if t != V3:
++                                continue
++                            pairs = o12 + ov(c1, c3_) + ov(c2_, c3_)
++                            if pairs - 3 * t == V2:
++                                return (0, 0, 0, a2, b2, c2, a3, b3, c3)
++    return None

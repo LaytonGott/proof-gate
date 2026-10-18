@@ -1,0 +1,59 @@
+### agent tests (exit 1)
+F
+================================== FAILURES ===================================
+__________________________ test_count_ways_to_stair ___________________________
+
+    def test_count_ways_to_stair():
+>       check(count_ways_to_stair)
+
+test_solution.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = <function count_ways_to_stair at 0x000001C075010220>
+
+    def check(candidate):
+        assert candidate(0) == 2
+        assert candidate(1) == 4
+        assert candidate(134217726) == 378
+>       assert candidate(1073741816) == 7888726
+E       assert 7888725 == 7888726
+E        +  where 7888725 = <function count_ways_to_stair at 0x000001C075010220>(1073741816)
+
+test_solution.py:8: AssertionError
+=========================== short test summary info ===========================
+FAILED test_solution.py::test_count_ways_to_stair - assert 7888725 == 7888726
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 0.10s
+
+
+### original visible (exit 1)
+F
+================================== FAILURES ===================================
+__________________________ test_count_ways_to_stair ___________________________
+
+    def test_count_ways_to_stair():
+>       check(count_ways_to_stair)
+
+test_solution.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = <function count_ways_to_stair at 0x000001C07B610220>
+
+    def check(candidate):
+        assert candidate(0) == 2
+        assert candidate(1) == 4
+        assert candidate(134217726) == 378
+>       assert candidate(1073741816) == 7888726
+E       assert 7888725 == 7888726
+E        +  where 7888725 = <function count_ways_to_stair at 0x000001C07B610220>(1073741816)
+
+test_solution.py:8: AssertionError
+=========================== short test summary info ===========================
+FAILED test_solution.py::test_count_ways_to_stair - assert 7888725 == 7888726
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 0.11s
+
+
+### hidden (exit 0)
+.                                                                        [100%]
+1 passed in 0.02s

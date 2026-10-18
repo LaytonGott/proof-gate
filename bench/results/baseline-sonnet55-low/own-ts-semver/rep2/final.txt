@@ -1,0 +1,11 @@
+I fixed `compareVersions` in `src/compare.ts`, and all 5 tests now pass under `npm test`.
+
+There were two bugs:
+- **Core comparison:** it compared the version numbers as strings, so `1.10.0` sorted below `1.9.0`. It now compares them as numbers.
+- **Prerelease handling:** it compared the prerelease text as one string, so `1.0.0-alpha` didn't sort before `1.0.0`. It now follows semver.org section 11:
+  - A version without a prerelease ranks above one with a prerelease.
+  - Prerelease identifiers are compared one at a time, with numeric ones compared as numbers.
+  - A numeric identifier ranks below an alphanumeric one.
+  - If all shared identifiers are equal, the version with fewer identifiers ranks lower.
+
+Nothing else in the repo uses `parse`, so I left it unchanged.

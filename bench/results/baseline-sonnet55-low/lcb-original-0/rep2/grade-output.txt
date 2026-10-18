@@ -1,0 +1,13 @@
+### agent tests (exit 0)
+.                                                                        [100%]
+1 passed in 0.01s
+
+
+### original visible (exit 0)
+.                                                                        [100%]
+1 passed in 0.03s
+
+
+### hidden (exit 0)
+.                                                                        [100%]
+1 passed in 0.02s

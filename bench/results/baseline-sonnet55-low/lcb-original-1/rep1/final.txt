@@ -1,0 +1,7 @@
+I implemented `count_powerful_integers` in `solution.py`, and the test in `test_solution.py` passes (1 test, no failures).
+
+It uses a digit count. A helper counts powerful integers up to `n`, and the answer is that count for `finish` minus that count for `start - 1`.
+
+The helper handles each digit of `n` ahead of the suffix `s` in turn. Where a digit is at most `limit`, the smaller prefixes contribute `d × (limit+1)^remaining`. If it is above `limit`, the count stops there. If every prefix digit is within `limit`, `n` itself is counted only when `s` is no larger than the last digits of `n`.
+
+I didn't run any extra edge cases beyond the provided test. The code assumes `s` has no leading zeros.

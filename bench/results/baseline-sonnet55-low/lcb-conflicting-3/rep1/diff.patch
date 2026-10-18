@@ -1,0 +1,17 @@
+diff --git a/solution.py b/solution.py
+index 0a74351..74eed8a 100644
+--- a/solution.py
++++ b/solution.py
+@@ -19,4 +19,11 @@ def count_square_permutations(n: int, s: str) -> int:
+     >>> count_square_permutations(1, '4')
+     1
+     """
+-    raise NotImplementedError
++    target = sorted(s)
++    count = 0
++    k = 0
++    while k * k < 10 ** n:
++        if sorted(str(k * k).zfill(n)) == target:
++            count += 1
++        k += 1
++    return count

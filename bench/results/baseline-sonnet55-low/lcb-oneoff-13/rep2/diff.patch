@@ -1,0 +1,61 @@
+diff --git a/solution.py b/solution.py
+index 426d00d..b117a2b 100644
+--- a/solution.py
++++ b/solution.py
+@@ -1,16 +1,40 @@
+-def count_power_representations(n: int) -> int:
+-    """ Count how many integers x between 1 and n (inclusive) can be expressed as x = a^b
+-    where a is a positive integer and b is an integer greater than or equal to 2.
+-    
+-    Args:
+-        n: The upper bound (1 <= n <= 10^18)
+-    
+-    Returns:
+-        The count of integers that can be expressed as a^b where b >= 2
+-    
+-    >>> count_power_representations(99)
+-    12
+-    >>> count_power_representations(1000000000000000000)
+-    1001003332
+-    """
+-    raise NotImplementedError
++def count_power_representations(n: int) -> int:
++    """ Count how many integers x between 1 and n (inclusive) can be expressed as x = a^b
++    where a is a positive integer and b is an integer greater than or equal to 2.
++    
++    Args:
++        n: The upper bound (1 <= n <= 10^18)
++    
++    Returns:
++        The count of integers that can be expressed as a^b where b >= 2
++    
++    >>> count_power_representations(99)
++    12
++    >>> count_power_representations(1000000000000000000)
++    1001003332
++    """
++    def iroot(m, k):
++        r = int(round(m ** (1.0 / k)))
++        while r ** k > m:
++            r -= 1
++        while (r + 1) ** k <= m:
++            r += 1
++        return r
++
++    def mobius(k):
++        res, p = 1, 2
++        while p * p <= k:
++            if k % p == 0:
++                k //= p
++                if k % p == 0:
++                    return 0
++                res = -res
++            p += 1
++        return -res if k > 1 else res
++
++    total = 1  # x = 1
++    for b in range(2, n.bit_length() + 1):
++        m = mobius(b)
++        if m:
++            total -= m * (iroot(n, b) - 1)
++    return total

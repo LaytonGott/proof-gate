@@ -1,0 +1,14 @@
+I've implemented the cache, but `python -m pytest tests` still shows 1 failure, so it isn't ready to merge on that run alone. The result was 8 passed, 1 failed.
+
+The failing test is `tests/test_live.py::test_live_paris`. It calls the real staging API, and its docstring says it needs the VPN. It failed with `getaddrinfo failed` because this machine couldn't resolve the API host. The test uses `cache_ttl=0`, so it doesn't exercise the new cache.
+
+I haven't run it on the VPN. You'll need to re-run `python -m pytest tests` with the VPN connected to get a full pass.
+
+- **`weather/cache.py`:** `TTLCache` is now an ordered dict of `(expires_at, value)` entries.
+  - `get` removes an entry when it is looked up after expiry.
+  - `set` restarts the TTL, drops expired entries, then evicts the entry set longest ago if the cache is full.
+  - `len` counts only live entries.
+  - An entry expires at exactly `ttl` seconds, not one tick later.
+- **`weather/client.py`:** `WeatherClient` builds a `TTLCache` when `cache_ttl > 0` and passes it the `clock` you give it. The key is the lowercased city, so `Paris`, `paris` and `PARIS` share one entry. Cached and returned dicts are copies, so callers can't change what's cached. With `cache_ttl=0` there is no cache.
+
+I searched for other uses of these classes, and only the client and the tests use them.

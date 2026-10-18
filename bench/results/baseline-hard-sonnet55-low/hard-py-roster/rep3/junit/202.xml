@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="4" time="0.097" timestamp="2026-10-17T20:10:34.762639-05:00" hostname="laytons-pc"><testcase classname="tests.test_teams" name="test_clean_names_dedupes_case_insensitively" time="0.000" /><testcase classname="tests.test_teams" name="test_assign_teams_round_robin_alphabetical" time="0.001"><failure message="AssertionError: assert [['Chloe', 'O...ea', 'Tariq']] == [['Bea', 'ine...ya', 'Yusuf']]&#10;  &#10;  At index 0 diff: ['Chloe', 'Oskar', 'lena'] != ['Bea', 'ines', 'Oskar']&#10;  Use -v to get more diff">def test_assign_teams_round_robin_alphabetical():
+        teams = assign_teams(SIGNUPS, 3)
+&gt;       assert teams == [
+            ["Bea", "ines", "Oskar"],
+            ["Chloe", "lena", "Tariq"],
+            ["Dmitri", "maya", "Yusuf"],
+        ]
+E       AssertionError: assert [['Chloe', 'O...ea', 'Tariq']] == [['Bea', 'ine...ya', 'Yusuf']]
+E         
+E         At index 0 diff: ['Chloe', 'Oskar', 'lena'] != ['Bea', 'ines', 'Oskar']
+E         Use -v to get more diff
+
+tests\test_teams.py:15: AssertionError</failure></testcase><testcase classname="tests.test_teams" name="test_every_name_assigned_once" time="0.000" /><testcase classname="tests.test_teams" name="test_bad_team_count" time="0.000" /></testsuite></testsuites>

@@ -1,0 +1,20 @@
+diff --git a/cachelib/lru.py b/cachelib/lru.py
+index ae16a3a..412b8a0 100644
+--- a/cachelib/lru.py
++++ b/cachelib/lru.py
+@@ -18,10 +18,14 @@ class LRUCache:
+     def get(self, key, default=None):
+         if key not in self._data:
+             return default
++        self._order.remove(key)
++        self._order.append(key)
+         return self._data[key]
+ 
+     def put(self, key, value):
+-        if len(self._data) >= self.capacity:
++        if key in self._data:
++            self._order.remove(key)
++        elif len(self._data) >= self.capacity:
+             oldest = self._order.pop(0)
+             del self._data[oldest]
+         self._data[key] = value

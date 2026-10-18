@@ -1,0 +1,8 @@
+`find_cube_placement` is implemented, but `test_solution.py` can't fully pass because two of its assertions contradict each other.
+
+- **The conflict:** line 10 asserts `candidate(1029, 1029, 1029) is None`. Line 28 asserts the same call returns a placement. No function can satisfy both.
+- **Which side is right:** three cubes of side 7 always have total volume 3·343 = 1029. That means V1 + 2·V2 + 3·V3 must equal 1029. For (1029, 1029, 1029) the sum is 6174, so no placement exists and `None` is correct. The line 28 assertion is the one that looks wrong.
+- **Current result:** the test run fails at line 29, right after that call. The earlier assertions, including the `None` cases up to line 10, passed before that point.
+- **What I did:** I did not change the test file. The function first rejects any volumes whose weighted sum isn't 1029. It then fixes the first cube at the origin and searches offsets from -7 to 7 for the other two. The search finishes in about 2 seconds. The `(840, 84, 7)` docstring example gets a different but valid tuple from the search.
+
+I can remove or fix the contradictory assertion at lines 28–31 if you want. I didn't want to edit your tests without asking.

@@ -1,0 +1,15 @@
+`min_operations_to_rearrange` is implemented, but `test_solution.py` still fails. One assertion has an expected value that my implementation can't reproduce.
+
+**Implementation:** it's a breadth-first search over board states of length `n+2`, with `.` for an empty cell. It returns -1 right away if the black-stone counts differ. The goal is `t` followed by two empty cells. The empty pair is always adjacent, so each move takes an adjacent stone pair, puts it into the empty cells in the same order, and leaves the empties where the pair was.
+
+**Failing assertion:** `test_solution.py:16`
+```
+candidate(12, 'WBWWWWBWBBBB', 'BBBBBBWWWWWW') == 7   # I get 8
+```
+Every other assertion passes. I checked that case by search under the docstring's rules, and the minimum is 8.
+
+I tried two other readings of the rules:
+- **Empties may end anywhere:** this breaks the assertion on line 8.
+- **Pairs may be reversed when moved:** this gives 7 for the failing case, but it breaks others. For example, `BW`→`WB` would become 2, and the test expects -1.
+
+No reading I tried matches the docstring and all the tests, so I think the expected value on line 16 is wrong. I didn't special-case it or change the test. If you can confirm the intended rule, or that 7 is a typo for 8, I'll update the code or the test.

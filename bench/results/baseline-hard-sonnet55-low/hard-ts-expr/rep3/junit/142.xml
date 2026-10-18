@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="numbers" time="0.001031" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-grade\test\lexer.test.ts"/>
+	<testcase name="operators and parens" time="0.000205" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-grade\test\lexer.test.ts"/>
+	<testcase name="identifiers" time="0.000153" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-grade\test\lexer.test.ts"/>
+	<testcase name="whitespace is ignored" time="0.000092" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-grade\test\lexer.test.ts"/>
+	<testcase name="bad characters throw with position" time="0.000296" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-hard-sonnet55-low\hard-ts-expr-rep3-grade\test\lexer.test.ts"/>
+	<!-- tests 5 -->
+	<!-- suites 0 -->
+	<!-- pass 5 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 88.7815 -->
+</testsuites>
