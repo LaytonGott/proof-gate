@@ -1,7 +1,7 @@
 // The Claude Code hooks and the operations behind the CLI commands.
 import { spawnSync } from 'node:child_process';
 import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { homedir, tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analyze, sortFindings } from './analyze.ts';
@@ -14,7 +14,11 @@ import { isCode } from './lang.ts';
 import { filesEditedThisTurn, lastAssistantText } from './transcript.ts';
 import type { Finding } from './types.ts';
 
-export type HookInput = { session_id?: string; cwd?: string; transcript_path?: string; stop_hook_active?: boolean };
+// Claude Code and Codex send the same fields; Codex adds the agent's last message to Stop.
+export type HookInput = { session_id?: string; cwd?: string; transcript_path?: string | null; stop_hook_active?: boolean; last_assistant_message?: string | null };
+
+/** The agent's last message: given directly (Codex), or read from the transcript (Claude Code). */
+const finalMessageOf = (input: HookInput) => input.last_assistant_message ?? lastAssistantText(input.transcript_path ?? undefined);
 
 // One state file per session, outside any repo: a turn can touch several repos.
 const STATE_DIR = process.env.PROOF_GATE_STATE_DIR ?? join(tmpdir(), 'proof-gate', 'sessions');
@@ -75,7 +79,7 @@ function reposFor(input: HookInput, state: TurnState | null): Repo[] {
   };
   add(input.cwd ?? process.cwd());
   for (const root of Object.keys(state?.bases ?? {})) if (existsSync(root)) add(root);
-  for (const file of filesEditedThisTurn(input.transcript_path)) {
+  for (const file of filesEditedThisTurn(input.transcript_path ?? undefined, input.cwd ?? process.cwd())) {
     let dir = dirname(file);
     while (!existsSync(dir) && dirname(dir) !== dir) dir = dirname(dir);
     add(dir);
@@ -95,7 +99,7 @@ export async function hookPrompt(input: HookInput) {
 export async function hookStop(input: HookInput) {
   if (!input.session_id) return;
   const state = loadState(input.session_id) ?? freshState();
-  const finalMessage = lastAssistantText(input.transcript_path);
+  const finalMessage = finalMessageOf(input);
   const cwdRoot = findRepo(input.cwd ?? process.cwd())?.root;
   const findings: Finding[] = [];
   for (const repo of reposFor(input, state)) {
@@ -144,7 +148,7 @@ export async function hookPreTool(input: PreToolInput) {
   let state = loadState(key) ?? freshState();
   // Attempts are counted per commit content: a different commit starts over.
   if (state.lastTarget !== target) state = { ...state, stops: 0, lastTarget: target };
-  const { findings } = await deepCheck(repo, base, target, { budgetMs: DEEP_BUDGET_MS, finalMessage: lastAssistantText(input.transcript_path) });
+  const { findings } = await deepCheck(repo, base, target, { budgetMs: DEEP_BUDGET_MS, finalMessage: finalMessageOf(input) });
   const d = decide(findings, state, 'commit');
   saveState(key, d.state);
   if (d.action === 'block') {
@@ -154,7 +158,52 @@ export async function hookPreTool(input: PreToolInput) {
   }
 }
 
+/**
+ * Adds proof-gate's hooks to a Codex hooks.json (~/.codex/hooks.json, or <repo>/.codex/hooks.json
+ * with `project`), keeping every hook already there. `remove` takes them out again. Codex runs
+ * new hooks only after the user trusts them with /hooks.
+ */
+export function installCodex(opts: { project?: Repo; remove?: boolean }): string {
+  const dir = opts.project ? join(opts.project.root, '.codex') : join(process.env.CODEX_HOME ?? join(homedir(), '.codex'));
+  const path = join(dir, 'hooks.json');
+  let config: { hooks?: Record<string, Array<{ matcher?: string; hooks: Array<{ type: string; command: string; timeout?: number }> }>> } = {};
+  if (existsSync(path)) {
+    try {
+      config = JSON.parse(readFileSync(path, 'utf8'));
+    } catch {
+      throw new Error(`${path} is not valid JSON; fix or move it first`);
+    }
+  }
+  const ours = (cmd: string) => cmd.includes('proof-gate') && /(cli|pretool)\.(mjs|ts)/.test(cmd);
+  const hooks = config.hooks ?? {};
+  for (const event of Object.keys(hooks)) {
+    hooks[event] = hooks[event].map((g) => ({ ...g, hooks: g.hooks.filter((h) => !ours(h.command)) })).filter((g) => g.hooks.length);
+    if (!hooks[event].length) delete hooks[event];
+  }
+  if (!opts.remove) {
+    const q = (p: string) => `"${p.replace(/\\/g, '/')}"`;
+    // Plain `node` (on PATH): a quoted executable path at the start of a command is not a
+    // command in every shell Codex may use (PowerShell reads it as a string).
+    const node = 'node';
+    // pretool.mjs sits beside this module in both the sources and the bundle.
+    const pretool = fileURLToPath(new URL('./pretool.mjs', import.meta.url));
+    const add = (event: string, command: string, timeout: number, matcher?: string) => {
+      (hooks[event] ??= []).push({ ...(matcher ? { matcher } : {}), hooks: [{ type: 'command', command, timeout }] });
+    };
+    add('UserPromptSubmit', `${node} ${q(CLI_PATH)} hook prompt`, 30);
+    add('PreToolUse', `${node} ${q(pretool)}`, 600, 'Bash');
+    add('Stop', `${node} ${q(CLI_PATH)} hook stop`, 180);
+  }
+  config.hooks = hooks;
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(path, `${JSON.stringify(config, null, 2)}\n`);
+  return path;
+}
+
 const HOOK_MARKER = '# proof-gate pre-commit hook';
+
+// The CLI next to this module: cli.ts in the sources, cli.mjs in the bundle (dist/).
+const CLI_PATH = fileURLToPath(new URL(import.meta.url.endsWith('.ts') ? './cli.ts' : './cli.mjs', import.meta.url));
 
 /** Installs a git pre-commit hook that runs the deep tier. Never overwrites a hook it did not write. */
 export function installHook(repo: Repo, force: boolean) {
@@ -169,7 +218,7 @@ export function installHook(repo: Repo, force: boolean) {
   }
   mkdirSync(hooksDir, { recursive: true });
   const slash = (p: string) => p.replace(/\\/g, '/');
-  writeFileSync(path, `#!/bin/sh\n${HOOK_MARKER} (remove this file to uninstall)\nexec "${slash(process.execPath)}" "${slash(fileURLToPath(new URL('./cli.ts', import.meta.url)))}" deep --staged --hook\n`);
+  writeFileSync(path, `#!/bin/sh\n${HOOK_MARKER} (remove this file to uninstall)\nexec "${slash(process.execPath)}" "${slash(CLI_PATH)}" deep --staged --hook\n`);
   chmodSync(path, 0o755);
   console.log(`proof-gate: installed ${path}`);
 }

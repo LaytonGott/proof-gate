@@ -10,11 +10,12 @@
 //   proof-gate deep [--base <rev>] [--staged] [--hook] [--json]
 //                                                   the deep tier (coverage, mutation, API breaks) on the working tree or index
 //   proof-gate install-hook [--force]               git pre-commit hook running the deep tier
+//   proof-gate install-codex [--project] [--remove] add (or remove) the hooks in Codex's hooks.json
 import { readFileSync } from 'node:fs';
 import { formatFindings } from './analyze.ts';
 import { deepCheck } from './deep/index.ts';
 import { EMPTY_TREE, findRepo, headTree, snapshot } from './git.ts';
-import { check, commitTarget, DEEP_BUDGET_MS, hookPreTool, hookPrompt, hookStop, installHook, treeOf, type HookInput, type PreToolInput } from './hooks.ts';
+import { check, commitTarget, DEEP_BUDGET_MS, hookPreTool, hookPrompt, hookStop, installCodex, installHook, treeOf, type HookInput, type PreToolInput } from './hooks.ts';
 
 const readStdin = (): string => {
   try {
@@ -36,6 +37,21 @@ async function main() {
     } catch (err) {
       process.stderr.write(`proof-gate: ${(err as Error).message}\n`);
     }
+    return;
+  }
+
+  if (cmd === 'install-codex') {
+    const args = [sub, ...rest];
+    const project = args.includes('--project') ? findRepo(process.cwd()) : undefined;
+    if (args.includes('--project') && !project) {
+      console.error('proof-gate: --project needs to run inside a git repository');
+      process.exit(2);
+    }
+    const remove = args.includes('--remove');
+    const path = installCodex({ project: project ?? undefined, remove });
+    console.log(remove
+      ? `proof-gate: removed its hooks from ${path}`
+      : `proof-gate: added its hooks to ${path}\nIn Codex, run /hooks and trust them: Codex skips new or changed hooks until you do.`);
     return;
   }
 
@@ -73,7 +89,7 @@ async function main() {
     installHook(repo, [sub, ...rest].includes('--force'));
     return;
   }
-  console.error('usage: proof-gate check [--base <tree-ish>] [--run-tests] [--json] | deep [--base <rev>] [--staged] [--hook] [--json] | install-hook [--force] | snapshot | hook prompt|stop|pretool');
+  console.error('usage: proof-gate check [--base <tree-ish>] [--run-tests] [--json] | deep [--base <rev>] [--staged] [--hook] [--json] | install-hook [--force] | install-codex [--project] [--remove] | snapshot | hook prompt|stop|pretool');
   process.exit(2);
 }
 

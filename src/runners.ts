@@ -49,12 +49,18 @@ const nodeBin = (root: string, pkg: string): string | null => {
   }
 };
 
+/** node --test can write the JUnit report this gate reads: Node 20.11+ / 21.3+. */
+export function nodeHasJunitReporter(version = process.versions.node): boolean {
+  const [major, minor] = version.split('.').map(Number);
+  return major > 21 || (major === 21 && minor >= 3) || (major === 20 && minor >= 11);
+}
+
 /** Which runner executes this test file, or null when none is available. */
 export function detectRunner(root: string, path: string, text: string): RunnerId | null {
   const lang = langOf(path);
   if (lang === 'py') return python() ? 'pytest' : null;
   if (lang !== 'js') return null;
-  if (/from\s+['"]node:test['"]|require\(\s*['"]node:test['"]\s*\)/.test(text)) return 'node-test';
+  if (/from\s+['"]node:test['"]|require\(\s*['"]node:test['"]\s*\)/.test(text)) return nodeHasJunitReporter() ? 'node-test' : null;
   if (/from\s+['"]vitest['"]/.test(text) || /\bvi\.(fn|mock|spyOn)\b/.test(text)) return nodeBin(root, 'vitest') ? 'vitest' : null;
   if (nodeBin(root, 'jest')) return 'jest';
   if (nodeBin(root, 'vitest')) return 'vitest';
@@ -123,7 +129,22 @@ export async function runTests(root: string, runner: RunnerId, files: string[], 
       p = await runProcess(process.execPath, [nodeBin(root, 'jest')!, '--ci', '--json', `--outputFile=${report}`, '--', ...files], root, timeoutMs, env);
     }
     const text = existsSync(report) ? readFileSync(report, 'utf8') : '';
-    const tests = runner === 'vitest' || runner === 'jest' ? parseJestJson(text, root) : parseJunit(text, { root });
+    // Older Node versions write JUnit without each test's file. One file: it is that file.
+    // Several: run them one at a time so every result can be attributed.
+    if (runner === 'node-test' && /<testcase\b(?![^>]*\bfile=)/.test(text)) {
+      if (files.length > 1) {
+        const merged: RunResult = { tests: {}, ms: 0, timedOut: false, output: '' };
+        for (const f of files) {
+          const r = await runTests(root, runner, [f], Math.max(1000, timeoutMs - merged.ms), extras);
+          Object.assign(merged.tests, r.tests);
+          merged.ms += r.ms;
+          merged.timedOut ||= r.timedOut;
+          merged.output = r.output;
+        }
+        return merged;
+      }
+    }
+    const tests = runner === 'vitest' || runner === 'jest' ? parseJestJson(text, root) : parseJunit(text, { root, fallbackFile: files.length === 1 ? files[0] : undefined });
     // A file that crashed or timed out before reporting anything counts as failed.
     for (const f of files) {
       if (!Object.keys(tests).some((id) => id.startsWith(`${f}::`)) && (p.code !== 0 || p.timedOut)) tests[`${f}::<collection>`] = 'fail';

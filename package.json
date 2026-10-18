@@ -1,23 +1,26 @@
 {
   "name": "proof-gate",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "Deterministic code-review gate for coding agents",
   "engines": {
-    "node": ">=24"
+    "node": ">=18"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
+    "esbuild": "^0.25.12",
     "hyparquet": "^1.31.4",
     "typescript": "^5.9.3"
   },
   "bin": {
-    "proof-gate": "src/cli.ts"
+    "proof-gate": "dist/cli.mjs"
   },
   "scripts": {
-    "test": "node --test test/changes.test.ts test/rules.test.ts test/hook.test.ts test/execute.test.ts test/deep.test.ts",
+    "test": "node --test test/changes.test.ts test/rules.test.ts test/hook.test.ts test/execute.test.ts test/deep.test.ts test/codex.test.ts",
     "check": "node src/cli.ts check",
-    "typecheck": "tsc -p ."
+    "typecheck": "tsc -p .",
+    "build": "node scripts/build.mjs",
+    "check:dist": "node scripts/build.mjs --check"
   }
 }

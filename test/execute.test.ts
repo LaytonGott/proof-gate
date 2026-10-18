@@ -167,3 +167,9 @@ test("cleaning up after a run never touches the repo's own node_modules", () => 
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+import { nodeHasJunitReporter } from '../src/runners.ts';
+
+test('node:test is only used where it can write a JUnit report', () => {
+  assert.deepEqual(['18.20.4', '20.10.0', '20.11.0', '21.2.0', '21.3.0', '22.0.0', '24.14.0'].map((v) => nodeHasJunitReporter(v)), [false, false, true, false, true, true, true]);
+});

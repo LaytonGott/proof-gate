@@ -48,18 +48,56 @@ At commit time the deep tier adds (see [Commit-time checks](#commit-time-checks)
 - **challenge**: the agent is sent back once and must either fix it or explain it to the user.
 - **info**: shown to the user, never stops the agent.
 
-## Use it
+## Install
 
-Claude Code (session-only, while developing):
+Needs Node 18+ and git. Python projects need pytest. Nothing else is installed or downloaded.
+
+**Claude Code:**
+
+```
+/plugin install proof-gate --marketplace LaytonGott/proof-gate
+```
+
+To try it without installing, for one session: `claude --plugin-dir /path/to/proof-gate`.
+
+**Codex:** the repo is also a Codex plugin (`.codex-plugin/plugin.json`, marketplace in
+`.agents/plugins/marketplace.json`):
 
 ```bash
-claude --plugin-dir /path/to/proof-gate
+codex plugin marketplace add LaytonGott/proof-gate
 ```
+
+then install it from the Plugins Directory. Codex applies plugin hooks only to plugins
+installed in the Codex desktop app; for the Codex CLI, add the hooks directly instead, for
+every project or for one:
+
+```bash
+npx github:LaytonGott/proof-gate install-codex            # ~/.codex/hooks.json
+npx github:LaytonGott/proof-gate install-codex --project  # <repo>/.codex/hooks.json
+```
+
+It keeps any hooks already there, and `install-codex --remove` takes its own back out. Then
+run `/hooks` in Codex and trust them: Codex skips new or changed hooks until you do. The hook
+commands start with a plain `node` from your PATH (on Windows, Codex runs hooks through
+PowerShell, which treats a quoted executable path as a string and runs nothing).
+
+`scripts/codex-e2e.sh` checks this in one real `codex exec` run: Codex is asked to switch a
+function to integer division, which breaks an existing test. The Stop hook reported the
+failing test and sent Codex back three times (the block cap) before handing it to the user.
+
+**Any repo, any agent (or none):** `npx github:LaytonGott/proof-gate install-hook` adds the
+commit-time checks as a git pre-commit hook.
+
+The plugin ships prebuilt in `dist/` (plain JavaScript, Node 18+); `npm run build` regenerates
+it from `src/`, and `npm run check:dist` fails if it is stale.
+
+## How it runs
 
 The plugin registers three hooks: `UserPromptSubmit` snapshots the working tree when a turn
 starts (a git tree object, written without touching your index), `Stop` checks the turn's
-changes against it, and `PreToolUse` runs the commit-time checks when the agent commits. It checks the session's own repo and every repo the agent edited
-files in. A repo first touched mid-turn is compared against where its HEAD was when the turn
+changes against it, and `PreToolUse` runs the commit-time checks when the agent commits. Codex
+calls the same hooks with the same input; its edits are found from `apply_patch` in its log.
+It checks the session's own repo and every repo the agent edited files in. A repo first touched mid-turn is compared against where its HEAD was when the turn
 began (from the reflog), so committing during the turn does not hide the turn's changes.
 Outside a git repository it does nothing.
 
@@ -99,25 +137,26 @@ It runs in three places:
   command is a `git commit` (on the index, or the working tree for `commit -a`; `--amend`
   compares against `HEAD~1`) and denies the commit on a block or a new challenge. The check
   for "is this a commit" is a plain-JS fast path, so other Bash calls cost about 25 ms.
-- **Your commits.** `node src/cli.ts install-hook` writes a git pre-commit hook. It fails the
+- **Your commits.** `proof-gate install-hook` writes a git pre-commit hook. It fails the
   commit only on block findings and prints the rest. It will not replace a hook it did not
   write unless given `--force`, which keeps the old one as `pre-commit.before-proof-gate`.
-- **By hand.** `node src/cli.ts deep [--base <rev>] [--staged] [--json]`.
+- **By hand.** `proof-gate deep [--base <rev>] [--staged] [--json]`.
 
 `PROOF_GATE_DEEP_BUDGET_S` (default 240) bounds its time.
 
 CLI:
 
 ```bash
-node src/cli.ts check              # working tree vs HEAD
-node src/cli.ts check --base main  # vs another commit
-node src/cli.ts check --run-tests  # include test execution
-node src/cli.ts check --json
-node src/cli.ts deep --staged      # the commit-time tier on what is staged
-node src/cli.ts install-hook       # run it from a git pre-commit hook
+proof-gate check              # working tree vs HEAD
+proof-gate check --base main  # vs another commit
+proof-gate check --run-tests  # include test execution
+proof-gate check --json
+proof-gate deep --staged      # the commit-time tier on what is staged
+proof-gate install-hook       # run it from a git pre-commit hook
 ```
 
-Requires Node 24+ (runs the TypeScript sources directly).
+(`proof-gate` is `npx github:LaytonGott/proof-gate`, or `node dist/cli.mjs` in a checkout. Developing
+proof-gate itself needs Node 24+, which runs the TypeScript sources and tests directly.)
 
 ## How well it works
 
@@ -184,4 +223,5 @@ Current numbers (Sonnet 5.5, low effort):
   port bounds 0 and 65535. On amnesia's last 6 commits it took about 5 s per commit (31 s for
   the one with tests) and flagged 23 new lines of `src/claude.mjs` that its tests never run.
 - Limitation: a challenge asks for an explanation; an agent can explain and keep the change
-  (it did once, transparently). Turning that into proof needs the test-execution checks of M2.
+  (it did once, transparently). Test execution turns the provable cases into blocks
+  (`regression`, `false-green`), but after 3 blocks in one turn the decision goes to the user.

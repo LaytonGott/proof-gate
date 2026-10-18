@@ -1,0 +1,12 @@
+{
+  "name": "proof-gate",
+  "owner": { "name": "LaytonGott", "url": "https://github.com/LaytonGott" },
+  "description": "proof-gate: a deterministic review gate for Claude Code and Codex.",
+  "plugins": [
+    {
+      "name": "proof-gate",
+      "source": "./",
+      "description": "Deterministic review gate for coding agents: stops a turn or a commit that games the tests, breaks a passing test, or ships code its tests do not check."
+    }
+  ]
+}
