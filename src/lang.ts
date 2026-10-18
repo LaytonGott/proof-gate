@@ -114,9 +114,11 @@ export function importsModule(imports: string, codePath: string): boolean {
   const modulePath = codePath.replace(/\.[^./]+$/, '');
   const parts = modulePath.split('/').filter((p) => p.length >= 3 && !GENERIC.has(p.toLowerCase()));
   if (parts.some((p) => new RegExp(`\\b${escapeRe(p)}\\b`).test(imports))) return true;
-  // src/index.ts and the like: only the path as a whole is distinctive.
-  const tail = modulePath.split('/').slice(-2).join('/');
-  return tail.includes('/') && new RegExp(`\\b${escapeRe(tail)}\\b`).test(imports);
+  // src/index.ts, pkg/m.py and the like: only the path as a whole is distinctive, written with
+  // slashes (JS) or dots (Python: `from pkg.m import f`).
+  const tail = modulePath.split('/').slice(-2);
+  if (tail.length < 2) return false;
+  return [tail.join('/'), tail.join('.')].some((t) => new RegExp(`(?<![\\w.])${escapeRe(t)}(?![\\w])`).test(imports));
 }
 
 // Comment or string text that ties a production value to what a test wants: "the tests

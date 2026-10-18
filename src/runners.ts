@@ -63,10 +63,10 @@ export function detectRunner(root: string, path: string, text: string): RunnerId
 
 type Proc = { code: number | null; stdout: string; stderr: string; timedOut: boolean; ms: number };
 /** spawn with an argument array and no shell. */
-function runProcess(cmd: string, args: string[], cwd: string, timeoutMs: number): Promise<Proc> {
+function runProcess(cmd: string, args: string[], cwd: string, timeoutMs: number, extraEnv: Record<string, string> = {}): Promise<Proc> {
   return new Promise((resolve) => {
     const t0 = Date.now();
-    const env: NodeJS.ProcessEnv = { ...process.env, CI: '1', NO_COLOR: '1', FORCE_COLOR: '0', PYTHONDONTWRITEBYTECODE: '1' };
+    const env: NodeJS.ProcessEnv = { ...process.env, CI: '1', NO_COLOR: '1', FORCE_COLOR: '0', PYTHONDONTWRITEBYTECODE: '1', ...extraEnv };
     // Set when this process itself runs under `node --test`: a child that inherits it reports
     // to that parent instead of writing its own report.
     delete env.NODE_TEST_CONTEXT;
@@ -98,21 +98,29 @@ function parseJestJson(text: string, root: string): Record<string, TestStatus> {
   return out;
 }
 
+export type RunExtras = {
+  // Extra environment for the test process (coverage collection).
+  env?: Record<string, string>;
+  // Extra pytest arguments, placed before the files (`-p plugin`).
+  pytestArgs?: string[];
+};
+
 /** Runs `files` (paths relative to `root`) with one runner, in one process. */
-export async function runTests(root: string, runner: RunnerId, files: string[], timeoutMs: number): Promise<RunResult> {
+export async function runTests(root: string, runner: RunnerId, files: string[], timeoutMs: number, extras: RunExtras = {}): Promise<RunResult> {
+  const env = extras.env ?? {};
   const scratch = mkdtempSync(join(tmpdir(), 'pg-report-'));
   const report = join(scratch, runner === 'vitest' || runner === 'jest' ? 'report.json' : 'report.xml');
   let p: Proc;
   try {
     // `--` ends option parsing, so a test file named like a flag is still just a file.
     if (runner === 'pytest') {
-      p = await runProcess(python()!, ['-m', 'pytest', '-q', '-p', 'no:cacheprovider', '-o', 'junit_family=xunit1', `--junitxml=${report}`, `--rootdir=${root}`, '--', ...files], root, timeoutMs);
+      p = await runProcess(python()!, ['-m', 'pytest', '-q', '-p', 'no:cacheprovider', '-o', 'junit_family=xunit1', `--junitxml=${report}`, `--rootdir=${root}`, ...(extras.pytestArgs ?? []), '--', ...files], root, timeoutMs, env);
     } else if (runner === 'node-test') {
-      p = await runProcess(process.execPath, ['--test', '--test-reporter=junit', `--test-reporter-destination=${report}`, '--', ...files], root, timeoutMs);
+      p = await runProcess(process.execPath, ['--test', '--test-reporter=junit', `--test-reporter-destination=${report}`, '--', ...files], root, timeoutMs, env);
     } else if (runner === 'vitest') {
-      p = await runProcess(process.execPath, [nodeBin(root, 'vitest')!, 'run', '--reporter=json', `--outputFile=${report}`, '--', ...files], root, timeoutMs);
+      p = await runProcess(process.execPath, [nodeBin(root, 'vitest')!, 'run', '--reporter=json', `--outputFile=${report}`, '--', ...files], root, timeoutMs, env);
     } else {
-      p = await runProcess(process.execPath, [nodeBin(root, 'jest')!, '--ci', '--json', `--outputFile=${report}`, '--', ...files], root, timeoutMs);
+      p = await runProcess(process.execPath, [nodeBin(root, 'jest')!, '--ci', '--json', `--outputFile=${report}`, '--', ...files], root, timeoutMs, env);
     }
     const text = existsSync(report) ? readFileSync(report, 'utf8') : '';
     const tests = runner === 'vitest' || runner === 'jest' ? parseJestJson(text, root) : parseJunit(text, { root });

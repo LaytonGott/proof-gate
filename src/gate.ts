@@ -13,13 +13,13 @@ export type TurnState = {
   stops: number;
   // Challenges already raised this turn: the agent has had its chance to answer them.
   challenged: string[];
+  // Commit checks: the tree last checked, so a different commit starts its attempts over.
+  lastTarget?: string;
 };
 
 export type Decision =
   | { action: 'allow'; userMessage?: string; state: TurnState }
   | { action: 'block'; agentMessage: string; state: TurnState };
-
-const AGENT_HEADER = 'proof-gate checked your changes before you stop and found problems:';
 
 const AGENT_FOOTER = [
   '',
@@ -29,9 +29,12 @@ const AGENT_FOOTER = [
   '- [challenge] findings: if the change is genuinely right (the user asked for it, or the spec says so),',
   '  keep it and explain it to the user in your final message: what the test expected and why the code is',
   '  correct. Otherwise make the code follow the spec instead of the test.',
+  '- surviving-mutants / uncovered-change: add tests that check the changed behaviour, or tell the user',
+  '  why it needs none.',
 ].join('\n');
 
-export function decide(findings: Finding[], state: TurnState): Decision {
+/** `moment`: whether the agent is trying to stop or to commit. */
+export function decide(findings: Finding[], state: TurnState, moment: 'stop' | 'commit' = 'stop'): Decision {
   const blocks = findings.filter((f) => f.level === 'block');
   const newChallenges = findings.filter((f) => f.level === 'challenge' && !state.challenged.includes(f.fingerprint));
   const stopping = [...blocks, ...newChallenges];
@@ -39,14 +42,14 @@ export function decide(findings: Finding[], state: TurnState): Decision {
   if (stopping.length && state.stops < MAX_STOPS_PER_TURN) {
     return {
       action: 'block',
-      agentMessage: `${AGENT_HEADER}\n\n${formatFindings(stopping)}\n${AGENT_FOOTER}`,
+      agentMessage: `proof-gate checked your changes before you ${moment} and found problems:\n\n${formatFindings(stopping)}\n${AGENT_FOOTER}`,
       state: { ...state, stops: state.stops + 1, challenged: [...state.challenged, ...newChallenges.map((f) => f.fingerprint)] },
     };
   }
   if (!findings.length) return { action: 'allow', state };
   const gaveUp = blocks.length > 0;
   const head = gaveUp
-    ? `proof-gate: the agent stopped with ${blocks.length} unresolved problem(s) after ${state.stops} attempt(s) to get them fixed:`
+    ? `proof-gate: the agent ${moment === 'commit' ? 'committed' : 'stopped'} with ${blocks.length} unresolved problem(s) after ${state.stops} attempt(s) to get them fixed:`
     : 'proof-gate: review before accepting:';
   return { action: 'allow', userMessage: `${head}\n${formatFindings(findings)}`, state };
 }

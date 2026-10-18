@@ -16,7 +16,7 @@
     "proof-gate": "src/cli.ts"
   },
   "scripts": {
-    "test": "node --test test/changes.test.ts test/rules.test.ts test/hook.test.ts test/execute.test.ts",
+    "test": "node --test test/changes.test.ts test/rules.test.ts test/hook.test.ts test/execute.test.ts test/deep.test.ts",
     "check": "node src/cli.ts check",
     "typecheck": "tsc -p ."
   }
