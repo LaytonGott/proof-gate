@@ -16,6 +16,13 @@
   "bin": {
     "proof-gate": "dist/cli.mjs"
   },
+  "files": [
+    "dist",
+    "hooks",
+    ".claude-plugin",
+    ".codex-plugin",
+    ".agents"
+  ],
   "scripts": {
     "test": "node --test test/changes.test.ts test/rules.test.ts test/hook.test.ts test/execute.test.ts test/deep.test.ts test/codex.test.ts",
     "check": "node src/cli.ts check",

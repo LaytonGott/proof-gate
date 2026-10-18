@@ -55,8 +55,12 @@ Needs Node 18+ and git. Python projects need pytest. Nothing else is installed o
 **Claude Code:**
 
 ```
-/plugin install proof-gate --marketplace LaytonGott/proof-gate
+/plugin marketplace add LaytonGott/proof-gate
+/plugin install proof-gate@proof-gate
 ```
+
+(or `claude plugin marketplace add LaytonGott/proof-gate` and
+`claude plugin install proof-gate@proof-gate` from a shell)
 
 To try it without installing, for one session: `claude --plugin-dir /path/to/proof-gate`.
 
