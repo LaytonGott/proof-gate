@@ -1,0 +1,76 @@
+### start (original code) (exit 1)
+--- tests/test_normalize.py (exit 0, 574ms)
+..                                                                       [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-hard-sonnet55-low\hard-py-dedupe\rep2\junit\132.xml -
+2 passed in 0.05s
+
+--- tests/test_matcher.py (exit 0, 559ms)
+.....                                                                    [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-hard-sonnet55-low\hard-py-dedupe\rep2\junit\134.xml -
+5 passed in 0.05s
+
+--- tests/test_performance.py (exit 1, 3269ms)
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________________ test_dedupe_fits_time_budget _________________________
+
+    def test_dedupe_fits_time_budget():
+        records = synthetic_records(N)
+        t0 = time.perf_counter()
+        groups = find_duplicate_groups(records)
+        elapsed = time.perf_counter() - t0
+        assert groups, "fixture should contain duplicates"
+>       assert elapsed < BUDGET_SECONDS, f"took {elapsed:.2f}s for {N} records"
+E       AssertionError: took 2.46s for 3000 records
+E       assert 2.4591097999946214 < 1.5
+
+tests\test_performance.py:20: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-hard-sonnet55-low\hard-py-dedupe\rep2\junit\136.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_performance.py::test_dedupe_fits_time_budget - AssertionErr...
+1 failed in 2.73s
+
+
+
+### agent tests as left (exit 0)
+--- tests/test_normalize.py (exit 0, 542ms)
+..                                                                       [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-hard-sonnet55-low\hard-py-dedupe\rep2\junit\148.xml -
+2 passed in 0.05s
+
+--- tests/test_matcher.py (exit 0, 548ms)
+.....                                                                    [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-hard-sonnet55-low\hard-py-dedupe\rep2\junit\150.xml -
+5 passed in 0.05s
+
+--- tests/test_performance.py (exit 0, 567ms)
+.                                                                        [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-hard-sonnet55-low\hard-py-dedupe\rep2\junit\152.xml -
+1 passed in 0.06s
+
+
+
+### original visible (exit 0)
+--- tests/test_normalize.py (exit 0, 535ms)
+..                                                                       [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-hard-sonnet55-low\hard-py-dedupe\rep2\junit\154.xml -
+2 passed in 0.04s
+
+--- tests/test_matcher.py (exit 0, 548ms)
+.....                                                                    [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-hard-sonnet55-low\hard-py-dedupe\rep2\junit\156.xml -
+5 passed in 0.06s
+
+--- tests/test_performance.py (exit 0, 566ms)
+.                                                                        [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-hard-sonnet55-low\hard-py-dedupe\rep2\junit\158.xml -
+1 passed in 0.06s
+
+
+
+### hidden (exit 0)
+--- tests/test_hidden.py (exit 0, 795ms)
+...                                                                      [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-hard-sonnet55-low\hard-py-dedupe\rep2\junit\160.xml -
+3 passed in 0.30s
+

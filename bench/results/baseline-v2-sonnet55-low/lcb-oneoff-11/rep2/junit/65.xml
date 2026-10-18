@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.090" timestamp="2026-10-17T21:10:20.470020-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_expected_black_ball_position" time="0.000"><failure message="NotImplementedError">def test_expected_black_ball_position():
+&gt;       check(expected_black_ball_position)
+
+test_solution.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:6: in check
+    assert candidate(2, 1) == 499122178
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+N = 2, K = 1
+
+    def expected_black_ball_position(N: int, K: int) -&gt; int:
+        """ There are N-1 white balls and one black ball arranged in a row, with the black ball
+        initially at the leftmost position. Takahashi performs K operations, where each operation
+        consists of:
+        - Choose two integers a and b uniformly at random between 1 and N, inclusive
+        - If a ≠ b, swap the a-th and b-th balls from the left
+    
+        Find the expected position of the black ball after K operations, modulo 998244353.
+    
+        The result is returned as an integer R where R × Q ≡ P (mod 998244353), where P/Q is
+        the expected value expressed as an irreducible fraction.
+    
+        Args:
+            N: Total number of balls (1 ≤ N ≤ 998244352)
+            K: Number of operations (1 ≤ K ≤ 10^5)
+    
+        Returns:
+            The expected position modulo 998244353
+    
+        &gt;&gt;&gt; expected_black_ball_position(2, 1)
+        499122178
+        &gt;&gt;&gt; expected_black_ball_position(3, 2)
+        554580198
+        &gt;&gt;&gt; expected_black_ball_position(4, 4)
+        592707587
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:27: NotImplementedError</failure></testcase></testsuite></testsuites>

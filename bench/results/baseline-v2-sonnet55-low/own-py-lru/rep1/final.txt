@@ -1,0 +1,7 @@
+I fixed the cache in `cachelib/lru.py`, and all 4 tests now pass. I haven't committed the change.
+
+There were two bugs, both in how the cache tracked recency:
+- **`get()`** never marked a key as recently used, so an entry you had just read could still be the next one evicted. It now moves the key to the most-recent position.
+- **`put()`** on a key already in the cache evicted the oldest entry when the cache was full, and left a duplicate of the key in the order list. It now updates the value, moves the key to the most-recent position, and only evicts when adding a genuinely new key.
+
+I searched the repo for other uses of the cache's internal `_order` and `_data` fields and found none outside `lru.py`, so nothing else needed updating.

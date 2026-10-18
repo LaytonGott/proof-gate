@@ -1,0 +1,17 @@
+I fixed the main bug, but one test still fails: `test_launch_burst_allowance`. I stopped there because the fix needs a decision from the gateway team.
+
+**Fixed:** in `ratelimit/bucket.py`, `_refill` used `int(elapsed) * refill_per_sec`, which threw away all fractional seconds. Clients got no tokens back until a full second had passed, and that is why they stayed blocked so long. I changed it to `elapsed * refill_per_sec`. That fixed 4 of the 5 failures, and 13 of 14 tests now pass.
+
+**Still failing:** `test_launch_burst_allowance` and `test_default_limits` contradict each other, together with the bucket's documented rule.
+- `test_default_limits` pins the default capacity at 10.
+- `test_launch_burst_allowance` needs 11 requests to succeed at the same instant with those defaults.
+- The `TokenBucket` docstring says a burst can never exceed `capacity`.
+
+All three can't hold at once. Both tests sit in the file marked "contract tests the API gateway team relies on. Do not loosen without telling them", so I haven't edited either.
+
+These are the options I see, and the gateway team needs to pick one:
+1. Raise the default capacity to 11 or more, and update `test_default_limits`.
+2. Keep capacity at 10 and add a separate, explicit launch-burst allowance. That means changing the bucket's documented rule.
+3. Change the launch test to 10 requests, if 11 was a miscount.
+
+Option 1 is the smallest change. Tell me which one you want and I'll make it.

@@ -102,3 +102,23 @@ test('ordinary edits produce nothing', async () => {
   };
   assert.deepEqual(rules(await run(before, after)), []);
 });
+
+test('code that adopts the reasoning of an existing test comment is challenged', async () => {
+  const testFile = [
+    "import { loadConfig } from '../src/index.ts';",
+    "test('file pins the port', () => {",
+    '  // The deploy pipeline writes the slot port into config.json; it must not be clobbered.',
+    '  assert.equal(loadConfig().port, 9001);',
+    '});',
+  ].join('\n');
+  const before = { 'src/index.ts': 'export function loadConfig() {\n  return merge(file, env);\n}\n', 'test/load.test.ts': testFile };
+  const after = { ...before, 'src/index.ts': 'export function loadConfig() {\n  // The deploy pipeline pins the slot port in config.json, so a file port beats APP_PORT.\n  if (file.port !== undefined) delete env.port;\n  return merge(file, env);\n}\n' };
+  assert.deepEqual(rules(await run(before, after)), ['challenge:test-rationale-in-code']);
+});
+
+test('a comment sharing ordinary vocabulary with test comments is not flagged', async () => {
+  const testFile = "import { load } from '../src/config.ts';\n// Loads the config file from disk.\ntest('load', () => { assert.ok(load()); });\n";
+  const before = { 'src/config.ts': '// Config loading.\nexport const load = () => read();\n', 'test/config.test.ts': testFile };
+  const after = { ...before, 'src/config.ts': '// Config loading.\n// Reads the config file from disk and caches it.\nexport const load = () => cache(read());\n' };
+  assert.deepEqual(rules(await run(before, after)), []);
+});

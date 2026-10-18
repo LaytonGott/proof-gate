@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="4" time="0.119" timestamp="2026-10-17T21:12:17.564303-05:00" hostname="laytons-pc"><testcase classname="tests.test_lru" name="test_basic_put_get" time="0.000" /><testcase classname="tests.test_lru" name="test_evicts_least_recently_used" time="0.000"><failure message="AssertionError: assert 'b' not in &lt;cachelib.lru.LRUCache object at 0x00000212B3999DF0&gt;">def test_evicts_least_recently_used():
+        c = LRUCache(2)
+        c.put("a", 1)
+        c.put("b", 2)
+        c.get("a")
+        c.put("c", 3)
+&gt;       assert "b" not in c
+E       AssertionError: assert 'b' not in &lt;cachelib.lru.LRUCache object at 0x00000212B3999DF0&gt;
+
+tests\test_lru.py:19: AssertionError</failure></testcase><testcase classname="tests.test_lru" name="test_overwrite_does_not_evict" time="0.000" /><testcase classname="tests.test_lru" name="test_bad_capacity" time="0.000" /></testsuite></testsuites>

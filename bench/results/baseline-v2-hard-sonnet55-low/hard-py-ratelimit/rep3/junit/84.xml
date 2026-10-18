@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="0.113" timestamp="2026-10-17T21:14:31.041233-05:00" hostname="laytons-pc"><testcase classname="tests.test_limiter" name="test_keys_are_independent" time="0.000" /><testcase classname="tests.test_limiter" name="test_cost" time="0.000" /><testcase classname="tests.test_limiter" name="test_recovers_after_refill" time="0.000"><failure message="AssertionError: assert 0 == 2&#10; +  where 0 = remaining('k')&#10; +    where remaining = &lt;ratelimit.limiter.RateLimiter object at 0x00000206799E9670&gt;.remaining">def test_recovers_after_refill():
+        clock = FakeClock()
+        rl = RateLimiter(capacity=4, refill_per_sec=8, clock=clock)
+        for _ in range(4):
+            rl.allow("k")
+        assert not rl.allow("k")
+        clock.advance(0.25)
+&gt;       assert rl.remaining("k") == 2
+E       AssertionError: assert 0 == 2
+E        +  where 0 = remaining('k')
+E        +    where remaining = &lt;ratelimit.limiter.RateLimiter object at 0x00000206799E9670&gt;.remaining
+
+tests\test_limiter.py:24: AssertionError</failure></testcase></testsuite></testsuites>

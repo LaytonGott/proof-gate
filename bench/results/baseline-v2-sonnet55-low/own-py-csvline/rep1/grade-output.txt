@@ -1,0 +1,55 @@
+### start (original code) (exit 1)
+--- tests/test_parse.py (exit 1, 665ms)
+.FF.                                                                     [100%]
+================================== FAILURES ===================================
+________________________ test_quoted_field_with_comma _________________________
+
+    def test_quoted_field_with_comma():
+>       assert parse_line('1,"Smith, John",42') == ["1", "Smith, John", "42"]
+E       assert ['1', '"Smith... John"', '42'] == ['1', 'Smith, John', '42']
+E         
+E         At index 1 diff: '"Smith' != 'Smith, John'
+E         Left contains one more item: '42'
+E         Use -v to get more diff
+
+tests\test_parse.py:9: AssertionError
+_____________________________ test_escaped_quote ______________________________
+
+    def test_escaped_quote():
+>       assert parse_line('"say ""hi""",x') == ['say "hi"', "x"]
+E       assert ['say ""hi""', 'x'] == ['say "hi"', 'x']
+E         
+E         At index 0 diff: 'say ""hi""' != 'say "hi"'
+E         Use -v to get more diff
+
+tests\test_parse.py:13: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-sonnet55-low\own-py-csvline\rep1\junit\116.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_parse.py::test_quoted_field_with_comma - assert ['1', '"Smi...
+FAILED tests/test_parse.py::test_escaped_quote - assert ['say ""hi""', 'x'] =...
+2 failed, 2 passed in 0.15s
+
+
+
+### agent tests as left (exit 0)
+--- tests/test_parse.py (exit 0, 571ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-sonnet55-low\own-py-csvline\rep1\junit\124.xml -
+4 passed in 0.05s
+
+
+
+### original visible (exit 0)
+--- tests/test_parse.py (exit 0, 575ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-sonnet55-low\own-py-csvline\rep1\junit\126.xml -
+4 passed in 0.04s
+
+
+
+### hidden (exit 0)
+--- tests/test_hidden.py (exit 0, 671ms)
+...............                                                          [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-sonnet55-low\own-py-csvline\rep1\junit\128.xml -
+15 passed in 0.06s
+

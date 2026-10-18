@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.112" timestamp="2026-10-17T21:08:33.556938-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_solve_grid" time="0.000"><failure message="NotImplementedError">def test_solve_grid():
+&gt;       check(solve_grid)
+
+test_solution.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:6: in check
+    assert candidate(3, 'BCB', 'ABC') is None
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+n = 3, r = 'BCB', c = 'ABC'
+
+    def solve_grid(n: int, r: str, c: str) -&gt; Optional[List[str]]:
+        """ Given an integer N and strings R and C of length N consisting of 'A', 'B', and 'C',
+        determine if it's possible to fill an N×N grid such that:
+        - Each row and column contains exactly one 'A', one 'B', and one 'C'
+        - The leftmost character written in the i-th row matches the i-th character of R
+        - The topmost character written in the i-th column matches the i-th character of C
+    
+        Empty cells are represented by '.' in the output.
+    
+        Args:
+            n: The size of the grid (3 &lt;= n &lt;= 5)
+            r: String of length n specifying leftmost characters in each row
+            c: String of length n specifying topmost characters in each column
+    
+        Returns:
+            A list of n strings representing the filled grid if possible, None otherwise.
+            Each string has length n, where '.' represents empty cells.
+    
+        &gt;&gt;&gt; solve_grid(3, 'ABC', 'ABC')
+        ['ABC', 'BCA', 'CAB']
+        &gt;&gt;&gt; solve_grid(3, 'AAA', 'BBB')
+        None
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:27: NotImplementedError</failure></testcase></testsuite></testsuites>

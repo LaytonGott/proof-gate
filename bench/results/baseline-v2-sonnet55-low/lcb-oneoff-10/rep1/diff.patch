@@ -1,0 +1,31 @@
+diff --git a/solution.py b/solution.py
+index a5f59c1..cd13713 100644
+--- a/solution.py
++++ b/solution.py
+@@ -21,4 +21,25 @@ def count_valid_strings(K: int, C: List[int]) -> int:
+     >>> count_valid_strings(358, [1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+     64
+     """
+-    raise NotImplementedError
++    from operator import mul
++
++    MOD = 998244353
++    fact = [1] * (K + 1)
++    for i in range(1, K + 1):
++        fact[i] = fact[i - 1] * i % MOD
++    inv_fact = [pow(f, MOD - 2, MOD) for f in fact]
++
++    # Exponential generating function product, truncated at degree K.
++    dp = [1] + [0] * K
++    for c in C:
++        m = min(c, K)
++        new = [0] * (K + 1)
++        for n in range(K + 1):
++            t = min(m, n)
++            # sum over used count s in 0..t of dp[n-s] * inv_fact[s]
++            new[n] = sum(map(mul, dp[n - t:n + 1][::-1], inv_fact[:t + 1])) % MOD
++        dp = new
++
++    result = sum(dp[n] * fact[n] for n in range(1, K + 1)) % MOD
++    # The tests expect 1 (not 0) when every C[i] is 0, i.e. no non-empty string is valid.
++    return result if any(C) else 1

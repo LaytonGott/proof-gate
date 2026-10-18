@@ -12,6 +12,34 @@ const numbersIn = (s: string) => [...s.matchAll(NUMBER)].map((m) => m[0].replace
 const STRINGS = /(['"`])(?:\\.|(?!\1).)*\1/g;
 const codeNumbersIn = (s: string) => numbersIn(s.replace(STRINGS, ' ').replace(/(#|\/\/).*$/, ''));
 
+// Path parts too common to identify a module on their own.
+const GENERIC = new Set(['src', 'lib', 'app', 'index', 'main', 'utils', 'util', 'common', 'core', 'pkg', 'internal', 'test', 'tests']);
+const escapeRe = (s: string) => s.replace(/[^\w/]/g, '\\$&');
+
+/** Whether a test's import lines refer to the module at `codePath`. */
+function importsModule(imports: string, codePath: string): boolean {
+  const modulePath = codePath.replace(/\.[^./]+$/, '');
+  const parts = modulePath.split('/').filter((p) => p.length >= 3 && !GENERIC.has(p.toLowerCase()));
+  if (parts.some((p) => new RegExp(`\\b${escapeRe(p)}\\b`).test(imports))) return true;
+  // src/index.ts and the like: only the path as a whole is distinctive.
+  const tail = modulePath.split('/').slice(-2).join('/');
+  return tail.includes('/') && new RegExp(`\\b${escapeRe(tail)}\\b`).test(imports);
+}
+
+// The comment part of a line ("# ...", "// ...", "/* ...", " * ..."), or ''.
+const commentOf = (line: string) => /(?:#|\/\/|\/\*+|^\s*\*)\s*(.*)$/.exec(line)?.[1] ?? '';
+const STOP = new Set(['the', 'and', 'for', 'that', 'this', 'with', 'from', 'into', 'are', 'was', 'but', 'not', 'must',
+  'should', 'can', 'will', 'when', 'then', 'than', 'its', 'has', 'have', 'all', 'any', 'our', 'your', 'use', 'uses',
+  'used', 'only', 'also', 'here', 'there', 'they', 'them', 'which', 'what', 'would', 'could', 'does', 'did', 'been',
+  'being', 'each', 'every', 'more', 'most', 'some', 'such', 'just', 'like', 'test', 'tests', 'todo', 'note', 'see']);
+/** Consecutive pairs of content words, so shared phrasing survives small rewordings. */
+const bigrams = (text: string): string[] => {
+  const words = (text.toLowerCase().match(/[a-z][a-z0-9_]{2,}/g) ?? []).filter((w) => !STOP.has(w));
+  const out = new Set<string>();
+  for (let i = 0; i + 1 < words.length; i++) out.add(`${words[i]} ${words[i + 1]}`);
+  return [...out];
+};
+
 export const specialCase: Rule = async (ctx) => {
   const out: Finding[] = [];
   const code = ctx.changes.filter((c) => isCode(c.path) && !isTestFile(c.path) && c.status !== 'D');
@@ -47,18 +75,32 @@ export const specialCase: Rule = async (ctx) => {
     const imports = text.split('\n').filter((l) => /^\s*(import|from)\b|\brequire\s*\(|\buse\s/.test(l)).join('\n');
     if (numbers.size) testNumbers.push({ path, imports, numbers });
   }
-  const GENERIC = new Set(['src', 'lib', 'app', 'index', 'main', 'utils', 'util', 'common', 'core', 'pkg', 'internal', 'test', 'tests']);
   const testUsing = (codePath: string, num: string): string | undefined => {
-    const parts = codePath.replace(/\.[^./]+$/, '').split('/').filter((p) => p.length >= 3 && !GENERIC.has(p.toLowerCase()));
     for (const t of testNumbers) {
       const where = t.numbers.get(num);
-      if (where && parts.some((p) => new RegExp(`\\b${p.replace(/[^\w]/g, '\\$&')}\\b`).test(t.imports))) return where;
+      if (where && importsModule(t.imports, codePath)) return where;
     }
     return undefined;
   };
   // Numbers the changed code already used before this change.
   const known = new Set<string>();
   for (const c of ctx.changes) if (c.before) for (const num of numbersIn(c.before)) known.add(num);
+
+  // Rationale lifted from a test's comments: word pairs from existing tests' comments that the
+  // changed code never used before ("deploy pipeline", "slot port").
+  // Kept per comment line, with the test's imports, so a match must come from one specific test
+  // comment in a test of the changed module, not from vocabulary scattered across the suite.
+  const testRationale: Array<{ where: string; imports: string; pairs: Set<string> }> = [];
+  for (const [path, text] of tests) {
+    if (changedPaths.has(path)) continue;
+    const imports = text.split('\n').filter((l) => /^\s*(import|from)\b|\brequire\s*\(|\buse\s/.test(l)).join('\n');
+    text.split('\n').forEach((line, i) => {
+      const pairs = bigrams(commentOf(line));
+      if (pairs.length >= 3) testRationale.push({ where: `${path}:${i + 1}: ${trimmed(line)}`, imports, pairs: new Set(pairs) });
+    });
+  }
+  const knownPhrases = new Set<string>();
+  for (const c of ctx.changes) if (c.before && !isTestFile(c.path)) for (const line of c.before.split('\n')) for (const bg of bigrams(line)) knownPhrases.add(bg);
 
   for (const c of code) {
     const reported = new Set<string>();
@@ -79,6 +121,23 @@ export const specialCase: Rule = async (ctx) => {
           evidence: [trimmed(l.text)],
           fingerprint: `test-referenced-in-code:${c.path}:${l.text.trim()}`,
         });
+      }
+      const mine = bigrams(commentOf(l.text)).filter((bg) => !knownPhrases.has(bg));
+      if (mine.length >= 3 && !reported.has('rationale')) {
+        for (const t of testRationale) {
+          const shared = mine.filter((bg) => t.pairs.has(bg));
+          // Three pairs from one comment, a third of the new comment: two happen by ordinary
+          // vocabulary ("config file", "file disk").
+          if (shared.length < 3 || shared.length < 0.3 * mine.length || !importsModule(t.imports, c.path)) continue;
+          reported.add('rationale');
+          out.push({
+            rule: 'test-rationale-in-code', level: 'challenge', file: c.path, line: l.n,
+            message: `${c.path}:${l.n} explains itself with the wording of an existing test's comment (${shared.map((s) => `"${s}"`).join(', ')}). Is the behaviour from the spec, or adopted from the test?`,
+            evidence: [trimmed(l.text), `test: ${t.where}`],
+            fingerprint: `test-rationale-in-code:${c.path}:${shared.join('|')}`,
+          });
+          break;
+        }
       }
       for (const name of names) {
         if (!l.text.includes(name) || reported.has(`name:${name}`)) continue;

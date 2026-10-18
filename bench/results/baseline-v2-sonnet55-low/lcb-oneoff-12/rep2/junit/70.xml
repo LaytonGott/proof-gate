@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.099" timestamp="2026-10-17T21:10:26.391436-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_min_operations_to_rearrange" time="0.000"><failure message="NotImplementedError">def test_min_operations_to_rearrange():
+&gt;       check(min_operations_to_rearrange)
+
+test_solution.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:6: in check
+    assert candidate(6, 'BWBWBW', 'WWWBBB') == 4
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+n = 6, s = 'BWBWBW', t = 'WWWBBB'
+
+    def min_operations_to_rearrange(n: int, s: str, t: str) -&gt; int:
+        """ Given two strings s and t of length n consisting of 'B' and 'W' characters,
+        determine the minimum number of operations needed to transform the initial configuration s
+        into the target configuration t.
+    
+        Initially, there are n stones placed in cells 1 to n according to string s,
+        where 'W' represents a white stone and 'B' represents a black stone.
+        There are also two empty cells at positions n+1 and n+2.
+    
+        In one operation, you can:
+        - Choose two adjacent cells that both contain stones
+        - Move these two stones to the two empty cells while preserving their order
+    
+        Return the minimum number of operations needed to achieve configuration t,
+        or -1 if it's impossible.
+    
+        Args:
+            n: Number of stones (2 &lt;= n &lt;= 14)
+            s: Initial configuration string of length n
+            t: Target configuration string of length n
+    
+        Returns:
+            Minimum number of operations, or -1 if impossible
+    
+        &gt;&gt;&gt; min_operations_to_rearrange(6, 'BWBWBW', 'WWWBBB')
+        4
+        &gt;&gt;&gt; min_operations_to_rearrange(6, 'BBBBBB', 'WWWWWW')
+        -1
+        &gt;&gt;&gt; min_operations_to_rearrange(3, 'BBW', 'BBW')
+        0
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:32: NotImplementedError</failure></testcase></testsuite></testsuites>

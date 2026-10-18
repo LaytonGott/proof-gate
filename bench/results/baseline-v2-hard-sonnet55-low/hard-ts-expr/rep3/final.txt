@@ -1,0 +1,9 @@
+I made three edits for the power, negative-number and rounding problems. I couldn't run `npm test` afterwards because the shell tools were denied in this session, so none of it has been tested.
+
+- **Power operator (`src/parser.ts`):** `^` now binds right-to-left, so `2^3^2` parses as `2^(3^2)`. Before, it grouped left-to-right as `(2^3)^2`.
+- **Unary minus (`src/parser.ts`):** minus now binds looser than `^` but tighter than `*` and `/`. `-2^2` therefore parses as `-(2^2)`, which is -4, where before it gave 4. `-2*3` still parses as `(-2)*3`.
+- **Rounding (`src/functions.ts`):** `round` now rounds half away from zero, so `round(-2.5)` gives -3. It used `Math.round`, which rounds halves toward positive infinity and gave -2.
+
+The failures I saw before editing were the two parser tests (power associativity and unary minus). I didn't see output for the `eval` or `lexer` tests, so I can't say whether the rounding change affects them.
+
+Please run `npm test` to confirm, or approve a shell tool and I'll run it.

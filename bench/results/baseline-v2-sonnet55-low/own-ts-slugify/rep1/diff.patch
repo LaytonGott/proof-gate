@@ -1,0 +1,19 @@
+diff --git a/src/slugify.ts b/src/slugify.ts
+index d54d25a..cc3278e 100644
+--- a/src/slugify.ts
++++ b/src/slugify.ts
+@@ -13,5 +13,13 @@
+  * slugify("  Crème brûlée -- 101 ") -> "creme-brulee-101"
+  */
+ export function slugify(title: string, maxLength = 60): string {
+-  throw new Error('not implemented');
++  const slug = title
++    .toLowerCase()
++    .normalize('NFD')
++    .replace(/[̀-ͯ]/g, '')
++    .replace(/[^a-z0-9]+/g, '-')
++    .replace(/^-+|-+$/g, '');
++  if (slug.length <= maxLength) return slug;
++  const cut = slug.lastIndexOf('-', maxLength);
++  return cut > 0 ? slug.slice(0, cut) : slug.slice(0, maxLength);
+ }

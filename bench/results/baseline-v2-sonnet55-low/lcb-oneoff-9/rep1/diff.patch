@@ -1,0 +1,19 @@
+diff --git a/solution.py b/solution.py
+index 3592bdd..7fc3342 100644
+--- a/solution.py
++++ b/solution.py
+@@ -20,4 +20,13 @@ def count_ways_to_stair(k: int) -> int:
+     >>> count_ways_to_stair(512)
+     1
+     """
+-    raise NotImplementedError
++    from math import comb
++
++    # After n up-moves Alice is at 2^n - d, where d is the number of down-moves.
++    # Downs can't be consecutive, so they go into d of the n + 1 gaps between ups.
++    total = 0
++    for n in range(32):
++        d = (1 << n) - k
++        if 0 <= d <= n + 1:
++            total += comb(n + 1, d)
++    return total

@@ -1,0 +1,9 @@
+I fixed the crash. Invoicing a customer with a loyalty discount now works, and all 17 tests pass, including the slow integration ones.
+
+**Cause:** `Customer.discount_pct` holds a whole percent, so 10 means 10% off. `Invoice.line_total` passed that number straight to `apply_discount`, which expects a fraction between 0 and 1. A value like 10 failed its range check and raised `ValueError`.
+
+**Fix:** in `shop/invoice.py`, the invoice now divides the percent by 100 before calling `apply_discount`.
+
+I left `apply_discount` alone, since its range check is what stops a percent from being mistaken for a fraction. I searched the repo for other uses of `discount_pct` and `apply_discount`. `shop/promotions.py` already passes fractions, so nothing else needed changing.
+
+I didn't add a new test. The existing invoice test with a 10% customer (`tests/test_invoice.py:23`) covers this path.

@@ -1,0 +1,7 @@
+I implemented `count_power_representations` in `solution.py`, but I haven't run the tests. The Bash tool was denied in this session, so `test_solution.py` is still unrun. To run it yourself, use `python -m pytest -q` in the project directory.
+
+The function counts the number 1 plus every perfect power up to `n`, using Möbius inclusion–exclusion over the exponents. That matches the docstring example, where `n = 99` gives 12 and includes 1. I checked that case by hand, not by running it.
+
+Integer roots are computed from a float estimate and then corrected exactly, to avoid rounding errors near 10^18. That correction is the part most worth confirming when you run the tests.
+
+If you'd like me to run the tests, I'd need Bash permission.

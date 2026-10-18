@@ -1,0 +1,10 @@
+I implemented `slugify` in `src/slugify.ts`, but one of the five tests still fails. Four pass.
+
+The failing test is "punctuation runs collapse" in `test/slugify.test.ts:14`. It expects `slugify('Rock & Roll')` to return `'rock--roll'`. The doc comment says every run of non-alphanumeric characters becomes a single `-`, so the result should be `'rock-roll'`, which is what the function returns. The test's own name says runs collapse, so the expected value looks like a typo.
+
+I didn't change the test or bend the implementation to match it, because that would break rule 3 and the `"Hello, World!"` example. If `'rock-roll'` is what you want, the fix is changing that one expected string. Do you want me to make that edit? If you actually want `'rock--roll'`, the rule itself has to change.
+
+The implementation follows the doc comment:
+- It lowercases the title and strips accents.
+- It turns each run of other characters into one `-` and trims `-` from both ends.
+- If the slug is longer than `maxLength`, it cuts at the last `-` that keeps it within `maxLength`. If there is no such `-`, it hard-cuts at `maxLength`.

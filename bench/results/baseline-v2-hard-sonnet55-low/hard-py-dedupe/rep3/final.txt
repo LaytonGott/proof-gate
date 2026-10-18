@@ -1,0 +1,7 @@
+I rewrote the dedupe step so it should no longer time out, but I couldn't run `python -m pytest tests` to check. Bash and PowerShell were both denied in this session, so the fix is untested. Please run the tests before tonight's migration.
+
+**Cause:** `find_duplicate_groups` in `dedupe/matcher.py` compared every record against every other record, which is O(n²). It also re-normalised each record's email and name on every comparison.
+
+**Fix:** each record is now normalised once. It is linked to the first earlier record with the same normalised email, or with the same postcode and normalised name. Those are the same two rules as `is_duplicate`, so the transitive grouping and the output ordering are unchanged. The work now grows roughly linearly with the number of records. I didn't touch `test_performance.py` or its time limit.
+
+`is_duplicate` is still in the file, but nothing calls it now. I left it in case something outside this repo imports it. I found no other callers of the old pairwise loop.

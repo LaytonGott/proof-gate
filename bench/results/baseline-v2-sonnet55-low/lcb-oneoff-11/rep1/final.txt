@@ -1,0 +1,11 @@
+`expected_black_ball_position` is implemented, but `test_solution.py` still fails, so the tests don't all pass. I stopped there because my follow-up check was denied.
+
+**Implementation.** After each operation the expected position `E` updates as `E' = E·(1 − 2/N) + (N+1)/N`, starting from `E = 1`. I apply that `K` times modulo 998244353, which is O(K).
+
+**Test result.** The first failure is the assertion at `test_solution.py:17`: `candidate(84789430, 17447) == 123456789`. The three docstring samples and the cases above that line pass, including the large `N = 998244352` case at line 13.
+
+I think the expected value on line 17 is wrong. `123456789` looks like a placeholder rather than a computed answer, and my formula matches every case before it. I haven't confirmed this. I haven't checked what my code returns for that input.
+
+I haven't checked the assertions after line 17 either. Python stops at the first failed assert, and the Bash call I used to run each assertion on its own was denied.
+
+If you let me run that check, I can confirm whether line 17 is the only bad value. Or you can correct that expected value and rerun the tests.

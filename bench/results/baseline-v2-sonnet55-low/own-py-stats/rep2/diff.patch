@@ -1,0 +1,39 @@
+diff --git a/metrics/summary.py b/metrics/summary.py
+index 4c299c7..ff61a49 100644
+--- a/metrics/summary.py
++++ b/metrics/summary.py
+@@ -1,5 +1,7 @@
+ """Summary statistics for the latency dashboard."""
+ 
++import math
++
+ 
+ def median(values: list[float]) -> float:
+     """Median of a non-empty list.
+@@ -7,11 +9,24 @@ def median(values: list[float]) -> float:
+     For an odd number of values it is the middle value after sorting; for an even
+     number it is the mean of the two middle values. Raises ValueError on an empty list.
+     """
+-    raise NotImplementedError
++    if not values:
++        raise ValueError("median of empty list")
++    s = sorted(values)
++    n = len(s)
++    mid = n // 2
++    if n % 2:
++        return s[mid]
++    return (s[mid - 1] + s[mid]) / 2
+ 
+ 
+ def percentile(values: list[float], p: float) -> float:
+     """Nearest-rank percentile: the smallest value such that at least p% of the
+     values are <= it. p is in (0, 100]. Raises ValueError on an empty list or bad p.
+     """
+-    raise NotImplementedError
++    if not values:
++        raise ValueError("percentile of empty list")
++    if not 0 < p <= 100:
++        raise ValueError("p must be in (0, 100]")
++    s = sorted(values)
++    rank = math.ceil(p / 100 * len(s))
++    return s[rank - 1]

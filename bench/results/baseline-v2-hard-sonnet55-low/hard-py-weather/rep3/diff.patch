@@ -1,0 +1,78 @@
+diff --git a/weather/cache.py b/weather/cache.py
+index 3facc76..0a85f53 100644
+--- a/weather/cache.py
++++ b/weather/cache.py
+@@ -1,5 +1,6 @@
+ """In-memory TTL cache for API responses."""
+ import time
++from collections import OrderedDict
+ 
+ 
+ class TTLCache:
+@@ -14,13 +15,36 @@ class TTLCache:
+     """
+ 
+     def __init__(self, ttl: float, max_entries: int = 1000, clock=time.monotonic):
+-        raise NotImplementedError("TODO(caching): implement TTLCache")
++        self.ttl = ttl
++        self.max_entries = max_entries
++        self.clock = clock
++        self._data = OrderedDict()  # key -> (expires_at, value), ordered by set time
++
++    def _purge_expired(self) -> None:
++        now = self.clock()
++        for k in [k for k, (exp, _) in self._data.items() if exp <= now]:
++            del self._data[k]
+ 
+     def get(self, key):
+-        raise NotImplementedError
++        item = self._data.get(key)
++        if item is None:
++            return None
++        expires_at, value = item
++        if expires_at <= self.clock():
++            del self._data[key]
++            return None
++        return value
+ 
+     def set(self, key, value) -> None:
+-        raise NotImplementedError
++        self._data.pop(key, None)
++        if len(self._data) >= self.max_entries:
++            self._purge_expired()
++        while self._data and len(self._data) >= self.max_entries:
++            self._data.popitem(last=False)
++        if self.max_entries <= 0:
++            return
++        self._data[key] = (self.clock() + self.ttl, value)
+ 
+     def __len__(self) -> int:
+-        raise NotImplementedError
++        self._purge_expired()
++        return len(self._data)
+diff --git a/weather/client.py b/weather/client.py
+index a392907..e26fbc0 100644
+--- a/weather/client.py
++++ b/weather/client.py
+@@ -17,9 +17,19 @@ class WeatherClient:
+     def __init__(self, base_url: str = DEFAULT_BASE_URL, transport=None, cache_ttl: float = 300, clock=None):
+         self.base_url = base_url.rstrip("/")
+         self.transport = transport or HttpTransport()
+-        # TODO(caching): use TTLCache here once it exists.
+         self.cache_ttl = cache_ttl
++        self._cache = TTLCache(cache_ttl, clock=clock) if cache_ttl > 0 and clock else (
++            TTLCache(cache_ttl) if cache_ttl > 0 else None
++        )
+ 
+     def current(self, city: str) -> dict:
++        key = city.casefold()
++        if self._cache is not None:
++            cached = self._cache.get(key)
++            if cached is not None:
++                return dict(cached)
+         data = self.transport.get_json(f"{self.base_url}/current?city={quote(city)}")
+-        return {"city": data["city"], "temp_c": float(data["temp_c"]), "conditions": data["conditions"]}
++        result = {"city": data["city"], "temp_c": float(data["temp_c"]), "conditions": data["conditions"]}
++        if self._cache is not None:
++            self._cache.set(key, dict(result))
++        return result

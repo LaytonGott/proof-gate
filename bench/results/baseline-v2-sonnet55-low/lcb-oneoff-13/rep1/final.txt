@@ -1,0 +1,9 @@
+I can't finish this: the test still fails, and my permission to run commands was denied before I could find out why.
+
+**What I did:** I wrote `count_power_representations` in `solution.py`. It counts perfect powers with Möbius inclusion–exclusion over the exponents, using exact integer k-th roots (`_iroot`) and a small `_mobius` helper. It counts 1 as a power and sums `-mu(k) * (floor(n^(1/k)) - 1)` for k ≥ 2.
+
+**Test result:** The one test, `test_count_power_representations`, fails. It stops at the last assertion (line 34 of `test_solution.py`). For `n = 604486426115901704` my function returns `778335786`, but the test expects `778335787`. The assertions before that one (lines 5–33) passed. They include 99, 10^18, and several other large values.
+
+**What I don't know:** I tried to rerun with a debug script that compares `_iroot` against `math.isqrt`. Both Bash and PowerShell were then denied ("don't ask" mode), so I couldn't diagnose it. A one-off count for that input is the next thing I'd check. It might be a bug in my code that only shows up for this input. It might also be a wrong expected value in the test, but I haven't confirmed either.
+
+**To continue:** Allow me to run Python commands again, or run `python -m pytest -q test_solution.py` yourself and send me the output. I haven't changed the test file.

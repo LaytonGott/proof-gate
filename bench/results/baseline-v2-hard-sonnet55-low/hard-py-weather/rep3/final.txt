@@ -1,0 +1,9 @@
+The cache is implemented, but I can't report the full suite as passing. 8 of 9 tests pass. The one failure is `tests/test_live.py::test_live_paris`, which calls the real staging API and needs the VPN. This machine can't resolve the hostname (`getaddrinfo failed`), so the failure isn't caused by the cache. That test uses `cache_ttl=0`, so it never touches the cache anyway.
+
+I haven't changed or skipped that test. You'd need to run it on the VPN, or deselect it for an offline run with `python -m pytest tests --deselect tests/test_live.py`.
+
+**What I changed:**
+- **`weather/cache.py`:** `TTLCache` is now backed by an ordered dict. Entries expire exactly `ttl` seconds after they were set, and expired entries are removed when looked up. Setting an existing key restarts its TTL. When the cache is full, expired entries are dropped first, then the entry set longest ago is evicted.
+- **`weather/client.py`:** `WeatherClient.current` now caches by city name, case-insensitive (so "Paris", "paris" and "PARIS" share one entry). `cache_ttl=0` turns caching off. It stores and returns copies of the result, so a caller changing a returned dict can't corrupt the cache.
+
+The `clock` argument to `WeatherClient` is passed through to the cache. When it's `None`, the cache uses its default `time.monotonic`.

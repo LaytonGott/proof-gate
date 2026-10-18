@@ -1,0 +1,8 @@
+All 5 tests in `test/compare.test.ts` now pass; I ran `npm test` to confirm.
+
+There were three bugs in `src/compare.ts`:
+- **Core versions:** The major, minor and patch parts were compared as strings, so `1.10.0` sorted below `1.9.0`. They're now compared as numbers.
+- **Prerelease vs. release:** A version with a prerelease tag, like `1.0.0-alpha`, was being compared against its plain release as text. A release now always sorts above its own prereleases.
+- **Prerelease identifiers:** These now follow semver.org section 11. Numeric identifiers compare as numbers and sort below alphanumeric ones, and a shorter list sorts before a longer one that starts with it.
+
+I also changed `parse` to split on only the first `-`, so a prerelease like `1.0.0-rc-1` keeps its full tag. `parse` returns the same shape as before, and nothing else in the repo calls it.

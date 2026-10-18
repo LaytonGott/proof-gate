@@ -1,0 +1,11 @@
+I rewrote the dedupe step, but I haven't run the tests. Both Bash and PowerShell were denied in this session's "don't ask" mode, so please run `python -m pytest tests` yourself before tonight's migration.
+
+**The fix, in `dedupe/matcher.py`:** `find_duplicate_groups` compared every record against every later record, which is O(n²). That would be about 31 billion comparisons on the 250k-record export, so it timed out. It now makes one pass and unions each record with the first record seen under the same key. There are two keys: the normalised email, and the (postcode, normalised name) pair. That is roughly linear, and each record's two normalisations now run once instead of once per comparison.
+
+**Behaviour:** I expect the output to be identical. The rules are the same (email match, or name and postcode match), groups are still transitive through union-find, and the sort order is unchanged. I read through `tests/test_matcher.py` and believe the existing cases still hold, but that is from reading the code, not from a run.
+
+I didn't change the 1.5s budget in `tests/test_performance.py`.
+
+`is_duplicate` is no longer called by `find_duplicate_groups`. I left it in place in case anything else uses it. Nothing in the repo does.
+
+If you allow me to run commands, I can run the suite and confirm.

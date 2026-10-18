@@ -1,0 +1,45 @@
+### start (original code) (exit 1)
+--- tests/test_lru.py (exit 1, 611ms)
+.F..                                                                     [100%]
+================================== FAILURES ===================================
+_______________________ test_evicts_least_recently_used _______________________
+
+    def test_evicts_least_recently_used():
+        c = LRUCache(2)
+        c.put("a", 1)
+        c.put("b", 2)
+        c.get("a")
+        c.put("c", 3)
+>       assert "b" not in c
+E       AssertionError: assert 'b' not in <cachelib.lru.LRUCache object at 0x0000014F6D449CA0>
+
+tests\test_lru.py:19: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-sonnet55-low\own-py-lru\rep1\junit\122.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_lru.py::test_evicts_least_recently_used - AssertionError: a...
+1 failed, 3 passed in 0.14s
+
+
+
+### agent tests as left (exit 0)
+--- tests/test_lru.py (exit 0, 558ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-sonnet55-low\own-py-lru\rep1\junit\131.xml -
+4 passed in 0.05s
+
+
+
+### original visible (exit 0)
+--- tests/test_lru.py (exit 0, 547ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-sonnet55-low\own-py-lru\rep1\junit\132.xml -
+4 passed in 0.06s
+
+
+
+### hidden (exit 0)
+--- tests/test_hidden.py (exit 0, 537ms)
+......                                                                   [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v2-sonnet55-low\own-py-lru\rep1\junit\133.xml -
+6 passed in 0.06s
+

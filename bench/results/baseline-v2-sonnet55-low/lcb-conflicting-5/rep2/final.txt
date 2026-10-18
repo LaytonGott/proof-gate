@@ -1,0 +1,9 @@
+`find_cube_placement` is implemented in `solution.py`, but `test_solution.py` can't fully pass: it fails at line 29, which contradicts line 10.
+
+- **The conflict:** `check` asserts `candidate(1029, 1029, 1029) is None` at line 10, then asserts it returns a valid placement at lines 28–31. A deterministic function can't do both.
+- **Why `None` is right:** three cubes of side 7 always satisfy V1 + 2·V2 + 3·V3 = 3·343 = 1029. For (1029, 1029, 1029) the left side is 6174, so no placement exists.
+- **Which assertions pass:** the function returns `None` for line 10 and for the other "should be `None`" cases. It also returns valid placements for every other positive case, and all of those satisfy the 1029 identity.
+
+**How it works:** it fixes cube 1 at the origin and enumerates the other two cubes' offsets in the range −7 to 7. It computes the three volumes per axis, using the overlap lengths of each pair and of all three. It builds a lookup table once and caches it. The first call takes about 0.5 seconds.
+
+To get a green run, delete lines 28–31 of the test, the second `(1029, 1029, 1029)` block. I haven't edited the test file. Do you want me to?

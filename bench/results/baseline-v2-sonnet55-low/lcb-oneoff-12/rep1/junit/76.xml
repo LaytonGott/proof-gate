@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.538" timestamp="2026-10-17T21:10:43.310865-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_min_operations_to_rearrange" time="0.424"><failure message="AssertionError: assert 8 == 7&#10; +  where 8 = &lt;function min_operations_to_rearrange at 0x0000024BA3F14540&gt;(12, 'WBWWWWBWBBBB', 'BBBBBBWWWWWW')">def test_min_operations_to_rearrange():
+&gt;       check(min_operations_to_rearrange)
+
+test_solution.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = &lt;function min_operations_to_rearrange at 0x0000024BA3F14540&gt;
+
+    def check(candidate):
+        # Sample test cases
+        assert candidate(6, 'BWBWBW', 'WWWBBB') == 4
+        assert candidate(6, 'BBBBBB', 'WWWWWW') == -1
+        assert candidate(14, 'BBBWBWWWBBWWBW', 'WBWWBBWWWBWBBB') == 7
+    
+        # Additional test cases
+        assert candidate(10, 'BBBBBWBWWW', 'BBWWWWWBBB') == -1
+        assert candidate(14, 'WBWBWBWBWBWBWB', 'WWWWWWWBBBBBBB') == 8
+        assert candidate(14, 'BWBBBWBBWBBWBB', 'WWWWBBBBBBBBBB') == 8
+        assert candidate(14, 'BWBBBBBBBBBBBB', 'WBBBBBBBBBBBBB') == 4
+        assert candidate(4, 'WWBB', 'BBWW') == 3
+&gt;       assert candidate(12, 'WBWWWWBWBBBB', 'BBBBBBWWWWWW') == 7
+E       AssertionError: assert 8 == 7
+E        +  where 8 = &lt;function min_operations_to_rearrange at 0x0000024BA3F14540&gt;(12, 'WBWWWWBWBBBB', 'BBBBBBWWWWWW')
+
+test_solution.py:16: AssertionError</failure></testcase></testsuite></testsuites>

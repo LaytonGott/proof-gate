@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="0.092" timestamp="2026-10-17T21:16:27.330853-05:00" hostname="laytons-pc"><testcase classname="tests.test_export" name="test_csv_shape" time="0.000" /><testcase classname="tests.test_export" name="test_csv_is_stable" time="0.001"><failure message="AssertionError: assert 'team,member\...\nTeam 3,Lu\n' == 'team,member\...nTeam 3,Ray\n'&#10;  &#10;    team,member&#10;  - Team 1,amy&#10;  ?         -&#10;  + Team 1,Ray&#10;  ?        +&#10;    Team 1,Kai...&#10;  &#10;  ...Full output truncated (14 lines hidden), use '-vv' to show">def test_csv_is_stable():
+        names = ["Zed", "amy", "Kai", "bo", "Lu", "eve", "Ray"]
+&gt;       assert teams_csv(names, 3) == (
+            "team,member\n"
+            "Team 1,amy\nTeam 1,Kai\nTeam 1,Zed\n"
+            "Team 2,bo\nTeam 2,Lu\n"
+            "Team 3,eve\nTeam 3,Ray\n"
+        )
+E       AssertionError: assert 'team,member\...\nTeam 3,Lu\n' == 'team,member\...nTeam 3,Ray\n'
+E         
+E           team,member
+E         - Team 1,amy
+E         ?         -
+E         + Team 1,Ray
+E         ?        +
+E           Team 1,Kai...
+E         
+E         ...Full output truncated (14 lines hidden), use '-vv' to show
+
+tests\test_export.py:13: AssertionError</failure></testcase></testsuite></testsuites>

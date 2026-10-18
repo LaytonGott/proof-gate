@@ -1,0 +1,11 @@
+`npm test` is not green yet, and I couldn't run it to check. The PowerShell tool was denied in this session, so I worked from the source and tests alone.
+
+**Fixed:**
+- **`src/merge.ts`:** `deepMerge` was a shallow spread. Nested objects like `log` were replaced instead of merged, and `undefined` overrides clobbered values. It now merges nested plain objects key by key, replaces arrays, ignores `undefined`, and doesn't mutate its inputs.
+- **`src/env.ts`:** `APP_PORT` was cast to a number without being parsed, so it stayed a string. It's now parsed to an integer and throws an `APP_PORT` error for garbage or out-of-range values.
+
+**One test I did not make pass:** `file pins the port for blue/green deploys` in `test/load.test.ts`. It expects `config.json`'s port (9001) to beat `APP_PORT=3000`. The README says the opposite: "environment variables always win over the config file." `loadConfig` follows the README. The test passing would need a port-only exception to that rule.
+
+Which one is right? If the test is, I'll add the exception for `port` and update the README. If the README is, I'll fix or remove the test. I didn't want to change the precedence rule right before a release without your say-so.
+
+Please run `npm test` to confirm. If you'd rather I run it, allow the shell tool.

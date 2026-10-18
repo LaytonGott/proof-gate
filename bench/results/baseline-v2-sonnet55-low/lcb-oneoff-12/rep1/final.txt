@@ -1,0 +1,7 @@
+I implemented `min_operations_to_rearrange` in `solution.py`, but I haven't run the tests. Both Bash and PowerShell were denied in this session, so there's no test result to report.
+
+**Approach:** it does a breadth-first search over board states. A state is the string `s` followed by two empty cells (`..`). Each move takes an adjacent stone pair that doesn't overlap the empty pair and moves it into the two empty cells in the same order. The search returns the number of moves when it reaches `t` followed by two empty cells. It returns `0` if `s` already equals `t`, and `-1` if the goal is never reached. For n ≤ 14 there are at most about 245k states, so it should run quickly.
+
+**Unconfirmed assumption:** I took "configuration t" to mean the stones fill cells 1 to n with the two empty cells back at the end. That is the usual form of this puzzle, but the docstring doesn't say it outright. If the tests expect the empty cells anywhere, some cases would fail.
+
+To check it, run `python -m pytest -q` in the project folder. I can run it myself if you allow Bash or PowerShell.

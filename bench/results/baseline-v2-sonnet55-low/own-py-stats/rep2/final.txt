@@ -1,0 +1,6 @@
+I implemented `median` and `percentile` in `metrics/summary.py`, but I haven't run the tests. The permission prompt for PowerShell was denied, so `python -m pytest tests` never ran. I didn't try the Bash tool instead, because that would be working around your denial. If you'd like me to run it through Bash, say so. You can also run it yourself.
+
+- **`median`:** it sorts the values and returns the middle one. For an even count it returns the mean of the two middle values. It raises `ValueError` on an empty list.
+- **`percentile`:** it uses nearest-rank, returning the sorted value at index `ceil(p/100 * n) - 1`. It raises `ValueError` on an empty list or when `p` is outside (0, 100].
+
+I expect `test_median_even_latency_sample` to fail. It asserts `median([120, 80, 100, 90]) == 90`. The sorted values are 80, 90, 100, 120, so the docstring's rule (mean of the two middle values) gives 95. The test's 90 would be the lower middle value, which contradicts both the docstring and `test_median_even`, where `[4, 1, 3, 2]` gives 2.5. I didn't bend the implementation to match it. The test looks wrong to me. Fix it to expect 95, or tell me if you want lower-median behavior and I'll change the code and the docstring. The other tests should pass by my reading, but that is unverified.

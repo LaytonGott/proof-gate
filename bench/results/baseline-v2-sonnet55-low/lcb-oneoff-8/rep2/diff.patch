@@ -1,0 +1,56 @@
+diff --git a/solution.py b/solution.py
+index 1f12da2..63507fa 100644
+--- a/solution.py
++++ b/solution.py
+@@ -1,3 +1,4 @@
++from math import gcd
+ from typing import List
+ 
+ 
+@@ -5,20 +6,41 @@ def kth_smallest_amount(coins: List[int], k: int) -> int:
+     """ Given an array of coin denominations and an integer k, return the k-th smallest amount
+     that can be made using these coins. You have infinite coins of each denomination, but
+     cannot combine coins of different denominations in a single amount.
+-    
++
+     Each coin denomination produces its multiples (e.g., coin 3 produces 3, 6, 9, 12, ...).
+     The k-th smallest among all possible amounts from all denominations is returned.
+-    
++
+     Args:
+         coins: List of distinct positive integers representing coin denominations (1-15 elements, each 1-25)
+         k: The position of the desired amount (1-based indexing, 1 <= k <= 2*10^9)
+-    
++
+     Returns:
+         The k-th smallest amount that can be made
+-    
++
+     >>> kth_smallest_amount([3, 6, 9], 3)
+     9
+     >>> kth_smallest_amount([5, 2], 7)
+     12
+     """
+-    raise NotImplementedError
++    # Inclusion-exclusion terms: (sign, lcm) for every non-empty subset of coins.
++    lcms = [1]
++    signs = [-1]
++    terms = []
++    for c in coins:
++        for i in range(len(lcms)):
++            l = lcms[i] * c // gcd(lcms[i], c)
++            lcms.append(l)
++            signs.append(-signs[i])
++            terms.append((-signs[i], l))
++
++    def count(x: int) -> int:
++        return sum(s * (x // l) for s, l in terms)
++
++    lo, hi = 1, min(coins) * k
++    while lo < hi:
++        mid = (lo + hi) // 2
++        if count(mid) >= k:
++            hi = mid
++        else:
++            lo = mid + 1
++    return lo

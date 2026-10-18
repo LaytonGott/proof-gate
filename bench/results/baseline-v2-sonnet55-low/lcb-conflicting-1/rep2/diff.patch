@@ -1,0 +1,35 @@
+diff --git a/solution.py b/solution.py
+index 58ce8c0..a73d0c0 100644
+--- a/solution.py
++++ b/solution.py
+@@ -21,4 +21,29 @@ def count_powerful_integers(start: int, finish: int, limit: int, s: str) -> int:
+     >>> count_powerful_integers(1000, 2000, 4, "3000")
+     0
+     """
+-    raise NotImplementedError
++    if any(int(c) > limit for c in s):
++        return 0
++    k = len(s)
++    suffix = int(s)
++
++    def count_upto(n: int) -> int:
++        # Count x in [1, n] with suffix s and all digits <= limit.
++        if n < suffix:
++            return 0
++        n_str = str(n)
++        prefix_len = len(n_str) - k
++        if prefix_len == 0:
++            return 1 if suffix <= n else 0
++        total = 0
++        for i in range(prefix_len):
++            d = int(n_str[i])
++            if d > limit:
++                total += (limit + 1) ** (prefix_len - i)
++                return total
++            total += d * (limit + 1) ** (prefix_len - i - 1)
++        # All prefix digits are within limit; check the tail.
++        if suffix <= int(n_str[prefix_len:]):
++            total += 1
++        return total
++
++    return count_upto(finish) - count_upto(start - 1)

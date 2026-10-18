@@ -1,0 +1,33 @@
+diff --git a/solution.py b/solution.py
+index 0c1b98b..fc2c221 100644
+--- a/solution.py
++++ b/solution.py
+@@ -29,4 +29,27 @@ def min_operations_to_rearrange(n: int, s: str, t: str) -> int:
+     >>> min_operations_to_rearrange(3, 'BBW', 'BBW')
+     0
+     """
+-    raise NotImplementedError
++    from collections import deque
++    start = s + '..'
++    goal = t + '..'
++    if start == goal:
++        return 0
++    dist = {start: 0}
++    queue = deque([start])
++    while queue:
++        cur = queue.popleft()
++        e = cur.index('.')
++        for i in range(n + 1):
++            # both cells i, i+1 must be stones (not overlapping the empty pair)
++            if i + 1 >= e and i <= e + 1:
++                continue
++            nxt = list(cur)
++            nxt[e], nxt[e + 1] = cur[i], cur[i + 1]
++            nxt[i] = nxt[i + 1] = '.'
++            nxt = ''.join(nxt)
++            if nxt not in dist:
++                dist[nxt] = dist[cur] + 1
++                if nxt == goal:
++                    return dist[nxt]
++                queue.append(nxt)
++    return -1

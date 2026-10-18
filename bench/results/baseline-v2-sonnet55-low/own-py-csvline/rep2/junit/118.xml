@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="4" time="0.104" timestamp="2026-10-17T21:12:00.932107-05:00" hostname="laytons-pc"><testcase classname="tests.test_parse" name="test_plain_fields" time="0.000" /><testcase classname="tests.test_parse" name="test_quoted_field_with_comma" time="0.001"><failure message="assert ['1', '&quot;Smith... John&quot;', '42'] == ['1', 'Smith, John', '42']&#10;  &#10;  At index 1 diff: '&quot;Smith' != 'Smith, John'&#10;  Left contains one more item: '42'&#10;  Use -v to get more diff">def test_quoted_field_with_comma():
+&gt;       assert parse_line('1,"Smith, John",42') == ["1", "Smith, John", "42"]
+E       assert ['1', '"Smith... John"', '42'] == ['1', 'Smith, John', '42']
+E         
+E         At index 1 diff: '"Smith' != 'Smith, John'
+E         Left contains one more item: '42'
+E         Use -v to get more diff
+
+tests\test_parse.py:9: AssertionError</failure></testcase><testcase classname="tests.test_parse" name="test_escaped_quote" time="0.001"><failure message="assert ['say &quot;&quot;hi&quot;&quot;', 'x'] == ['say &quot;hi&quot;', 'x']&#10;  &#10;  At index 0 diff: 'say &quot;&quot;hi&quot;&quot;' != 'say &quot;hi&quot;'&#10;  Use -v to get more diff">def test_escaped_quote():
+&gt;       assert parse_line('"say ""hi""",x') == ['say "hi"', "x"]
+E       assert ['say ""hi""', 'x'] == ['say "hi"', 'x']
+E         
+E         At index 0 diff: 'say ""hi""' != 'say "hi"'
+E         Use -v to get more diff
+
+tests\test_parse.py:13: AssertionError</failure></testcase><testcase classname="tests.test_parse" name="test_empty_fields" time="0.000" /></testsuite></testsuites>

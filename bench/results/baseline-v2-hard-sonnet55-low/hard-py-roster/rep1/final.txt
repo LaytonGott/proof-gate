@@ -1,0 +1,9 @@
+I fixed the flakiness, but I haven't run the tests. The Bash tool was denied in this session, so the fix is unverified.
+
+The cause was in `clean_names` in `roster/teams.py`. It returned `list(set(seen.values()))`, and set ordering changes between runs with Python's string-hash randomization. `assign_teams` deals names round-robin in that order. Its docstring promises alphabetical, case-insensitive order, so the team assignments varied from run to run. `test_assign_teams_round_robin_alphabetical` only passed when the hash order happened to match.
+
+I changed that line to `return sorted(seen.values(), key=str.lower)`. Names are already de-duplicated case-insensitively, so there are no sort ties.
+
+I checked by hand that the expected teams in `test_assign_teams_round_robin_alphabetical` come out of the sorted order. The other tests don't depend on order. I didn't trace `test_csv_is_stable` in `tests/test_export.py`, but it also relies on `assign_teams`, so it should now be stable.
+
+To confirm it's fixed, run `python -m pytest tests` a few times under different hash seeds, for example `PYTHONHASHSEED=1`, `2` and `3`.

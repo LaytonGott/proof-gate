@@ -1,0 +1,30 @@
+### start (original code) (exit 1)
+--- test/lexer.test.ts (exit 0, 159ms)
+
+--- test/parser.test.ts (exit 1, 167ms)
+
+--- test/eval.test.ts (exit 1, 181ms)
+
+
+
+### agent tests as left (exit 1)
+--- test/lexer.test.ts (exit 0, 143ms)
+
+--- test/parser.test.ts (exit 0, 139ms)
+
+--- test/eval.test.ts (exit 1, 150ms)
+
+
+
+### original visible (exit 1)
+--- test/lexer.test.ts (exit 0, 150ms)
+
+--- test/parser.test.ts (exit 0, 152ms)
+
+--- test/eval.test.ts (exit 1, 158ms)
+
+
+
+### hidden (exit 0)
+--- test/hidden.test.ts (exit 0, 151ms)
+

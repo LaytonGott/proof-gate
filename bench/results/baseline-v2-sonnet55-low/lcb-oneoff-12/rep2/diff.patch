@@ -1,0 +1,36 @@
+diff --git a/solution.py b/solution.py
+index 0c1b98b..e8a496b 100644
+--- a/solution.py
++++ b/solution.py
+@@ -29,4 +29,30 @@ def min_operations_to_rearrange(n: int, s: str, t: str) -> int:
+     >>> min_operations_to_rearrange(3, 'BBW', 'BBW')
+     0
+     """
+-    raise NotImplementedError
++    start = s + '..'
++    goal = t + '..'
++    if start == goal:
++        return 0
++    seen = {start}
++    frontier = [start]
++    steps = 0
++    while frontier:
++        steps += 1
++        nxt = []
++        for cur in frontier:
++            e = cur.index('.')
++            for i in range(n + 1):
++                if cur[i] == '.' or cur[i + 1] == '.':
++                    continue
++                lst = list(cur)
++                lst[e], lst[e + 1] = cur[i], cur[i + 1]
++                lst[i] = lst[i + 1] = '.'
++                new = ''.join(lst)
++                if new in seen:
++                    continue
++                if new == goal:
++                    return steps
++                seen.add(new)
++                nxt.append(new)
++        frontier = nxt
++    return -1

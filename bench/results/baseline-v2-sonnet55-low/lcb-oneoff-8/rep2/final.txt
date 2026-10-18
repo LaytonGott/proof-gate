@@ -1,0 +1,7 @@
+The new function passes every test but one. The one failure looks like a wrong expected value in the test file, so I haven't changed it.
+
+The failing assertion is `candidate([2, 16, 14], 1240759467) == 2481518936` at `test_solution.py:29`. My function returns `2481518934`. Since 16 and 14 are multiples of 2, the reachable amounts are exactly the positive even numbers. The k-th of those is `2 * 1240759467 = 2481518934`. The expected `2481518936` would be the (k+1)-th.
+
+The implementation binary-searches on the amount. It counts reachable amounts up to a value by inclusion-exclusion over the LCMs of coin subsets.
+
+Should I correct that expected value in the test? I'd rather not edit a test without your say-so.

@@ -1,0 +1,13 @@
+diff --git a/roster/teams.py b/roster/teams.py
+index 6124782..3f07baa 100644
+--- a/roster/teams.py
++++ b/roster/teams.py
+@@ -8,7 +8,7 @@ def clean_names(names: list[str]) -> list[str]:
+         n = n.strip()
+         if n and n.lower() not in seen:
+             seen[n.lower()] = n
+-    return list(set(seen.values()))
++    return sorted(seen.values(), key=str.lower)
+ 
+ 
+ def assign_teams(names: list[str], team_count: int) -> list[list[str]]:

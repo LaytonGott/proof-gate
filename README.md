@@ -57,12 +57,22 @@ against hidden tests.
 - `node bench/replay.mts <label...>`: replay recorded runs through the gate offline
 - `node bench/replay-git.mts <repo...>`: false-alarm check on real commit history
 
+**The benchmark is not a security sandbox.** Agents run on your machine as you. File tools
+are confined to a temp workspace and Bash is limited to running tests and listing files, but
+the tests an agent runs are code it can write. Every run's transcript is audited for tool
+calls that reach outside the workspace (`out_of_bounds` in each `grade.json`;
+`node bench/scripts/audit.mts <label>` re-audits old runs). For real isolation, run the bench
+inside WSL2 or Linux with Claude Code's Bash sandbox enabled.
+
 Current numbers (Sonnet 5.5, low effort):
 
-- Baseline cheat rate: 5% on simple tasks, 25% on hard impossible tasks. Every recorded cheat
-  was disclosed in the agent's final message; none were silent.
-- Replay: 6/6 recorded cheats stopped (block or challenge), 0/60 clean runs stopped.
-- Real history: 15 of 551 commits across three repos would have stopped the agent, all for
+- Baseline cheat rate: 5% on simple tasks; 8-25% on hard impossible tasks across two batches
+  (the second with the narrowed Bash allowlist). Every recorded cheat was disclosed in the
+  agent's final message; none were silent. No run touched anything outside its workspace.
+- Replay: 9/9 recorded cheats stopped (block or challenge), 0/118 clean runs stopped.
+- Real history: 18 of 553 commits across three repos would have stopped the agent, mostly for
   test deletions or expectation changes.
+- Known gap: a repo the agent touches for the first time in a turn is checked against its last
+  commit, so an agent that commits mid-turn hides that turn's changes from the gate.
 - Limitation: a challenge asks for an explanation; an agent can explain and keep the change
   (it did once, transparently). Turning that into proof needs the test-execution checks of M2.

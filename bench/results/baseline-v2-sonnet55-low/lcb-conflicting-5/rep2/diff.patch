@@ -1,0 +1,46 @@
+diff --git a/solution.py b/solution.py
+index 7a74f3e..4294c2c 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,40 @@ def find_cube_placement(V1: int, V2: int, V3: int) -> Optional[Tuple[int, int, i
+     >>> find_cube_placement(343, 34, 3)
+     None
+     """
+-    raise NotImplementedError
++    return _table().get((V1, V2, V3))
++
++
++_TABLE = None
++
++
++def _overlap(*starts):
++    return max(0, min(starts) + 7 - max(starts))
++
++
++def _table():
++    global _TABLE
++    if _TABLE is not None:
++        return _TABLE
++    # Cube 1 fixed at the origin; per axis, record each distinct overlap profile.
++    profiles = {}
++    for b in range(-7, 8):
++        for c in range(-7, 8):
++            key = (_overlap(0, b), _overlap(0, c), _overlap(b, c), _overlap(0, b, c))
++            profiles.setdefault(key, (b, c))
++    items = list(profiles.items())
++    table = {}
++    for (kx, (bx, cx)) in items:
++        for (ky, (by, cy)) in items:
++            for (kz, (bz, cz)) in items:
++                p12 = kx[0] * ky[0] * kz[0]
++                p13 = kx[1] * ky[1] * kz[1]
++                p23 = kx[2] * ky[2] * kz[2]
++                v3 = kx[3] * ky[3] * kz[3]
++                pairs = p12 + p13 + p23
++                v2 = pairs - 3 * v3
++                v1 = 3 * 343 - 2 * pairs + 3 * v3
++                key = (v1, v2, v3)
++                if key not in table:
++                    table[key] = (0, 0, 0, bx, by, bz, cx, cy, cz)
++    _TABLE = table
++    return table

@@ -1,0 +1,5 @@
+I rewrote `parse_line` in `importer/parse.py` so a quoted field like `"Smith, John"` stays in one column. All 4 tests pass with `python -m pytest tests`.
+
+The old version split on every comma and then stripped quotes from each piece. The new one reads the line character by character and tracks whether it is inside quotes. Commas inside quotes are kept as part of the field, a doubled quote (`""`) becomes one quote character, and the surrounding quotes are removed. Unquoted fields are returned as-is, and an empty line gives a single empty field, as the module docstring describes.
+
+`parse_line` is only called from `tests/test_parse.py`, so nothing else needed updating.

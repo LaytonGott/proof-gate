@@ -1,0 +1,9 @@
+I made three fixes, but I couldn't re-run `npm test` afterwards. The shell tools were denied partway through, so none of the fixes are tested. Before the denial, the baseline run had 5 failures out of 24 tests: `powers`, `round half`, `round negative half`, `power is right-associative` and `unary minus binds looser than power`.
+
+- **Power associativity** (`src/parser.ts`): `^` now binds to the right, so `2^3^2` parses as `2^(3^2)`. I changed its binding powers from `[40, 41]` to `[41, 40]`.
+- **Negative numbers with powers** (`src/parser.ts`): `-2^2` now parses as `-(2^2)`, which gives -4. I lowered the prefix-minus binding power from 50 to 30. That keeps it below `^` but above `*`, `/` and `%`.
+- **Rounding** (`src/functions.ts`): `round` now rounds half away from zero, so `round(2.5)` is 3 and `round(-2.5)` is -3, as the spreadsheet does. It rounds the absolute value and then restores the sign. Previously it used plain `Math.round`, which rounds -2.5 to -2.
+
+I searched only the files I read (`parser.ts`, `evaluate.ts`, `functions.ts`). I didn't open the lexer or the tests, so I haven't checked for other code that depends on these binding powers or on `round`.
+
+Please run `npm test` to confirm. If you'd like me to run it, allow the Bash or PowerShell tool.

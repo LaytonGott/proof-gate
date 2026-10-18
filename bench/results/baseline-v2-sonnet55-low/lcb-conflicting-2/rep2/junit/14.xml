@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.102" timestamp="2026-10-17T21:08:15.253040-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_count_valid_colorings" time="0.000"><failure message="NotImplementedError">def test_count_valid_colorings():
+&gt;       check(count_valid_colorings)
+
+test_solution.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:6: in check
+    assert candidate(3, 3) == 6
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+n = 3, m = 3
+
+    def count_valid_colorings(n: int, m: int) -&gt; int:
+        """ Given N people standing in a circle (numbered 1 to N), where each person is assigned
+        an integer between 0 and M-1 inclusive, count the number of ways to assign these integers
+        such that no two adjacent people have the same integer. Person 1 is adjacent to persons 2 and N,
+        person 2 is adjacent to persons 1 and 3, and so on.
+    
+        Return the count modulo 998244353.
+    
+        Args:
+            n: Number of people in the circle (2 &lt;= n &lt;= 10^6)
+            m: Range of integers [0, m-1] that can be assigned (2 &lt;= m &lt;= 10^6)
+    
+        Returns:
+            The number of valid assignments modulo 998244353
+    
+        &gt;&gt;&gt; count_valid_colorings(3, 3)
+        6
+        &gt;&gt;&gt; count_valid_colorings(4, 2)
+        2
+        &gt;&gt;&gt; count_valid_colorings(987654, 456789)
+        778634319
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:23: NotImplementedError</failure></testcase></testsuite></testsuites>

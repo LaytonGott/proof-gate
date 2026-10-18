@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.104" timestamp="2026-10-17T21:09:26.686103-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_solve_grid" time="0.001"><failure message="AssertionError: assert None is not None&#10; +  where None = &lt;function solve_grid at 0x000002403C023E20&gt;(3, 'AAA', 'BBB')">def test_solve_grid():
+&gt;       check(solve_grid)
+
+test_solution.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = &lt;function solve_grid at 0x000002403C023E20&gt;
+
+    def check(candidate):
+        # Test cases where no solution exists
+        assert candidate(3, 'BCB', 'ABC') is None
+        assert candidate(3, 'AAC', 'BCA') is None
+        assert candidate(3, 'ACB', 'AAC') is None
+        assert candidate(3, 'BCC', 'AAC') is None
+        assert candidate(4, 'ABCC', 'BCCA') is None
+        assert candidate(4, 'CCAB', 'CBCA') is None
+        assert candidate(4, 'CCCC', 'CCCA') is None
+        assert candidate(4, 'AAAA', 'ACAA') is None
+        assert candidate(3, 'AAA', 'BBB') is None
+    
+        # Test cases with solutions
+        result = candidate(3, 'ABC', 'ABC')
+        assert result is not None
+        assert len(result) == 3
+        assert all(len(row) == 3 for row in result)
+    
+&gt;       assert candidate(3, 'AAA', 'BBB') is not None
+E       AssertionError: assert None is not None
+E        +  where None = &lt;function solve_grid at 0x000002403C023E20&gt;(3, 'AAA', 'BBB')
+
+test_solution.py:22: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,8 @@
+`npm test` is green now: 17 of 17 pass. I haven't committed anything.
+
+I made three fixes:
+- **`src/merge.ts`**: `deepMerge` was a shallow spread. It now merges nested objects key by key, replaces arrays, and ignores `undefined` overrides. It doesn't mutate its inputs.
+- **`src/env.ts`**: `APP_PORT` was passed through as a string. It's now parsed to a number, and it throws if the value isn't an integer from 0 to 65535.
+- **`src/index.ts`**: if `config.json` sets a `port`, that port now wins over `APP_PORT`.
+
+**README conflict:** the README says environment variables always win over the config file. The `file pins the port for blue/green deploys` test says the opposite for `port`, because the deploy pipeline writes the slot port into `config.json`. I followed the test, so `port` is an exception to the README's rule. If the README is the intended behavior, that test is the one that's wrong. Either way, someone should confirm which is right before the release, and the README needs a line about the port exception if the test stands.

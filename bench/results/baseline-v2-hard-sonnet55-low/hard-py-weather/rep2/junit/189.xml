@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.223" timestamp="2026-10-17T21:16:18.473857-05:00" hostname="laytons-pc"><testcase classname="tests.test_live" name="test_live_paris" time="0.019"><failure message="urllib.error.URLError: &lt;urlopen error [Errno 11001] getaddrinfo failed&gt;">self = &lt;urllib.request.HTTPHandler object at 0x0000027FF39C99A0&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000027FF39C93D0&gt;, http_conn_args = {}
+host = 'weather-api.internal.example'
+h = &lt;http.client.HTTPConnection object at 0x0000027FF3A37B90&gt;
+headers = {'Connection': 'close', 'Host': 'weather-api.internal.example', 'User-Agent': 'Python-urllib/3.12'}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+..\..\..\..\Programs\Python\Python312\Lib\urllib\request.py:1344: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\Programs\Python\Python312\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+..\..\..\..\Programs\Python\Python312\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+..\..\..\..\Programs\Python\Python312\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+..\..\..\..\Programs\Python\Python312\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+..\..\..\..\Programs\Python\Python312\Lib\http\client.py:1037: in send
+    self.connect()
+..\..\..\..\Programs\Python\Python312\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+..\..\..\..\Programs\Python\Python312\Lib\socket.py:841: in create_connection
+    for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+host = 'weather-api.internal.example', port = 80, family = 0
+type = &lt;SocketKind.SOCK_STREAM: 1&gt;, proto = 0, flags = 0
+
+    def getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        """Resolve host and port into list of address info entries.
+    
+        Translate the host/port argument into a sequence of 5-tuples that contain
+        all the necessary arguments for creating a socket connected to that service.
+        host is a domain name, a string representation of an IPv4/v6 address or
+        None. port is a string service name such as 'http', a numeric port number or
+        None. By passing None as the value of host and port, you can pass NULL to
+        the underlying C API.
+    
+        The family, type and proto arguments can be optionally specified in order to
+        narrow the list of addresses returned. Passing zero as a value for each of
+        these arguments selects the full range of results.
+        """
+        # We override this function since we want to translate the numeric family
+        # and socket type values to enum constants.
+        addrlist = []
+&gt;       for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+E       socket.gaierror: [Errno 11001] getaddrinfo failed
+
+..\..\..\..\Programs\Python\Python312\Lib\socket.py:978: gaierror
+
+During handling of the above exception, another exception occurred:
+
+    def test_live_paris():
+&gt;       data = WeatherClient(cache_ttl=0).current("Paris")
+
+tests\test_live.py:6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+weather\client.py:31: in current
+    data = self.transport.get_json(f"{self.base_url}/current?city={quote(city)}")
+weather\transport.py:11: in get_json
+    with urllib.request.urlopen(url, timeout=self.timeout) as resp:
+..\..\..\..\Programs\Python\Python312\Lib\urllib\request.py:215: in urlopen
+    return opener.open(url, data, timeout)
+..\..\..\..\Programs\Python\Python312\Lib\urllib\request.py:515: in open
+    response = self._open(req, data)
+..\..\..\..\Programs\Python\Python312\Lib\urllib\request.py:532: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+..\..\..\..\Programs\Python\Python312\Lib\urllib\request.py:492: in _call_chain
+    result = func(*args)
+..\..\..\..\Programs\Python\Python312\Lib\urllib\request.py:1373: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;urllib.request.HTTPHandler object at 0x0000027FF39C99A0&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000027FF39C93D0&gt;, http_conn_args = {}
+host = 'weather-api.internal.example'
+h = &lt;http.client.HTTPConnection object at 0x0000027FF3A37B90&gt;
+headers = {'Connection': 'close', 'Host': 'weather-api.internal.example', 'User-Agent': 'Python-urllib/3.12'}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [Errno 11001] getaddrinfo failed&gt;
+
+..\..\..\..\Programs\Python\Python312\Lib\urllib\request.py:1347: URLError</failure></testcase></testsuite></testsuites>

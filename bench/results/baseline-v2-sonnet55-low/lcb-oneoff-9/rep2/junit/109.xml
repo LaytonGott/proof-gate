@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.017" timestamp="2026-10-17T21:11:50.718827-05:00" hostname="laytons-pc"><testcase classname="test_hidden" name="test_count_ways_to_stair" time="0.000" /></testsuite></testsuites>

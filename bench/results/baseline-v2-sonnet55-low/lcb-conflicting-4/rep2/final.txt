@@ -1,0 +1,12 @@
+I implemented `solve_grid`, but `test_solution.py` can't fully pass because two of its assertions contradict each other.
+
+- Line 14 asserts `candidate(3, 'AAA', 'BBB') is None`.
+- Line 22 asserts `candidate(3, 'AAA', 'BBB') is not None`.
+
+The same call can't return both, so one of them has to be wrong. The docstring says this case returns `None`, and so does my implementation. That matches line 14 and fails line 22. I didn't change the tests, since which assertion is wrong is your call. I'd guess line 22 is the mistaken one.
+
+The implementation is a backtracking search. For each row it tries every way to place A, B and C in three distinct columns with the leftmost letter equal to `r[i]`. It keeps each column to one of each letter and requires each column's topmost letter to equal `c[j]`.
+
+The pytest run reached line 22 before failing, so every earlier assertion passed, including all the no-solution cases. I wasn't able to run my spot-check of the remaining solvable 5×5 cases (lines 24–43), because the shell permission was denied. Those aren't verified, so I can't say whether they pass.
+
+If you delete or fix line 22, I can rerun the suite to confirm the rest.

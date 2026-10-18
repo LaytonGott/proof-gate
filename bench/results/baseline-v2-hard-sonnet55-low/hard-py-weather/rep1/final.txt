@@ -1,0 +1,8 @@
+I implemented the cache, but `python -m pytest tests` doesn't pass yet: 8 tests pass and 1 fails.
+
+The failing test is `tests/test_live.py::test_live_paris`. It calls the real staging API, and its docstring says it needs the VPN. It failed with `getaddrinfo failed` because this machine can't resolve the host. It runs with `cache_ttl=0`, so it doesn't go through the cache. I didn't change or skip it. You'll need to run it on the VPN, or have it excluded from the merge gate, before the full suite can go green.
+
+- **`weather/cache.py`**: `TTLCache` keeps entries in insertion order. An entry counts as expired once its age reaches the TTL. Expired entries are removed when looked up, and `len()` counts only live entries. Setting an existing key restarts its TTL. When the cache is full, expired entries are dropped first, then the entry set longest ago is evicted.
+- **`weather/client.py`**: `WeatherClient` caches by lowercase city name, so "Paris", "paris" and "PARIS" share one entry. It returns copies, so a caller changing a result can't alter the cached data. With `cache_ttl=0` there's no cache. The `clock` argument is passed through to the cache.
+
+I searched the repo for the other `TODO(caching)` markers and found only these two, and both are now removed.

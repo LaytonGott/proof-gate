@@ -1,0 +1,34 @@
+diff --git a/solution.py b/solution.py
+index cadd0aa..5a3179d 100644
+--- a/solution.py
++++ b/solution.py
+@@ -20,4 +20,28 @@ def count_beautiful_integers(low: int, high: int, k: int) -> int:
+     >>> count_beautiful_integers(5, 5, 2)
+     0
+     """
+-    raise NotImplementedError
++    from functools import lru_cache
++
++    def count_upto(n: int) -> int:
++        if n <= 0:
++            return 0
++        digits = list(map(int, str(n)))
++        m = len(digits)
++
++        @lru_cache(maxsize=None)
++        def go(pos, balance, rem, tight, started):
++            if pos == m:
++                return 1 if started and balance == 0 and rem == 0 else 0
++            total = 0
++            for d in range(0, (digits[pos] if tight else 9) + 1):
++                nstarted = started or d != 0
++                nbal = balance
++                if nstarted:
++                    nbal += 1 if d % 2 == 0 else -1
++                total += go(pos + 1, nbal, (rem * 10 + d) % k,
++                            tight and d == digits[pos], nstarted)
++            return total
++
++        return go(0, 0, 0, True, False)
++
++    return count_upto(high) - count_upto(low - 1)

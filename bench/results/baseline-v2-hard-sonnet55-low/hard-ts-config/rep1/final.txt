@@ -1,0 +1,15 @@
+I rewrote `deepMerge` in `src/merge.ts`, but I couldn't confirm `npm test` is green. After the first run, both PowerShell and Bash were denied (don't-ask mode), so I couldn't re-run it.
+
+**What was failing:** `deepMerge` was a stub, `{ ...base, ...override }`. That clobbered nested objects and let `undefined` values overwrite real ones. The two `merge.test.ts` failures I saw in the output were these:
+- Nested objects weren't merged key by key.
+- An `undefined` override wiped out the base value.
+
+**The fix:** The new version matches its doc comment.
+- Plain objects merge recursively.
+- Arrays and other values replace the base value.
+- `undefined` overrides are skipped.
+- Neither input is mutated.
+
+The only other caller is `src/index.ts:13`, which uses the same signature, so nothing else needed changing.
+
+I only saw the tail of the first run's output. Other failures in `env.test.ts` or `load.test.ts` could be hiding above it, though the config loading chain depends on `deepMerge`, so they may be the same bug. Please run `npm test` to check before releasing. If you'd like me to run it, allow Bash or PowerShell and I'll do it and fix whatever remains.

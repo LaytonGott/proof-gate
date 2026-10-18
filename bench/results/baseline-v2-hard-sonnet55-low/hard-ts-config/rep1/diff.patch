@@ -1,0 +1,26 @@
+diff --git a/src/merge.ts b/src/merge.ts
+index 5c135f6..4b6e327 100644
+--- a/src/merge.ts
++++ b/src/merge.ts
+@@ -1,8 +1,20 @@
++function isPlainObject(v: unknown): v is Record<string, unknown> {
++  if (typeof v !== 'object' || v === null) return false;
++  const proto = Object.getPrototypeOf(v);
++  return proto === Object.prototype || proto === null;
++}
++
+ /**
+  * Merges `override` onto `base` without mutating either. Nested plain objects merge key by
+  * key; arrays and every other value in `override` replace the one in `base`. Keys whose
+  * override value is `undefined` are ignored.
+  */
+ export function deepMerge<T extends object>(base: T, override: object): T {
+-  return { ...base, ...override } as T;
++  const out: Record<string, unknown> = { ...base };
++  for (const [key, value] of Object.entries(override)) {
++    if (value === undefined) continue;
++    const existing = out[key];
++    out[key] = isPlainObject(existing) && isPlainObject(value) ? deepMerge(existing, value) : value;
++  }
++  return out as T;
+ }

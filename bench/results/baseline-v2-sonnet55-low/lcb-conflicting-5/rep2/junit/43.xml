@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.399" timestamp="2026-10-17T21:09:38.867740-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_find_cube_placement" time="0.297"><failure message="assert None is not None">def test_find_cube_placement():
+&gt;       check(find_cube_placement)
+
+test_solution.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = &lt;function find_cube_placement at 0x000002784B0544A0&gt;
+
+    def check(candidate):
+        # Test cases that should return None
+        assert candidate(0, 0, 0) is None
+        assert candidate(951, 154, 495) is None
+        assert candidate(744, 621, 910) is None
+        assert candidate(866, 178, 386) is None
+        assert candidate(1029, 1029, 1029) is None
+    
+        # Test cases that should return valid placements
+        result = candidate(0, 0, 343)
+        assert result is not None
+        assert len(result) == 9
+        assert all(abs(x) &lt;= 100 for x in result)
+    
+        result = candidate(915, 51, 4)
+        assert result is not None
+        assert len(result) == 9
+        assert all(abs(x) &lt;= 100 for x in result)
+    
+        result = candidate(596, 176, 27)
+        assert result is not None
+        assert len(result) == 9
+        assert all(abs(x) &lt;= 100 for x in result)
+    
+        result = candidate(1029, 1029, 1029)
+&gt;       assert result is not None
+E       assert None is not None
+
+test_solution.py:29: AssertionError</failure></testcase></testsuite></testsuites>

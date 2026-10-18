@@ -1,0 +1,46 @@
+diff --git a/solution.py b/solution.py
+index 8a99151..981c474 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,40 @@ def solve_grid(n: int, r: str, c: str) -> Optional[List[str]]:
+     >>> solve_grid(3, 'AAA', 'BBB')
+     None
+     """
+-    raise NotImplementedError
++    grid = [['.'] * n for _ in range(n)]
++    row_used = [set() for _ in range(n)]
++    col_used = [set() for _ in range(n)]
++
++    def place(pos: int) -> bool:
++        if pos == n * n:
++            return True
++        i, j = divmod(pos, n)
++        for ch in 'ABC.':
++            if ch != '.':
++                if ch in row_used[i] or ch in col_used[j]:
++                    continue
++                if not row_used[i] and ch != r[i]:
++                    continue
++                if not col_used[j] and ch != c[j]:
++                    continue
++            # Each row/column needs 3 letters: enough cells must remain.
++            if ch == '.':
++                if n - j - 1 < 3 - len(row_used[i]) or n - i - 1 < 3 - len(col_used[j]):
++                    continue
++                grid[i][j] = '.'
++                if place(pos + 1):
++                    return True
++                continue
++            row_used[i].add(ch)
++            col_used[j].add(ch)
++            grid[i][j] = ch
++            if place(pos + 1):
++                return True
++            row_used[i].discard(ch)
++            col_used[j].discard(ch)
++            grid[i][j] = '.'
++        return False
++
++    if place(0):
++        return [''.join(row) for row in grid]
++    return None

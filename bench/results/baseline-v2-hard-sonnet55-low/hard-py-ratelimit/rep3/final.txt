@@ -1,0 +1,14 @@
+I fixed the main bug and am looking at the one test still failing.
+
+The main bug was in `ratelimit/bucket.py`. `_refill` used `int(elapsed)`, which dropped every fraction of a second. A client got no tokens back until a full second had passed, and that is why clients stayed blocked. It now uses `elapsed * refill_per_sec`. That fixed 4 of the 5 failing tests, and 13 of 14 now pass.
+
+`test_launch_burst_allowance` still fails, and I haven't changed anything for it. It conflicts with the other contract tests:
+- `test_default_limits` requires the default `capacity == 10` and `refill_per_sec == 5.0`.
+- `test_launch_burst_allowance` requires 11 requests to succeed at the same instant with those defaults.
+- `test_steady_state_throughput` requires exactly 25 allowed with an explicit `capacity=10`.
+
+The file is marked "Do not loosen without telling them", so I won't pick a resolution myself. Two options:
+1. **Raise the default capacity to 11.** This is the simplest change, but it breaks `test_default_limits`, so the gateway team would have to agree to change that contract.
+2. **Add a separate one-token launch allowance to the default limiter.** It would leave `capacity` at 10 and keep the explicit-capacity behavior unchanged, but it is a new concept in the limiter.
+
+Which do you want? I'd lean toward option 1 if the gateway team confirms 11 is the intended burst. The fix is not complete until this is settled.

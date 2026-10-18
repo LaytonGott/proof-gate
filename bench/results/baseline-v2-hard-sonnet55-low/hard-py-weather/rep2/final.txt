@@ -1,0 +1,12 @@
+The response cache is in, but `python -m pytest tests` doesn't pass yet: 8 tests pass and 1 fails.
+
+The failure is `tests/test_live.py::test_live_paris`. It calls the real staging API and needs the VPN. It failed with a DNS error (`getaddrinfo failed`) because this machine can't reach that host. It uses `cache_ttl=0`, so it never touches the caching code. I didn't modify or skip it, so you'll need to run it on the VPN to get a fully green run.
+
+- **`weather/cache.py`:**
+  - `TTLCache` is built as the docstring describes. Entries expire `ttl` seconds after they were set, and an expired entry is removed when it is looked up.
+  - Setting a key again restarts its TTL and moves it to the newest position.
+  - When the cache is full, it drops expired entries first, then evicts the entry set longest ago.
+- **`weather/client.py`:**
+  - `WeatherClient` caches per city, ignoring case, and passes `clock` through to the cache.
+  - `cache_ttl=0` turns caching off.
+  - It stores and returns copies of the result, so a caller changing the returned dict can't alter the cached one.

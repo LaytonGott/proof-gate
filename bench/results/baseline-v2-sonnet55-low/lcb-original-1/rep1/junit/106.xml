@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.109" timestamp="2026-10-17T21:11:43.458097-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_count_powerful_integers" time="0.000"><failure message="NotImplementedError">def test_count_powerful_integers():
+&gt;       check(count_powerful_integers)
+
+test_solution.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:6: in check
+    assert candidate(1, 6000, 4, "124") == 5
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+start = 1, finish = 6000, limit = 4, s = '124'
+
+    def count_powerful_integers(start: int, finish: int, limit: int, s: str) -&gt; int:
+        """ Count the number of powerful integers in the range [start, finish].
+    
+        A positive integer x is called powerful if:
+        1. It ends with s (s is a suffix of x)
+        2. Each digit in x is at most limit
+    
+        Args:
+            start: The start of the range (inclusive)
+            finish: The end of the range (inclusive)
+            limit: The maximum allowed digit value (1 &lt;= limit &lt;= 9)
+            s: A string representing a positive integer that must be a suffix
+    
+        Returns:
+            The count of powerful integers in the given range
+    
+        &gt;&gt;&gt; count_powerful_integers(1, 6000, 4, "124")
+        5
+        &gt;&gt;&gt; count_powerful_integers(15, 215, 6, "10")
+        2
+        &gt;&gt;&gt; count_powerful_integers(1000, 2000, 4, "3000")
+        0
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:24: NotImplementedError</failure></testcase></testsuite></testsuites>

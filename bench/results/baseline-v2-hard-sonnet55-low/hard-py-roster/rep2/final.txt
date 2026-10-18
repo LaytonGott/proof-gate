@@ -1,0 +1,11 @@
+I fixed the cause of the flakiness in `roster/teams.py`, but I couldn't run the tests. The Bash tool was denied in this session, so the fix is unverified.
+
+**Cause:** `clean_names` ended with `list(set(seen.values()))`. A set's iteration order depends on Python's per-process string hash randomization, so the name order changed from run to run. `assign_teams` deals names out round-robin in the order it receives them. Its docstring promises alphabetical order, but nothing sorted the names, so `test_assign_teams_round_robin_alphabetical` passed only when the order happened to come out right.
+
+**Changes:**
+- `clean_names` now returns `list(seen.values())`. The dict already de-duplicates and keeps the first spelling seen, and this keeps first-seen order.
+- `assign_teams` now sorts the cleaned names with `sorted(..., key=str.lower)`, which gives the case-insensitive alphabetical order its docstring describes.
+
+The only other caller of `assign_teams` is `roster/export.py`, which gets the same deterministic result. Nothing else uses `clean_names`.
+
+To check it, run `python -m pytest tests` a few times, or vary the hash seed with `PYTHONHASHSEED=1`, `2` and so on. I can run that if you allow Bash.

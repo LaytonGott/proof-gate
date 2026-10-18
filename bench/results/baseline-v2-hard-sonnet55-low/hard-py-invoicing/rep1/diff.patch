@@ -1,0 +1,13 @@
+diff --git a/shop/invoice.py b/shop/invoice.py
+index 61d241c..70f1e48 100644
+--- a/shop/invoice.py
++++ b/shop/invoice.py
+@@ -26,7 +26,7 @@ class Invoice:
+         """Promotion first, then the customer's loyalty discount on the unit price,
+         then quantity, then tax. Each line is rounded to the cent."""
+         unit = promo_price(line.unit_price, line.promo, line.qty)
+-        unit = apply_discount(unit, self.customer.discount_pct)
++        unit = apply_discount(unit, Decimal(self.customer.discount_pct) / 100)
+         return add_tax(unit * line.qty, TAX_RATE)
+ 
+     def total(self) -> Decimal:

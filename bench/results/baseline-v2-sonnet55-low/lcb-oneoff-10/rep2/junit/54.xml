@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.111" timestamp="2026-10-17T21:09:51.593746-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_count_valid_strings" time="0.000"><failure message="NotImplementedError">def test_count_valid_strings():
+&gt;       check(count_valid_strings)
+
+test_solution.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:6: in check
+    assert candidate(2, [2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) == 10
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+K = 2, C = [2, 1, 1, 0, 0, 0, ...]
+
+    def count_valid_strings(K: int, C: List[int]) -&gt; int:
+        """ Count the number of strings consisting of uppercase English letters with length between
+        1 and K (inclusive) that satisfy the following condition: for each letter (A=0, B=1, ..., Z=25),
+        the number of occurrences in the string is at most C[i].
+    
+        Return the count modulo 998244353.
+    
+        Args:
+            K: Maximum length of strings to consider (1 &lt;= K &lt;= 1000)
+            C: List of 26 integers where C[i] is the maximum allowed occurrences of the i-th letter
+                (0 &lt;= C[i] &lt;= 1000)
+    
+        Returns:
+            The number of valid strings modulo 998244353
+    
+        &gt;&gt;&gt; count_valid_strings(2, [2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        10
+        &gt;&gt;&gt; count_valid_strings(358, [1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        64
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:24: NotImplementedError</failure></testcase></testsuite></testsuites>

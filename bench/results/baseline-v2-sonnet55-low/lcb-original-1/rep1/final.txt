@@ -1,0 +1,7 @@
+I implemented `count_powerful_integers` in `solution.py`, and the test in `test_solution.py` passes (pytest reports 1 passed).
+
+It returns 0 straight away if `s` has a digit above `limit`. Otherwise it counts the powerful numbers up to `finish` and subtracts the count up to `start - 1`.
+
+To count up to a bound `x`, it counts the possible prefixes `p` where `p*10^len(s) + s <= x` and every digit of `p` is at most `limit`. A prefix of 0 gives `s` itself.
+
+I didn't run the three docstring examples separately. They are the first three assertions in the test, so they were covered by that run.

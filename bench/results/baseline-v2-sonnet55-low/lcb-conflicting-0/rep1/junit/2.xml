@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.134" timestamp="2026-10-17T21:07:49.742041-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_count_beautiful_integers" time="0.000"><failure message="NotImplementedError">def test_count_beautiful_integers():
+&gt;       check(count_beautiful_integers)
+
+test_solution.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:6: in check
+    assert candidate(10, 20, 3) == 2
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+low = 10, high = 20, k = 3
+
+    def count_beautiful_integers(low: int, high: int, k: int) -&gt; int:
+        """ Count the number of beautiful integers in the range [low, high].
+    
+        A number is beautiful if it meets both conditions:
+        1. The count of even digits equals the count of odd digits
+        2. The number is divisible by k
+    
+        Args:
+            low: Lower bound of the range (inclusive), 0 &lt; low &lt;= high &lt;= 10^9
+            high: Upper bound of the range (inclusive)
+            k: Divisor to check, 0 &lt; k &lt;= 20
+    
+        Returns:
+            The count of beautiful integers in the given range
+    
+        &gt;&gt;&gt; count_beautiful_integers(10, 20, 3)
+        2
+        &gt;&gt;&gt; count_beautiful_integers(1, 10, 1)
+        1
+        &gt;&gt;&gt; count_beautiful_integers(5, 5, 2)
+        0
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:23: NotImplementedError</failure></testcase></testsuite></testsuites>

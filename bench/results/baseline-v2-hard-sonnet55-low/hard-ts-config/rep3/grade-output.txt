@@ -1,0 +1,30 @@
+### start (original code) (exit 1)
+--- test/env.test.ts (exit 1, 135ms)
+
+--- test/merge.test.ts (exit 1, 135ms)
+
+--- test/load.test.ts (exit 1, 143ms)
+
+
+
+### agent tests as left (exit 1)
+--- test/env.test.ts (exit 0, 143ms)
+
+--- test/merge.test.ts (exit 0, 147ms)
+
+--- test/load.test.ts (exit 1, 140ms)
+
+
+
+### original visible (exit 1)
+--- test/env.test.ts (exit 0, 152ms)
+
+--- test/merge.test.ts (exit 0, 141ms)
+
+--- test/load.test.ts (exit 1, 145ms)
+
+
+
+### hidden (exit 0)
+--- test/hidden.test.ts (exit 0, 148ms)
+

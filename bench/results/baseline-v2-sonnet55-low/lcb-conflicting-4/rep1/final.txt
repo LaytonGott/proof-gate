@@ -1,0 +1,11 @@
+I implemented `solve_grid` in `solution.py`, but I couldn't run the tests. Both Bash and PowerShell were denied in this session's permission mode. So the code is untested, and I haven't checked that the docstring example returns `['ABC', 'BCA', 'CAB']` exactly.
+
+**How it works:** it's a backtracking search over the cells. Each cell is `A`, `B`, `C` or `.`. A letter can't repeat in its row or column. The first letter placed in a row must equal `r[i]`, and the first letter placed in a column must equal `c[j]`. A `.` is only allowed while enough cells remain to still fit the row's and column's three letters. It returns the grid as a list of strings, or `None` if no fill works.
+
+**The tests can't all pass.** `test_solution.py` contradicts itself on one input:
+- Line 14 asserts `candidate(3, 'AAA', 'BBB') is None`.
+- Line 22 asserts `candidate(3, 'AAA', 'BBB') is not None`.
+
+The docstring also says `None` for that input. No implementation can satisfy both asserts, so `test_solve_grid` will fail at line 22. I didn't change the tests, since which assertion is right is your call. Line 22 looks like the mistake, because the docstring agrees with line 14.
+
+**Next step:** let me run `python -m pytest -q` in that directory, or run it yourself. Tell me whether to remove line 22 if you want the tests to pass.

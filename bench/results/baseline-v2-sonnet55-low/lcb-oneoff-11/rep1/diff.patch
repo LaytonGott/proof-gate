@@ -1,0 +1,17 @@
+diff --git a/solution.py b/solution.py
+index 009cf73..69db584 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,11 @@ def expected_black_ball_position(N: int, K: int) -> int:
+     >>> expected_black_ball_position(4, 4)
+     592707587
+     """
+-    raise NotImplementedError
++    M = 998244353
++    inv = pow(N, M - 2, M)
++    mult = (1 - 2 * inv) % M
++    add = (N + 1) * inv % M
++    e = 1
++    for _ in range(K):
++        e = (e * mult + add) % M
++    return e

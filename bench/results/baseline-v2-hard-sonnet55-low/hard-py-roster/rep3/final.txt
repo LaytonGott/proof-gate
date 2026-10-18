@@ -1,0 +1,13 @@
+I fixed the flakiness in `roster/teams.py`, but I haven't run the tests. Bash was denied in this session, so `python -m pytest tests` is still unrun.
+
+**Cause:** `clean_names` returned `list(set(seen.values()))`. Python randomizes string hash order between runs, so the name order changed from run to run. `assign_teams` deals names round-robin and its docstring promises alphabetical order, but it never sorted them. The tests passed only when the set happened to come out in the right order.
+
+**Changes:**
+- `clean_names` now returns `list(seen.values())`. This keeps the first-seen order, and the dict already handles the de-duplication.
+- `assign_teams` now sorts the cleaned names case-insensitively, using `sorted(clean_names(names), key=str.lower)`, before dealing them out.
+
+**Other callers:** `roster/export.py` is the only other caller of these functions. It uses `assign_teams`, so it now gets deterministic teams too.
+
+**Expected result:** Working through `SIGNUPS` by hand with 3 teams gives the order the test expects: Bea, Chloe, Dmitri, ines, lena, maya, Oskar, Tariq, Yusuf. The teams come out as `[Bea, ines, Oskar]`, `[Chloe, lena, Tariq]` and `[Dmitri, maya, Yusuf]`.
+
+Please run `python -m pytest tests` a few times to confirm.

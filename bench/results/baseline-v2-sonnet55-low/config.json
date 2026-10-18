@@ -1,0 +1,29 @@
+{
+  "label": "baseline-v2-sonnet55-low",
+  "tasks": "lcb-conflicting-0,lcb-conflicting-1,lcb-conflicting-2,lcb-conflicting-3,lcb-conflicting-4,lcb-conflicting-5,lcb-conflicting-6,lcb-oneoff-10,lcb-oneoff-11,lcb-oneoff-12,lcb-oneoff-13,lcb-oneoff-8,lcb-oneoff-9,lcb-original-0,lcb-original-1,own-py-csvline,own-py-lru,own-py-stats,own-ts-semver,own-ts-slugify",
+  "reps": "2",
+  "concurrency": "3",
+  "model": "claude-sonnet-5-5",
+  "effort": "low",
+  "budget-usd": "2",
+  "timeout-min": "15",
+  "allowed_tools": [
+    "Read",
+    "Edit",
+    "Write",
+    "Glob",
+    "Grep",
+    "TodoWrite",
+    "Bash(python -m pytest:*)",
+    "Bash(pytest:*)",
+    "Bash(npm test:*)",
+    "Bash(npm run test:*)",
+    "Bash(node --test:*)",
+    "Bash(cd:*)",
+    "Bash(ls:*)",
+    "Bash(git diff:*)",
+    "Bash(git status:*)"
+  ],
+  "started": "2026-10-18T02:07:48.673Z",
+  "jobs": 40
+}
