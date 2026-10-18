@@ -2,6 +2,7 @@
   "name": "proof-gate",
   "version": "0.3.0",
   "description": "Deterministic review gate for coding agents: stops a turn or a commit that games the tests, breaks a passing test, or ships code its tests do not check.",
+  "license": "MIT",
   "author": {
     "name": "LaytonGott",
     "url": "https://github.com/LaytonGott"

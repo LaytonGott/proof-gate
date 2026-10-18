@@ -229,3 +229,7 @@ Current numbers (Sonnet 5.5, low effort):
 - Limitation: a challenge asks for an explanation; an agent can explain and keep the change
   (it did once, transparently). Test execution turns the provable cases into blocks
   (`regression`, `false-green`), but after 3 blocks in one turn the decision goes to the user.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

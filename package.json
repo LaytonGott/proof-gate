@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Deterministic code-review gate for coding agents",
+  "license": "MIT",
   "engines": {
     "node": ">=18"
   },
