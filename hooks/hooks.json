@@ -4,7 +4,7 @@
       { "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/src/cli.ts\" hook prompt", "timeout": 30 }] }
     ],
     "Stop": [
-      { "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/src/cli.ts\" hook stop", "timeout": 60 }] }
+      { "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/src/cli.ts\" hook stop", "timeout": 180 }] }
     ]
   }
 }

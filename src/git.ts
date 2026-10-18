@@ -1,7 +1,7 @@
 // Git plumbing: snapshot the working tree (tracked + untracked, honouring .gitignore) as a
 // tree object without touching the user's index, and read file contents back out of trees.
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { copyFileSync, existsSync, lstatSync, mkdirSync, rmSync, symlinkSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileChange } from './changes.ts';
 import { isTestFile } from './lang.ts';
@@ -48,6 +48,52 @@ export function headTree(repo: Repo): string | null {
 
 // git's well-known empty tree, for repos with no commits yet.
 export const EMPTY_TREE = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
+
+/**
+ * The tree HEAD pointed at, at an earlier moment, from the reflog. A turn that commits its
+ * work moves HEAD, so "the last commit" is no baseline for a repo first seen at the end of a
+ * turn; where HEAD was when the turn began is. Null when the reflog cannot say.
+ */
+export function headTreeAt(repo: Repo, when: Date): string | null {
+  // git's approxidate reads "YYYY-MM-DD HH:MM:SS +0000".
+  const stamp = when.toISOString().replace('T', ' ').replace(/\.\d+Z$/, ' +0000');
+  const r = spawnSync('git', ['rev-parse', '--verify', '--quiet', `HEAD@{${stamp}}^{tree}`], { cwd: repo.root, encoding: 'utf8' });
+  return r.status === 0 ? r.stdout.trim() : null;
+}
+
+/**
+ * Writes the files of `tree` into `dir` (which must not exist yet), without touching the
+ * repo's index or working tree. Links the repo's node_modules in, so JS test runners resolve.
+ */
+/**
+ * Removes the node_modules link from a materialized folder before the folder is deleted, so a
+ * recursive delete can never walk into the repo's real node_modules.
+ */
+export function disposeMaterialized(dir: string): void {
+  const link = join(dir, 'node_modules');
+  try {
+    if (lstatSync(link).isSymbolicLink()) unlinkSync(link);
+  } catch {
+    // Not there: nothing to unlink.
+  }
+}
+
+export function materialize(repo: Repo, tree: string, dir: string): void {
+  mkdirSync(dir, { recursive: true });
+  mkdirSync(repo.stateDir, { recursive: true });
+  const index = join(repo.stateDir, `index-mat-${process.pid}-${Date.now()}`);
+  try {
+    const env = { GIT_INDEX_FILE: index };
+    git(repo.root, ['read-tree', tree], env);
+    git(repo.root, ['checkout-index', '-a', '-f', `--prefix=${dir.replace(/\\/g, '/').replace(/\/?$/, '/')}`], env);
+  } finally {
+    rmSync(index, { force: true });
+  }
+  const modules = join(repo.root, 'node_modules');
+  if (existsSync(modules) && !existsSync(join(dir, 'node_modules'))) {
+    symlinkSync(modules, join(dir, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
+  }
+}
 
 function readBlobs(repo: Repo, specs: string[]): Map<string, string | null> {
   const out = new Map<string, string | null>();

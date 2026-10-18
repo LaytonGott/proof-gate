@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 // proof-gate CLI.
 //
-//   proof-gate check [--base <tree-ish>] [--json]   analyze the working tree against a base (default HEAD)
+//   proof-gate check [--base <tree-ish>] [--run-tests] [--json]
+//                                                   analyze the working tree against a base (default HEAD)
 //   proof-gate snapshot                             print the tree id of the working tree right now
 //   proof-gate hook prompt                          Claude Code UserPromptSubmit hook: remember the turn's start
 //   proof-gate hook stop                            Claude Code Stop hook: gate the agent's changes
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
-import { analyze, formatFindings } from './analyze.ts';
+import { analyze, formatFindings, sortFindings } from './analyze.ts';
+import { executeChecks, refineWithExecution } from './execute.ts';
 import { decide, type TurnState } from './gate.ts';
-import { changesBetween, EMPTY_TREE, findRepo, headTree, snapshot, testFilesIn, type Repo } from './git.ts';
+import { changesBetween, disposeMaterialized, EMPTY_TREE, findRepo, headTree, headTreeAt, materialize, snapshot, testFilesIn, type Repo } from './git.ts';
+import { isCode } from './lang.ts';
 import { filesEditedThisTurn, lastAssistantText } from './transcript.ts';
 import type { Finding } from './types.ts';
 
@@ -44,14 +47,33 @@ const saveState = (session: string, state: TurnState) => {
   writeFileSync(statePath(session), JSON.stringify(state, null, 2));
 };
 
-async function check(repo: Repo, base: string, finalMessage?: string) {
+// Test execution: on unless PROOF_GATE_RUN_TESTS=0, within a time budget per check.
+const RUN_TESTS = process.env.PROOF_GATE_RUN_TESTS !== '0';
+const TEST_BUDGET_MS = Number(process.env.PROOF_GATE_TEST_BUDGET_S ?? 60) * 1000;
+
+async function check(repo: Repo, base: string, finalMessage: string | undefined, runTests: boolean) {
   const now = snapshot(repo);
   if (now === base) return { now, findings: [] as Finding[] };
-  const findings = await analyze({
-    changes: changesBetween(repo, base, now),
-    testFiles: async () => testFilesIn(repo, now),
-    finalMessage,
-  });
+  const changes = changesBetween(repo, base, now);
+  let tests: Map<string, string> | undefined;
+  const testFiles = async () => (tests ??= testFilesIn(repo, now));
+  let findings = await analyze({ changes, testFiles, finalMessage });
+  if (runTests && changes.some((c) => isCode(c.path))) {
+    // Both states are checked out into throwaway folders; the working tree is never touched.
+    const scratch = mkdtempSync(join(tmpdir(), 'pg-exec-'));
+    const baseDir = join(scratch, 'base');
+    const newDir = join(scratch, 'new');
+    try {
+      materialize(repo, base, baseDir);
+      materialize(repo, now, newDir);
+      const report = await executeChecks({ baseDir, newDir, changes, testFiles: await testFiles(), finalMessage, budgetMs: TEST_BUDGET_MS });
+      findings = sortFindings([...refineWithExecution(findings, report), ...report.findings]);
+    } finally {
+      disposeMaterialized(baseDir);
+      disposeMaterialized(newDir);
+      rmSync(scratch, { recursive: true, force: true });
+    }
+  }
   return { now, findings };
 }
 
@@ -88,11 +110,12 @@ async function hookStop(input: HookInput) {
   const cwdRoot = findRepo(input.cwd ?? process.cwd())?.root;
   const findings: Finding[] = [];
   for (const repo of reposFor(input, state)) {
-    // A repo first seen this turn has no snapshot from the turn's start; its last commit is
-    // the best available baseline.
-    const base = state.bases[repo.root] ?? headTree(repo) ?? EMPTY_TREE;
+    // A repo first seen this turn has no snapshot from the turn's start. Where HEAD was when
+    // the turn began is the next best thing: comparing against the latest commit instead would
+    // let a turn hide its changes by committing them.
+    const base = state.bases[repo.root] ?? headTreeAt(repo, new Date(state.startedAt)) ?? headTree(repo) ?? EMPTY_TREE;
     state.bases[repo.root] = base;
-    const { findings: fs } = await check(repo, base, finalMessage);
+    const { findings: fs } = await check(repo, base, finalMessage, RUN_TESTS);
     const label = repo.root === cwdRoot ? '' : `[${basename(repo.root)}] `;
     findings.push(...fs.map((f) => ({ ...f, message: label + f.message, fingerprint: `${repo.root}:${f.fingerprint}` })));
   }
@@ -132,12 +155,12 @@ async function main() {
     const args = [sub, ...rest].filter(Boolean);
     const baseArg = args.includes('--base') ? args[args.indexOf('--base') + 1] : undefined;
     const base = baseArg ? (baseArg.length === 40 ? baseArg : `${baseArg}^{tree}`) : headTree(repo) ?? EMPTY_TREE;
-    const { findings } = await check(repo, base);
+    const { findings } = await check(repo, base, undefined, args.includes('--run-tests'));
     if (args.includes('--json')) console.log(JSON.stringify(findings, null, 2));
     else console.log(findings.length ? formatFindings(findings) : 'proof-gate: no findings');
     process.exit(findings.some((f) => f.level !== 'info') ? 1 : 0);
   }
-  console.error('usage: proof-gate check [--base <tree-ish>] [--json] | snapshot | hook prompt|stop');
+  console.error('usage: proof-gate check [--base <tree-ish>] [--run-tests] [--json] | snapshot | hook prompt|stop');
   process.exit(2);
 }
 

@@ -1,5 +1,5 @@
 // Production code shaped around the test suite instead of the spec.
-import { assertionRe, isCode, isTestFile, langOf, SUPPRESSION, TEST_ENV_SNIFF, TEST_TALK, testNames } from '../lang.ts';
+import { assertionRe, importLines, importsModule, isCode, isTestFile, langOf, SUPPRESSION, TEST_ENV_SNIFF, TEST_TALK, testNames } from '../lang.ts';
 import type { Finding, Rule } from '../types.ts';
 
 const trimmed = (s: string) => s.trim().slice(0, 200);
@@ -11,20 +11,6 @@ const numbersIn = (s: string) => [...s.matchAll(NUMBER)].map((m) => m[0].replace
 // Numbers in code position only: string literals and trailing comments removed.
 const STRINGS = /(['"`])(?:\\.|(?!\1).)*\1/g;
 const codeNumbersIn = (s: string) => numbersIn(s.replace(STRINGS, ' ').replace(/(#|\/\/).*$/, ''));
-
-// Path parts too common to identify a module on their own.
-const GENERIC = new Set(['src', 'lib', 'app', 'index', 'main', 'utils', 'util', 'common', 'core', 'pkg', 'internal', 'test', 'tests']);
-const escapeRe = (s: string) => s.replace(/[^\w/]/g, '\\$&');
-
-/** Whether a test's import lines refer to the module at `codePath`. */
-function importsModule(imports: string, codePath: string): boolean {
-  const modulePath = codePath.replace(/\.[^./]+$/, '');
-  const parts = modulePath.split('/').filter((p) => p.length >= 3 && !GENERIC.has(p.toLowerCase()));
-  if (parts.some((p) => new RegExp(`\\b${escapeRe(p)}\\b`).test(imports))) return true;
-  // src/index.ts and the like: only the path as a whole is distinctive.
-  const tail = modulePath.split('/').slice(-2).join('/');
-  return tail.includes('/') && new RegExp(`\\b${escapeRe(tail)}\\b`).test(imports);
-}
 
 // The comment part of a line ("# ...", "// ...", "/* ...", " * ..."), or ''.
 const commentOf = (line: string) => /(?:#|\/\/|\/\*+|^\s*\*)\s*(.*)$/.exec(line)?.[1] ?? '';
@@ -72,7 +58,7 @@ export const specialCase: Rule = async (ctx) => {
       }
     });
     if (changedPaths.has(path)) continue;
-    const imports = text.split('\n').filter((l) => /^\s*(import|from)\b|\brequire\s*\(|\buse\s/.test(l)).join('\n');
+    const imports = importLines(text);
     if (numbers.size) testNumbers.push({ path, imports, numbers });
   }
   const testUsing = (codePath: string, num: string): string | undefined => {
@@ -93,7 +79,7 @@ export const specialCase: Rule = async (ctx) => {
   const testRationale: Array<{ where: string; imports: string; pairs: Set<string> }> = [];
   for (const [path, text] of tests) {
     if (changedPaths.has(path)) continue;
-    const imports = text.split('\n').filter((l) => /^\s*(import|from)\b|\brequire\s*\(|\buse\s/.test(l)).join('\n');
+    const imports = importLines(text);
     text.split('\n').forEach((line, i) => {
       const pairs = bigrams(commentOf(line));
       if (pairs.length >= 3) testRationale.push({ where: `${path}:${i + 1}: ${trimmed(line)}`, imports, pairs: new Set(pairs) });

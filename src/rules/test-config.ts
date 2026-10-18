@@ -81,7 +81,10 @@ export const testConfig: Rule = (ctx) => {
     if (/(^|\/)package\.json$/.test(c.path)) {
       const was = testScript(c.before);
       const now = testScript(c.after);
-      if (was !== undefined && was !== now) {
+      // Appending test files to the command only widens what runs: not worth stopping for.
+      const onlyAddsTests = was !== undefined && now !== undefined && now.startsWith(was)
+        && /^(\s+[\w./\\-]*\.(test|spec)\.[cm]?[jt]sx?|\s+[\w./\\-]*test_[\w-]*\.py|\s+[\w./\\-]*_test\.(py|go))+\s*$/.test(now.slice(was.length));
+      if (was !== undefined && was !== now && !onlyAddsTests) {
         out.push({
           rule: 'test-script-changed', level: 'challenge', file: c.path,
           message: `Changed the "test" script in ${c.path}.`,

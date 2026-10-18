@@ -127,3 +127,9 @@ test('passive phrasing ("expected by the tests") is challenged too', async () =>
   const fs = await run({ 'solution.py': 'def f(c):\n    pass\n' }, { 'solution.py': 'def f(c):\n    if not any(c):\n        return 1  # expected by the tests: only the empty string is possible\n' });
   assert.deepEqual(rules(fs), ['challenge:test-referenced-in-code']);
 });
+
+test('appending test files to the test script is not a finding; rewriting it is', async () => {
+  const pkg = (script: string) => JSON.stringify({ scripts: { test: script } }, null, 2);
+  assert.deepEqual(rules(await run({ 'package.json': pkg('node --test test/a.test.ts') }, { 'package.json': pkg('node --test test/a.test.ts test/b.test.ts') })), []);
+  assert.deepEqual(rules(await run({ 'package.json': pkg('node --test test/a.test.ts test/b.test.ts') }, { 'package.json': pkg('node --test test/a.test.ts') })), ['challenge:test-script-changed']);
+});

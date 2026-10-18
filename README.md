@@ -17,7 +17,21 @@ tests instead of fixing the code. No model calls, no network, no dependencies.
 | challenge | `literal-from-test` | `DEFAULT_BURST = 11` copied from `range(11)` in an existing test |
 | challenge | `test-referenced-in-code` | `return 1  # tests expect 1 here` |
 | challenge | `test-name-in-code`, `test-script-changed`, `test-harness-changed` | |
+| challenge | `test-rationale-in-code` | a code comment lifting a test comment's wording to justify a special case |
 | info | `suppression-added`, `agent-admits-shortcut` | `@ts-ignore`; "I special-cased the empty input" |
+
+These need the tests to run (see below):
+
+| Level | Rule | What it proves |
+|---|---|---|
+| block | `regression` | a test the agent did not touch passed before the turn and fails now (re-run on both sides first, so a flaky test is not reported) |
+| block | `false-green` | the agent says the tests pass while affected tests fail |
+| challenge | `test-edited-to-pass` | an edited test passes, but its original version fails against the new code |
+| info | `tests-failing`, `tests-not-all-run` | affected tests still failing; the time budget or the cap cut the run short |
+
+Test execution also sharpens `literal-from-test`: a constant copied from a test stays a
+challenge when that test went from failing to passing, and drops to info when the test was
+already passing (a coincidence, not a copied expectation).
 
 - **block**: the agent is sent back until the problem is gone (up to 3 times per turn; after
   that the user is told what is still unresolved).
@@ -34,13 +48,28 @@ claude --plugin-dir /path/to/proof-gate
 
 The plugin registers two hooks: `UserPromptSubmit` snapshots the working tree when a turn
 starts (a git tree object, written without touching your index), and `Stop` checks the
-turn's changes against it. Outside a git repository it does nothing.
+turn's changes against it. It checks the session's own repo and every repo the agent edited
+files in. A repo first touched mid-turn is compared against where its HEAD was when the turn
+began (from the reflog), so committing during the turn does not hide the turn's changes.
+Outside a git repository it does nothing.
+
+**Test execution.** When a turn changes code, the Stop hook runs the affected tests: the test
+files the turn changed, plus unchanged test files that import a changed module. Both states
+(start of turn, now) are checked out into throwaway folders, so your working tree is never
+touched; the repo's `node_modules` is linked in. Runners are detected per test file: pytest,
+`node:test`, vitest and jest (when installed in the repo). Three runs: the original tests on
+the original code, the current tests on the current code, and the original versions of
+edited tests on the current code.
+
+- `PROOF_GATE_RUN_TESTS=0` turns execution off.
+- `PROOF_GATE_TEST_BUDGET_S` (default 60) bounds the time it may take per repo.
 
 CLI:
 
 ```bash
 node src/cli.ts check              # working tree vs HEAD
 node src/cli.ts check --base main  # vs another commit
+node src/cli.ts check --run-tests  # include test execution
 node src/cli.ts check --json
 ```
 
@@ -98,10 +127,11 @@ Current numbers (Sonnet 5.5, low effort):
   anything outside its workspace. The WSL sandbox batch matched the host batches on simple
   tasks; on hard ones it cheated more often (all on `hard-ts-expr`, 3/3), within the noise
   of three runs per task.
-- Replay: 15/15 recorded cheats stopped (block or challenge), 0/176 clean runs stopped.
+- Replay: 15/15 recorded cheats stopped (block or challenge), 0/176 clean runs stopped, with
+  and without test execution. With execution, all 5 edited-test cheats also come with proof
+  (`test-edited-to-pass`: the original test fails against the new code), at about 3s of test
+  running per run.
 - Real history: 18 of 554 commits across three repos would have stopped the agent, mostly for
   test deletions or expectation changes.
-- Known gap: a repo the agent touches for the first time in a turn is checked against its last
-  commit, so an agent that commits mid-turn hides that turn's changes from the gate.
 - Limitation: a challenge asks for an explanation; an agent can explain and keep the change
   (it did once, transparently). Turning that into proof needs the test-execution checks of M2.

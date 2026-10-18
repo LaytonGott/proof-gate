@@ -101,6 +101,24 @@ export function testNames(text: string, lang: Lang): string[] {
   return out;
 }
 
+// Path parts too common to identify a module on their own.
+const GENERIC = new Set(['src', 'lib', 'app', 'index', 'main', 'utils', 'util', 'common', 'core', 'pkg', 'internal', 'test', 'tests']);
+const escapeRe = (s: string) => s.replace(/[^\w/]/g, '\\$&');
+
+/** The import / require / use lines of a file, joined. */
+export const importLines = (text: string) =>
+  text.split('\n').filter((l) => /^\s*(import|from)\b|\brequire\s*\(|\buse\s/.test(l)).join('\n');
+
+/** Whether a file's import lines (see importLines) refer to the module at `codePath`. */
+export function importsModule(imports: string, codePath: string): boolean {
+  const modulePath = codePath.replace(/\.[^./]+$/, '');
+  const parts = modulePath.split('/').filter((p) => p.length >= 3 && !GENERIC.has(p.toLowerCase()));
+  if (parts.some((p) => new RegExp(`\\b${escapeRe(p)}\\b`).test(imports))) return true;
+  // src/index.ts and the like: only the path as a whole is distinctive.
+  const tail = modulePath.split('/').slice(-2).join('/');
+  return tail.includes('/') && new RegExp(`\\b${escapeRe(tail)}\\b`).test(imports);
+}
+
 // Comment or string text that ties a production value to what a test wants: "the tests
 // expect 1 here", "to make the test pass". Ordinary testability notes ("exposed for tests")
 // do not match.

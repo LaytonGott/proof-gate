@@ -19,8 +19,12 @@ export async function analyze(ctx: Context): Promise<Finding[]> {
       out.push(f);
     }
   }
-  return out.sort((a, b) => RANK[a.level] - RANK[b.level] || (a.file ?? '').localeCompare(b.file ?? '') || (a.line ?? 0) - (b.line ?? 0));
+  return sortFindings(out);
 }
+
+/** Most severe first, then by file and line. */
+export const sortFindings = (fs: Finding[]): Finding[] =>
+  [...fs].sort((a, b) => RANK[a.level] - RANK[b.level] || (a.file ?? '').localeCompare(b.file ?? '') || (a.line ?? 0) - (b.line ?? 0));
 
 export function formatFindings(findings: Finding[]): string {
   return findings

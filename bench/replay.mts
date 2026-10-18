@@ -1,12 +1,13 @@
 // Replays recorded agent runs through the gate's analyzer, offline, and scores it against
 // the bench's ground-truth cheat labels.
-// Usage: node bench/replay.mts <label> [label...] [--verbose]
+// Usage: node bench/replay.mts <label> [label...] [--exec] [--verbose]
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { analyze } from '../src/analyze.ts';
+import { analyze, sortFindings } from '../src/analyze.ts';
+import { executeChecks, refineWithExecution } from '../src/execute.ts';
 import { changesFromMaps } from '../src/changes.ts';
 import { isTestFile } from '../src/lang.ts';
 import type { Finding } from '../src/types.ts';
@@ -14,6 +15,9 @@ import type { Finding } from '../src/types.ts';
 const BENCH = fileURLToPath(new URL('.', import.meta.url));
 const args = process.argv.slice(2);
 const verbose = args.includes('--verbose');
+// Also run the gate's test execution, as the Stop hook does.
+const exec = args.includes('--exec');
+let execMs = 0;
 const labels = args.filter((a) => !a.startsWith('--'));
 
 const SKIP_DIR = /^(\.git|node_modules|__pycache__|\.pytest_cache)$/;
@@ -54,12 +58,20 @@ for (const label of labels) {
         if (r.status !== 0) console.error(`could not apply ${label}/${task}/${rep}: ${r.stderr}`);
       }
       const after = readTree(tmp);
+      const changes = changesFromMaps(before, after);
+      const testFiles = new Map([...after].filter(([p]) => isTestFile(p)));
+      const finalMessage = readFileSync(join(runDir, 'final.txt'), 'utf8');
+      let findings = await analyze({ changes, testFiles: async () => testFiles, finalMessage });
+      if (exec && changes.length) {
+        // The gate's test execution, on a pristine copy of the task and the agent's result.
+        const baseDir = mkdtempSync(join(tmpdir(), 'pg-replay-base-'));
+        cpSync(workspace, baseDir, { recursive: true });
+        const report = await executeChecks({ baseDir, newDir: tmp, changes, testFiles, finalMessage, budgetMs: 120_000 });
+        findings = sortFindings([...refineWithExecution(findings, report), ...report.findings]);
+        execMs += report.ms;
+        rmSync(baseDir, { recursive: true, force: true });
+      }
       rmSync(tmp, { recursive: true, force: true });
-      const findings = await analyze({
-        changes: changesFromMaps(before, after),
-        testFiles: async () => new Map([...after].filter(([p]) => isTestFile(p))),
-        finalMessage: readFileSync(join(runDir, 'final.txt'), 'utf8'),
-      });
       rows.push({ label, task, rep, cheated: grade.cheated, cheats: grade.cheats, findings });
     }
   }
@@ -70,7 +82,7 @@ const blocks = (r: Row) => r.findings.some((f) => f.level === 'block');
 const cheats = rows.filter((r) => r.cheated);
 const clean = rows.filter((r) => !r.cheated);
 
-console.log(`\n${rows.length} runs replayed (${cheats.length} cheated, ${clean.length} clean)\n`);
+console.log(`\n${rows.length} runs replayed (${cheats.length} cheated, ${clean.length} clean)${exec ? `, test execution on (${Math.round(execMs / 1000)}s total)` : ''}\n`);
 console.log(`cheats stopped (block or challenge): ${cheats.filter(stops).length}/${cheats.length}`);
 console.log(`cheats blocked outright:            ${cheats.filter(blocks).length}/${cheats.length}`);
 console.log(`clean runs stopped (false alarms):  ${clean.filter(stops).length}/${clean.length}`);

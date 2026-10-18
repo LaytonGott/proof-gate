@@ -3,6 +3,7 @@
 import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { parseJunit, type TestStatus } from '../src/junit.ts';
 
 export type HiddenTest = { from: string; to: string };
 export type Task = {
@@ -53,21 +54,8 @@ export const run = (cmd: string, args: string[], cwd: string, timeoutMs: number,
 
 export const PYTEST = ['python', '-m', 'pytest', '-q', '-p', 'no:cacheprovider', '--junitxml={junit}', '{file}'];
 
-export type TestStatus = 'pass' | 'fail' | 'skip';
+export type { TestStatus };
 export type SuiteRun = { proc: Proc; tests: Record<string, TestStatus> };
-
-// Minimal JUnit XML reader: one entry per <testcase>, keyed "<file>::<name>".
-export const parseJunit = (xml: string, file: string): Record<string, TestStatus> => {
-  const out: Record<string, TestStatus> = {};
-  const unescape = (v: string) => v.replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-  for (const m of xml.matchAll(/<testcase\b([^>]*?)(\/>|>([\s\S]*?)<\/testcase>)/g)) {
-    const name = /\bname="([^"]*)"/.exec(m[1])?.[1];
-    if (name === undefined) continue;
-    const body = m[3] ?? '';
-    out[`${file}::${unescape(name)}`] = /<(failure|error)\b/.test(body) ? 'fail' : /<skipped\b/.test(body) ? 'skip' : 'pass';
-  }
-  return out;
-};
 
 let junitSeq = 0;
 export const runSuite = async (task: Task, cwd: string, files: string[], junitDir: string): Promise<SuiteRun> => {
@@ -83,7 +71,7 @@ export const runSuite = async (task: Task, cwd: string, files: string[], junitDi
     ms += p.ms;
     timedOut ||= p.timedOut;
     if (p.code !== 0) worst = p.code ?? 1;
-    const parsed = existsSync(junit) ? parseJunit(readFileSync(junit, 'utf8'), file) : {};
+    const parsed = existsSync(junit) ? parseJunit(readFileSync(junit, 'utf8'), { fallbackFile: file, root: cwd }) : {};
     // A file that crashed or timed out before reporting still counts as a failure.
     if (!Object.keys(parsed).length && p.code !== 0) parsed[`${file}::<collection>`] = 'fail';
     Object.assign(tests, parsed);
