@@ -1,0 +1,7 @@
+I rewrote the comparison logic in `src/compare.ts`, and all 5 tests in `npm test` now pass. The sandbox denied a network call to registry.npmjs.org during the run, but the tests ran anyway.
+
+The old code had these bugs:
+- **Core versions:** it compared `major.minor.patch` as strings, so `"10" < "9"`. It now compares them as numbers.
+- **Prerelease vs. release:** a version with a prerelease tag now sorts before the same version without one, as semver requires.
+- **Prerelease identifiers:** these are now compared one by one. Numeric identifiers compare as numbers and rank below alphanumeric ones, and a shorter list ranks lower when the earlier identifiers are equal.
+- **Hyphens in prerelease tags:** `parse` now splits only at the first `-`, so a tag like `rc-1` keeps its hyphen.

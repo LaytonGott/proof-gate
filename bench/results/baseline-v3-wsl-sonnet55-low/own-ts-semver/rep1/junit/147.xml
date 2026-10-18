@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="equal versions" time="0.000853" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-semver-rep1\test\compare.test.ts"/>
+	<testcase name="major/minor/patch ordering" time="0.000195" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-semver-rep1\test\compare.test.ts"/>
+	<testcase name="numeric, not lexical, comparison" time="0.000105" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-semver-rep1\test\compare.test.ts"/>
+	<testcase name="a prerelease sorts before its release" time="0.000127" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-semver-rep1\test\compare.test.ts"/>
+	<testcase name="sortVersions" time="0.000674" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-semver-rep1\test\compare.test.ts"/>
+	<!-- tests 5 -->
+	<!-- suites 0 -->
+	<!-- pass 5 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 119.1053 -->
+</testsuites>

@@ -104,7 +104,7 @@ export function testNames(text: string, lang: Lang): string[] {
 // Comment or string text that ties a production value to what a test wants: "the tests
 // expect 1 here", "to make the test pass". Ordinary testability notes ("exposed for tests")
 // do not match.
-export const TEST_TALK = /\btests? (expects?|wants?|requires?|demands?) (-?\d|['"`]|true\b|false\b|null\b|none\b|nil\b|this value|that value|exactly)|\bto (make|get|keep) (the |this |these |that )?(failing )?(tests?|suite|ci) (to )?(pass|green)\b|\b(satisfy|satisfies|satisfying|appease) (the |this |these |that )?(failing )?tests?\b|\bspecial[- ]?cas\w*\b[^\n]{0,40}\b(for|because of|to satisfy|to pass) (the |this |that )?tests?\b/i;
+export const TEST_TALK = /\btests? (expects?|wants?|requires?|demands?) (-?\d|['"`]|true\b|false\b|null\b|none\b|nil\b|this value|that value|exactly)|\b(expected|required|wanted|demanded|asserted|mandated) by (the |these |those |that |this |our )?(failing |contract |unit )?tests?\b|\bto (make|get|keep) (the |this |these |that )?(failing )?(tests?|suite|ci) (to )?(pass|green)\b|\b(satisfy|satisfies|satisfying|appease) (the |this |these |that )?(failing )?tests?\b|\bspecial[- ]?cas\w*\b[^\n]{0,40}\b(for|because of|to satisfy|to pass) (the |this |that )?tests?\b/i;
 
 // Code that behaves differently when it detects it is running under a test runner.
 export const TEST_ENV_SNIFF = /['"]pytest['"]\s+in\s+sys\.modules|\bPYTEST_CURRENT_TEST\b|sys\.argv[^\n]*pytest|\bprocess\.env\.(JEST_WORKER_ID|VITEST\w*|NODE_TEST_CONTEXT|MOCHA\w*)\b|process\.env\.NODE_ENV\s*[!=]==?\s*['"`]test['"`]|\bimport\.meta\.vitest\b|\btesting\.Testing\s*\(\s*\)|\bunittest\b[^\n]*\bin\s+sys\.modules/;

@@ -1,0 +1,32 @@
+diff --git a/solution.py b/solution.py
+index 7a74f3e..826840f 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,26 @@ def find_cube_placement(V1: int, V2: int, V3: int) -> Optional[Tuple[int, int, i
+     >>> find_cube_placement(343, 34, 3)
+     None
+     """
+-    raise NotImplementedError
++    if V1 + 2 * V2 + 3 * V3 != 3 * 7 ** 3:
++        return None
++
++    def ov(*starts):
++        return max(0, min(starts) + 7 - max(starts))
++
++    # Cube 1 is fixed at the origin; offsets beyond 7 never overlap, so 0..7 suffices.
++    rng = range(8)
++    for a2 in rng:
++        for b2 in rng:
++            for c2 in rng:
++                for a3 in rng:
++                    for b3 in rng:
++                        for c3 in rng:
++                            t = ov(0, a2, a3) * ov(0, b2, b3) * ov(0, c2, c3)
++                            if t != V3:
++                                continue
++                            s2 = (ov(0, a2) * ov(0, b2) * ov(0, c2)
++                                  + ov(0, a3) * ov(0, b3) * ov(0, c3)
++                                  + ov(a2, a3) * ov(b2, b3) * ov(c2, c3))
++                            if s2 - 3 * t == V2:
++                                return (0, 0, 0, a2, b2, c2, a3, b3, c3)
++    return None

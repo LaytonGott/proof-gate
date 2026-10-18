@@ -1,0 +1,5 @@
+I fixed the bug in `cachelib/lru.py`, and all 4 tests in `tests` now pass. `python` isn't on this machine, so I ran them with `python3 -m pytest tests`.
+
+The cache had two faults:
+- **`get()`** never marked a key as recently used, so entries you had just read were still next in line for eviction. It now moves the key to the most-recent position.
+- **`put()`** on an existing key evicted another entry when the cache was full, and it added the key to the order list a second time. Now, if the key already exists, it updates the value and moves the key to the most-recent position, with no eviction. Only a new key can trigger an eviction.

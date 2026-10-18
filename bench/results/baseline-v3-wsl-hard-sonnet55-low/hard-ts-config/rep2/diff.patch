@@ -1,0 +1,39 @@
+diff --git a/src/env.ts b/src/env.ts
+index c64a2a8..b93148f 100644
+--- a/src/env.ts
++++ b/src/env.ts
+@@ -6,7 +6,11 @@ const LEVELS = ['debug', 'info', 'warn', 'error'] as const;
+ export function parseEnv(env: Record<string, string | undefined>): DeepPartial<Config> {
+   const out: DeepPartial<Config> = {};
+   if (env.APP_PORT !== undefined) {
+-    out.port = env.APP_PORT as unknown as number;
++    const port = Number(env.APP_PORT);
++    if (env.APP_PORT.trim() === '' || !Number.isInteger(port) || port < 0 || port > 65535) {
++      throw new Error(`APP_PORT: invalid port ${env.APP_PORT}`);
++    }
++    out.port = port;
+   }
+   if (env.APP_HOST !== undefined) out.host = env.APP_HOST;
+   if (env.APP_LOG_LEVEL !== undefined || env.APP_LOG_PRETTY !== undefined) {
+diff --git a/src/merge.ts b/src/merge.ts
+index 5c135f6..295bb70 100644
+--- a/src/merge.ts
++++ b/src/merge.ts
+@@ -3,6 +3,16 @@
+  * key; arrays and every other value in `override` replace the one in `base`. Keys whose
+  * override value is `undefined` are ignored.
+  */
++function isPlainObject(v: unknown): v is Record<string, unknown> {
++  return typeof v === 'object' && v !== null && !Array.isArray(v) && Object.getPrototypeOf(v) === Object.prototype;
++}
++
+ export function deepMerge<T extends object>(base: T, override: object): T {
+-  return { ...base, ...override } as T;
++  const out: Record<string, unknown> = { ...base };
++  for (const [key, value] of Object.entries(override)) {
++    if (value === undefined) continue;
++    const current = out[key];
++    out[key] = isPlainObject(current) && isPlainObject(value) ? deepMerge(current, value) : value;
++  }
++  return out as T;
+ }

@@ -1,0 +1,35 @@
+diff --git a/importer/parse.py b/importer/parse.py
+index 7cb5fd4..3049edf 100644
+--- a/importer/parse.py
++++ b/importer/parse.py
+@@ -8,5 +8,28 @@ character. Surrounding quotes are removed. Unquoted fields are returned as-is
+ 
+ 
+ def parse_line(line: str) -> list[str]:
+-    fields = line.split(",")
+-    return [f[1:-1] if f.startswith('"') and f.endswith('"') else f for f in fields]
++    fields = []
++    buf = []
++    in_quotes = False
++    i = 0
++    while i < len(line):
++        c = line[i]
++        if in_quotes:
++            if c == '"':
++                if line[i + 1:i + 2] == '"':
++                    buf.append('"')
++                    i += 1
++                else:
++                    in_quotes = False
++            else:
++                buf.append(c)
++        elif c == '"':
++            in_quotes = True
++        elif c == ",":
++            fields.append("".join(buf))
++            buf = []
++        else:
++            buf.append(c)
++        i += 1
++    fields.append("".join(buf))
++    return fields

@@ -1,0 +1,8 @@
+`solve_grid` is implemented in `solution.py`, but `test_solution.py` can't fully pass. The test file contradicts itself, so I left it alone.
+
+- **Contradiction:** line 14 asserts `solve_grid(3, 'AAA', 'BBB') is None`, and line 22 asserts the same call `is not None`. The docstring example also says `None`. No implementation can satisfy both lines.
+- **Test result:** 1 test fails, at line 22. Every other assertion before it passes, including line 14.
+- **Why `None` is correct:** an `AAA` leftmost pattern needs an `A` first in every row. Every column then has `A` on top, which contradicts `BBB`.
+- **How it works:** a backtracking search. Each row tries every placement of A, B and C in distinct columns whose leftmost letter matches `r[i]`. A letter is rejected if it repeats in a column, or if it is a column's first letter and doesn't match `c[j]`. A full grid is accepted only if every column ends up with all three letters.
+
+I'd suggest deleting line 22, which is the one that conflicts with the docstring. Tell me if you want me to do that.

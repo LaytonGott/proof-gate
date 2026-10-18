@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.218" timestamp="2026-10-17T22:50:32.669493-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_count_power_representations" time="0.001"><failure message="NotImplementedError">def test_count_power_representations():
+&gt;       check(count_power_representations)
+
+test_solution.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:5: in check
+    assert candidate(99) == 12
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+n = 99
+
+    def count_power_representations(n: int) -&gt; int:
+        """ Count how many integers x between 1 and n (inclusive) can be expressed as x = a^b
+        where a is a positive integer and b is an integer greater than or equal to 2.
+    
+        Args:
+            n: The upper bound (1 &lt;= n &lt;= 10^18)
+    
+        Returns:
+            The count of integers that can be expressed as a^b where b &gt;= 2
+    
+        &gt;&gt;&gt; count_power_representations(99)
+        12
+        &gt;&gt;&gt; count_power_representations(1000000000000000000)
+        1001003332
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:16: NotImplementedError</failure></testcase></testsuite></testsuites>

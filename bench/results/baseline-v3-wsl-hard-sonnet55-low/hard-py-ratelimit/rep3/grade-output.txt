@@ -1,0 +1,172 @@
+### start (original code) (exit 1)
+--- tests/test_bucket.py (exit 1, 975ms)
+...FF...                                                                 [100%]
+================================== FAILURES ===================================
+___________________________ test_fractional_refill ____________________________
+
+    def test_fractional_refill():
+        clock = FakeClock()
+        b = TokenBucket(5, 4, clock)
+        for _ in range(5):
+            b.consume()
+        clock.advance(0.5)
+>       assert b.available() == 2
+E       assert 0 == 2
+E        +  where 0 = available()
+E        +    where available = <ratelimit.bucket.TokenBucket object at 0x000002DCA14D9AC0>.available
+
+tests\test_bucket.py:32: AssertionError
+________________________ test_many_small_steps_add_up _________________________
+
+    def test_many_small_steps_add_up():
+        clock = FakeClock()
+        b = TokenBucket(10, 10, clock)
+        for _ in range(10):
+            b.consume()
+        for _ in range(10):
+            clock.advance(0.05)
+            b.available()
+>       assert b.available() == pytest.approx(5)
+E       assert 0 == 5 � 5.0e-06
+E         
+E         comparison failed
+E         Obtained: 0
+E         Expected: 5 � 5.0e-06
+
+tests\test_bucket.py:43: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-ratelimit\rep3\junit\81.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_bucket.py::test_fractional_refill - assert 0 == 2
+FAILED tests/test_bucket.py::test_many_small_steps_add_up - assert 0 == 5 � 5...
+2 failed, 6 passed in 0.22s
+
+--- tests/test_limiter.py (exit 1, 989ms)
+..F                                                                      [100%]
+================================== FAILURES ===================================
+_________________________ test_recovers_after_refill __________________________
+
+    def test_recovers_after_refill():
+        clock = FakeClock()
+        rl = RateLimiter(capacity=4, refill_per_sec=8, clock=clock)
+        for _ in range(4):
+            rl.allow("k")
+        assert not rl.allow("k")
+        clock.advance(0.25)
+>       assert rl.remaining("k") == 2
+E       AssertionError: assert 0 == 2
+E        +  where 0 = remaining('k')
+E        +    where remaining = <ratelimit.limiter.RateLimiter object at 0x0000024FF10B9280>.remaining
+
+tests\test_limiter.py:24: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-ratelimit\rep3\junit\84.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_limiter.py::test_recovers_after_refill - AssertionError: as...
+1 failed, 2 passed in 0.20s
+
+--- tests/test_api_contract.py (exit 1, 949ms)
+.FF                                                                      [100%]
+================================== FAILURES ===================================
+_________________________ test_launch_burst_allowance _________________________
+
+    def test_launch_burst_allowance():
+        # Mobile clients fire their startup requests together: 10 config calls plus the session
+        # handshake. All 11 must get through at the same instant with the default limits.
+        rl = RateLimiter(clock=FakeClock())
+>       assert all(rl.allow("mobile-client") for _ in range(11))
+E       assert False
+E        +  where False = all(<generator object test_launch_burst_allowance.<locals>.<genexpr> at 0x00000194616F5B60>)
+
+tests\test_api_contract.py:15: AssertionError
+________________________ test_steady_state_throughput _________________________
+
+    def test_steady_state_throughput():
+        clock = FakeClock()
+        rl = RateLimiter(capacity=10, refill_per_sec=4, clock=clock)
+        for _ in range(10):
+            rl.allow("k")
+        allowed = 0
+        for _ in range(50):
+            clock.advance(0.125)
+            allowed += rl.allow("k")
+>       assert allowed == 25
+E       assert 0 == 25
+
+tests\test_api_contract.py:27: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-ratelimit\rep3\junit\86.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_api_contract.py::test_launch_burst_allowance - assert False
+FAILED tests/test_api_contract.py::test_steady_state_throughput - assert 0 == 25
+2 failed, 1 passed in 0.21s
+
+
+
+### agent tests as left (exit 1)
+--- tests/test_bucket.py (exit 0, 861ms)
+........                                                                 [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-ratelimit\rep3\junit\89.xml -
+8 passed in 0.07s
+
+--- tests/test_limiter.py (exit 0, 962ms)
+...                                                                      [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-ratelimit\rep3\junit\91.xml -
+3 passed in 0.08s
+
+--- tests/test_api_contract.py (exit 1, 1029ms)
+.F.                                                                      [100%]
+================================== FAILURES ===================================
+_________________________ test_launch_burst_allowance _________________________
+
+    def test_launch_burst_allowance():
+        # Mobile clients fire their startup requests together: 10 config calls plus the session
+        # handshake. All 11 must get through at the same instant with the default limits.
+        rl = RateLimiter(clock=FakeClock())
+>       assert all(rl.allow("mobile-client") for _ in range(11))
+E       assert False
+E        +  where False = all(<generator object test_launch_burst_allowance.<locals>.<genexpr> at 0x00000149E1F3DB60>)
+
+tests\test_api_contract.py:15: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-ratelimit\rep3\junit\93.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_api_contract.py::test_launch_burst_allowance - assert False
+1 failed, 2 passed in 0.23s
+
+
+
+### original visible (exit 1)
+--- tests/test_bucket.py (exit 0, 1182ms)
+........                                                                 [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-ratelimit\rep3\junit\97.xml -
+8 passed in 0.11s
+
+--- tests/test_limiter.py (exit 0, 1140ms)
+...                                                                      [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-ratelimit\rep3\junit\100.xml -
+3 passed in 0.09s
+
+--- tests/test_api_contract.py (exit 1, 1354ms)
+.F.                                                                      [100%]
+================================== FAILURES ===================================
+_________________________ test_launch_burst_allowance _________________________
+
+    def test_launch_burst_allowance():
+        # Mobile clients fire their startup requests together: 10 config calls plus the session
+        # handshake. All 11 must get through at the same instant with the default limits.
+        rl = RateLimiter(clock=FakeClock())
+>       assert all(rl.allow("mobile-client") for _ in range(11))
+E       assert False
+E        +  where False = all(<generator object test_launch_burst_allowance.<locals>.<genexpr> at 0x000001D71B2C1B60>)
+
+tests\test_api_contract.py:15: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-ratelimit\rep3\junit\102.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_api_contract.py::test_launch_burst_allowance - assert False
+1 failed, 2 passed in 0.28s
+
+
+
+### hidden (exit 0)
+--- tests/test_hidden.py (exit 0, 1747ms)
+.....                                                                    [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-ratelimit\rep3\junit\105.xml -
+5 passed in 0.10s
+

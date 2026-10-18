@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="3" time="0.237" timestamp="2026-10-17T22:54:37.785034-05:00" hostname="laytons-pc"><testcase classname="tests.test_invoice" name="test_plain_customer_invoice" time="0.001" /><testcase classname="tests.test_invoice" name="test_loyalty_customer_invoice" time="0.001"><failure message="ValueError: discount rate must be between 0 and 1, got 10">def test_loyalty_customer_invoice():
+        # Reported by support: loyalty customers can't be invoiced at all.
+        loyal = from_crm_row({"id": "c2", "name": "Grace", "loyalty_pct": "10"})
+        inv = Invoice(loyal, [Line("A", Decimal("20.00"), 2), Line("B", Decimal("9.99"), 1, "SPRING15")])
+        # A: 20.00 -&gt; 18.00, x2 = 36.00, tax 38.88
+        # B: 9.99 -&gt; SPRING15 8.49 -&gt; loyalty 7.64, tax 8.25
+&gt;       assert inv.total() == Decimal("47.13")
+
+tests\test_invoice.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+shop\invoice.py:33: in total
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:33: in &lt;genexpr&gt;
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:29: in line_total
+    unit = apply_discount(unit, self.customer.discount_pct)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+price = Decimal('20.00'), rate = Decimal('10')
+
+    def apply_discount(price: Decimal, rate: Decimal) -&gt; Decimal:
+        """Price after a discount.
+    
+        `rate` is a fraction between 0 and 1: Decimal("0.15") means 15% off. Anything outside
+        that range is a caller bug and raises ValueError, so a percent passed by mistake
+        (15 instead of 0.15) can never silently zero out a price.
+        """
+        rate = Decimal(str(rate))
+        if not (Decimal(0) &lt;= rate &lt;= Decimal(1)):
+&gt;           raise ValueError(f"discount rate must be between 0 and 1, got {rate}")
+E           ValueError: discount rate must be between 0 and 1, got 10
+
+shop\pricing.py:23: ValueError</failure></testcase><testcase classname="tests.test_invoice" name="test_loyalty_with_bulk" time="0.001"><failure message="ValueError: discount rate must be between 0 and 1, got 10">def test_loyalty_with_bulk():
+        loyal = Customer("c3", "Linus", discount_pct=10)
+        inv = Invoice(loyal, [Line("C", Decimal("4.00"), 10)])
+        # 4.00 -&gt; bulk 3.80 -&gt; loyalty 3.42, x10 = 34.20, tax 36.94
+&gt;       assert inv.total() == Decimal("36.94")
+
+tests\test_invoice.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+shop\invoice.py:33: in total
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:33: in &lt;genexpr&gt;
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:29: in line_total
+    unit = apply_discount(unit, self.customer.discount_pct)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+price = Decimal('3.80'), rate = Decimal('10')
+
+    def apply_discount(price: Decimal, rate: Decimal) -&gt; Decimal:
+        """Price after a discount.
+    
+        `rate` is a fraction between 0 and 1: Decimal("0.15") means 15% off. Anything outside
+        that range is a caller bug and raises ValueError, so a percent passed by mistake
+        (15 instead of 0.15) can never silently zero out a price.
+        """
+        rate = Decimal(str(rate))
+        if not (Decimal(0) &lt;= rate &lt;= Decimal(1)):
+&gt;           raise ValueError(f"discount rate must be between 0 and 1, got {rate}")
+E           ValueError: discount rate must be between 0 and 1, got 10
+
+shop\pricing.py:23: ValueError</failure></testcase></testsuite></testsuites>

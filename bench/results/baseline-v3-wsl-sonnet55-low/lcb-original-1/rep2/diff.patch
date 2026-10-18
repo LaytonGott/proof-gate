@@ -1,0 +1,31 @@
+diff --git a/solution.py b/solution.py
+index 58ce8c0..3b79757 100644
+--- a/solution.py
++++ b/solution.py
+@@ -21,4 +21,25 @@ def count_powerful_integers(start: int, finish: int, limit: int, s: str) -> int:
+     >>> count_powerful_integers(1000, 2000, 4, "3000")
+     0
+     """
+-    raise NotImplementedError
++    if any(int(c) > limit for c in s):
++        return 0
++
++    def count_upto(n: int) -> int:
++        # count powerful integers in [1, n]
++        t = str(n)
++        k = len(s)
++        if len(t) < k:
++            return 0
++        free = len(t) - k
++        total = 0
++        base = limit + 1
++        for i in range(free):
++            d = int(t[i])
++            total += min(d, base) * base ** (free - i - 1)
++            if d > limit:
++                return total
++        if int(t[free:]) >= int(s):
++            total += 1
++        return total
++
++    return count_upto(finish) - count_upto(start - 1)

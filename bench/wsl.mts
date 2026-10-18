@@ -16,6 +16,11 @@ export const DISTRO = process.env.PG_WSL_DISTRO ?? 'Ubuntu';
 const WSL_ROOT = '/tmp/pg-runs';
 const WSL_CTL = '/tmp/pg-ctl';
 
+/** The id a bench run uses inside WSL; its workspace is `${WSL_ROOT}/<id>`. */
+export const benchRunId = (label: string, task: string, rep: number | string) =>
+  `${label}/${task}-rep${String(rep).replace(/^rep/, '')}`.replace(/[^\w.-]/g, '_');
+export const wslWorkFor = (runId: string) => `${WSL_ROOT}/${runId}`;
+
 /** C:\Users\x -> /mnt/c/Users/x */
 export const toWslPath = (p: string) => p.replace(/^([A-Za-z]):[\\/]/, (_, d: string) => `/mnt/${d.toLowerCase()}/`).replace(/\\/g, '/');
 
@@ -64,7 +69,7 @@ export async function runAgentInWsl(opts: {
   const script = join(opts.ctlDir, `${opts.runId}.sh`);
   writeFileSync(prompt, opts.prompt);
   writeFileSync(settings, JSON.stringify(sandboxSettings(), null, 2));
-  const wslWork = `${WSL_ROOT}/${opts.runId}`;
+  const wslWork = wslWorkFor(opts.runId);
   const host = toWslPath(opts.hostWork);
   writeFileSync(script, [
     '#!/usr/bin/env bash',

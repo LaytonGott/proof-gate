@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.205" timestamp="2026-10-17T22:50:06.468327-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_expected_black_ball_position" time="0.033"><failure message="assert 571416630 == 123456789&#10; +  where 571416630 = &lt;function expected_black_ball_position at 0x0000013AC61B39C0&gt;(84789430, 17447)">def test_expected_black_ball_position():
+&gt;       check(expected_black_ball_position)
+
+test_solution.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = &lt;function expected_black_ball_position at 0x0000013AC61B39C0&gt;
+
+    def check(candidate):
+        # Sample test cases
+        assert candidate(2, 1) == 499122178
+        assert candidate(3, 2) == 554580198
+        assert candidate(4, 4) == 592707587
+    
+        # Additional test cases
+        assert candidate(92724482, 8713) == 397187210
+        assert candidate(42952, 42770) == 3846140
+        assert candidate(998244352, 100000) == 296595689
+        assert candidate(87868, 84659) == 469774635
+        assert candidate(1, 1) == 1
+        assert candidate(73, 2890) == 757452161
+&gt;       assert candidate(84789430, 17447) == 123456789
+E       assert 571416630 == 123456789
+E        +  where 571416630 = &lt;function expected_black_ball_position at 0x0000013AC61B39C0&gt;(84789430, 17447)
+
+test_solution.py:17: AssertionError</failure></testcase></testsuite></testsuites>

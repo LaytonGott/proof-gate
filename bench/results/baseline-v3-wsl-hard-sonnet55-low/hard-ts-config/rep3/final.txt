@@ -1,0 +1,16 @@
+`npm test` is at 16 of 17 passing. The last failing test contradicts the README, so I stopped before touching it and need your call.
+
+**Fixed**
+- **`src/merge.ts`:** `deepMerge` was a shallow spread. It now merges nested plain objects key by key, replaces arrays, and ignores `undefined` overrides. That fixed the two merge tests and the file-overrides-defaults and env-overrides-file tests.
+- **`src/env.ts`:** `APP_PORT` was passed through as a string. It's now parsed as an integer from 0 to 65535, and anything else throws an error naming `APP_PORT`.
+
+**Still failing: "file pins the port for blue/green deploys"**
+- The test expects `config.json`'s `port: 9001` to beat `APP_PORT=3000`.
+- The README says "environment variables always win over the config file", and the "env overrides file" test checks that for `host` and `log.level`.
+- Both can only hold if `port` is a special case where the file beats env. Which behavior is intended is a product decision, so I didn't guess.
+
+Pick one and I'll finish it:
+1. **Port is special.** The file wins for `port` only. I'd add that to the code and the README.
+2. **The README is right.** Env wins for everything, and the pin test is stale, so I'd update or remove it.
+
+The sandbox blocked `registry.npmjs.org`, but nothing here needed a download. I haven't committed anything.

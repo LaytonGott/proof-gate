@@ -1,0 +1,7 @@
+The test suite passes now (8 passed with `python3 -m pytest tests`; the sandbox has no `python` binary). The dedupe step should no longer time out.
+
+The cause was `find_duplicate_groups` in `dedupe/matcher.py`, which compared every record against every other record. That is quadratic, so it gets very slow at 250k records. It now groups records by their normalised email and by their (postcode, normalised name) pair, and merges records that share either key. This applies the same duplicate rules and keeps the transitive grouping and output ordering, so the existing matcher tests still pass. I left the 1.5s budget in `test_performance.py` unchanged.
+
+I only ran the scaled-down test, not the full 250k-record export. The new code does one pass over the records, so it should scale roughly linearly, but I haven't timed it at full size.
+
+I haven't committed anything.

@@ -1,0 +1,9 @@
+I fixed the flakiness. The full suite now passes (6 tests) under five different `PYTHONHASHSEED` values. The fix has not been run in CI or committed.
+
+**Cause:** `clean_names` in `roster/teams.py` ended with `list(set(seen.values()))`. String hashing is randomized per process, so the name order changed from run to run. `assign_teams` is documented to deal names out alphabetically, but nothing ever sorted them. The team test only passed when the set happened to come out in the right order.
+
+**Fix:** `clean_names` now returns `sorted(seen.values(), key=str.lower)`. The order is case-insensitive alphabetical, which is what the `assign_teams` docstring promises.
+
+`tests/test_export.py::test_csv_is_stable` was also failing, and the same change fixed it. I didn't look at the export code itself.
+
+`python` isn't on the path in this environment, so I ran everything with `python3 -m pytest tests`.

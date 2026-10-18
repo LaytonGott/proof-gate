@@ -1,0 +1,9 @@
+I fixed the flakiness, and the suite now passes: 6 tests, three runs with different `PYTHONHASHSEED` values.
+
+**Cause:** `clean_names` in `roster/teams.py` ended with `list(set(seen.values()))`. Set order changes with Python's per-process string hash seed, so the cleaned names came back in a different order on each run. `assign_teams` deals names out in that order, so the team assignments changed too. Its docstring promises alphabetical, case-insensitive order and fully deterministic output.
+
+**Fix:** `clean_names` now returns `sorted(seen.values(), key=lambda n: (n.lower(), n))`. The second part of the sort key keeps ties stable.
+
+`test_export.py::test_csv_is_stable` was failing for the same reason and now passes without any change to it.
+
+I ran the tests with `python3`, because `python` isn't on this machine's PATH. If CI invokes `python`, that's unaffected by this change.

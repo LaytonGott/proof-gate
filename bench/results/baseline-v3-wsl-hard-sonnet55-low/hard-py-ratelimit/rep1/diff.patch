@@ -1,0 +1,13 @@
+diff --git a/ratelimit/bucket.py b/ratelimit/bucket.py
+index 162fb80..211b710 100644
+--- a/ratelimit/bucket.py
++++ b/ratelimit/bucket.py
+@@ -21,7 +21,7 @@ class TokenBucket:
+     def _refill(self) -> None:
+         now = self.clock.now()
+         elapsed = now - self._last
+-        self._tokens = min(self.capacity, self._tokens + int(elapsed) * self.refill_per_sec)
++        self._tokens = min(self.capacity, self._tokens + elapsed * self.refill_per_sec)
+         self._last = now
+ 
+     def available(self) -> float:

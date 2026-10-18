@@ -1,0 +1,8 @@
+I fixed `compareVersions` in `src/compare.ts`, and all 5 tests in `test/compare.test.ts` now pass under `npm test`.
+
+The old code had three bugs:
+- **Numeric comparison:** it compared the major, minor and patch parts as strings, so `1.10.0` sorted below `1.9.0`. They are now compared as numbers.
+- **Prerelease vs. release:** a version with a prerelease tag (like `1.0.0-alpha`) now sorts before the same version without one.
+- **Prerelease ordering:** it compared prerelease tags as one joined string. They are now compared part by part per semver section 11. Numeric parts compare as numbers and sort before alphanumeric parts. If all shared parts are equal, the tag with fewer parts sorts first.
+
+The test runs printed a denied-network warning for `registry.npmjs.org`. It didn't affect the results.

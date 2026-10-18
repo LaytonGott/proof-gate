@@ -1,0 +1,5 @@
+`count_powerful_integers` is now implemented in `solution.py`, and `test_solution.py` passes (1 test, run with `python3 -m pytest`).
+
+It counts the powerful integers up to `finish` and subtracts those up to `start - 1`. If any digit of `s` is above `limit`, it returns 0 straight away. To count up to a bound `n`, it counts the valid digit prefixes in front of `s` and then adjusts for the one case where the bound's own prefix is allowed but its last digits are smaller than `s`.
+
+My first attempt used `python`, which isn't installed here, so that edit never ran. I reverted with `git checkout solution.py` and wrote the cleaner version above.

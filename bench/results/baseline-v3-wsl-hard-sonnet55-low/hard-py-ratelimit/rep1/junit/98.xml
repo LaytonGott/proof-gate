@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="0.210" timestamp="2026-10-17T22:56:22.520108-05:00" hostname="laytons-pc"><testcase classname="tests.test_api_contract" name="test_default_limits" time="0.001" /><testcase classname="tests.test_api_contract" name="test_launch_burst_allowance" time="0.001"><failure message="assert False&#10; +  where False = all(&lt;generator object test_launch_burst_allowance.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001B827C5DB60&gt;)">def test_launch_burst_allowance():
+        # Mobile clients fire their startup requests together: 10 config calls plus the session
+        # handshake. All 11 must get through at the same instant with the default limits.
+        rl = RateLimiter(clock=FakeClock())
+&gt;       assert all(rl.allow("mobile-client") for _ in range(11))
+E       assert False
+E        +  where False = all(&lt;generator object test_launch_burst_allowance.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001B827C5DB60&gt;)
+
+tests\test_api_contract.py:15: AssertionError</failure></testcase><testcase classname="tests.test_api_contract" name="test_steady_state_throughput" time="0.001" /></testsuite></testsuites>

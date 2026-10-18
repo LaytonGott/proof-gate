@@ -1,0 +1,9 @@
+I fixed the flakiness. `python3 -m pytest tests` passed 6 of 6 on each of six consecutive runs. The `python` command isn't installed here, so I used `python3`.
+
+**Cause:** `clean_names` in `roster/teams.py` returned `list(set(seen.values()))`. Set order changes with Python's per-process string hashing, so the "alphabetical" round-robin in `assign_teams` got a different order on most runs. Before the fix it failed `test_assign_teams_round_robin_alphabetical` and `test_csv_is_stable` in all four runs I tried here; in CI it passed only now and then.
+
+**Fix:** `clean_names` now returns `sorted(seen.values(), key=str.lower)`. That gives a case-insensitive alphabetical order, which is what the `assign_teams` docstring already promised. It still keeps the first spelling of each name.
+
+`test_csv_is_stable` in `tests/test_export.py` was failing for the same reason, and the same change fixed it.
+
+I haven't committed anything.

@@ -1,0 +1,9 @@
+I implemented `count_square_permutations`, but `test_solution.py` still fails because of one assertion that contradicts the rest of the file. I did not edit the test.
+
+**Implementation:** the function goes through every k with k² below 10ⁿ. It zero-pads each k² to n digits and counts it if its sorted digits match the sorted digits of `s`.
+
+**Test failure:** line 20 asserts `candidate(1, '4') == 0`. Lines 11 and 16 assert `candidate(1, '4') == 1`, and so does the docstring. 4 is 2², so 1 is correct, and no implementation can satisfy both versions.
+
+Every other assertion passes. That includes all the 13-digit cases (840, 781, 745, 735, 733). I checked the three after line 20 directly, because the failing assert stops the test before it reaches them.
+
+The line-20 assert looks like a typo. If you confirm, I can delete it or change it to `== 1`, and the test will pass.

@@ -1,0 +1,8 @@
+I rewrote `parse_line` in `importer/parse.py` so a comma inside a quoted field no longer splits it. All 4 tests in `tests/test_parse.py` pass.
+
+It now reads the line one character at a time and tracks whether it's inside quotes. That matches the module docstring:
+- **Quoted fields:** commas inside quotes stay literal, `""` becomes one quote character, and the surrounding quotes are removed.
+- **Unquoted fields:** returned as-is, with no trimming.
+- **Empty line:** gives a single empty field.
+
+`python` isn't on this machine's PATH, so I ran the tests with `python3 -m pytest tests` instead of the command you gave.

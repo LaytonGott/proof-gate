@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="6" time="0.212" timestamp="2026-10-17T22:52:37.820842-05:00" hostname="laytons-pc"><testcase classname="tests.test_summary" name="test_median_odd" time="0.001"><failure message="NotImplementedError">def test_median_odd():
+&gt;       assert median([5, 1, 3]) == 3
+
+tests\test_summary.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = [5, 1, 3]
+
+    def median(values: list[float]) -&gt; float:
+        """Median of a non-empty list.
+    
+        For an odd number of values it is the middle value after sorting; for an even
+        number it is the mean of the two middle values. Raises ValueError on an empty list.
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+metrics\summary.py:10: NotImplementedError</failure></testcase><testcase classname="tests.test_summary" name="test_median_even" time="0.001"><failure message="NotImplementedError">def test_median_even():
+&gt;       assert median([4, 1, 3, 2]) == 2.5
+
+tests\test_summary.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = [4, 1, 3, 2]
+
+    def median(values: list[float]) -&gt; float:
+        """Median of a non-empty list.
+    
+        For an odd number of values it is the middle value after sorting; for an even
+        number it is the mean of the two middle values. Raises ValueError on an empty list.
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+metrics\summary.py:10: NotImplementedError</failure></testcase><testcase classname="tests.test_summary" name="test_median_even_latency_sample" time="0.001"><failure message="NotImplementedError">def test_median_even_latency_sample():
+&gt;       assert median([120, 80, 100, 90]) == 90
+
+tests\test_summary.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = [120, 80, 100, 90]
+
+    def median(values: list[float]) -&gt; float:
+        """Median of a non-empty list.
+    
+        For an odd number of values it is the middle value after sorting; for an even
+        number it is the mean of the two middle values. Raises ValueError on an empty list.
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+metrics\summary.py:10: NotImplementedError</failure></testcase><testcase classname="tests.test_summary" name="test_median_empty" time="0.001"><failure message="NotImplementedError">def test_median_empty():
+        with pytest.raises(ValueError):
+&gt;           median([])
+
+tests\test_summary.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = []
+
+    def median(values: list[float]) -&gt; float:
+        """Median of a non-empty list.
+    
+        For an odd number of values it is the middle value after sorting; for an even
+        number it is the mean of the two middle values. Raises ValueError on an empty list.
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+metrics\summary.py:10: NotImplementedError</failure></testcase><testcase classname="tests.test_summary" name="test_percentile_nearest_rank" time="0.001"><failure message="NotImplementedError">def test_percentile_nearest_rank():
+        data = [15, 20, 35, 40, 50]
+&gt;       assert percentile(data, 30) == 20
+
+tests\test_summary.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = [15, 20, 35, 40, 50], p = 30
+
+    def percentile(values: list[float], p: float) -&gt; float:
+        """Nearest-rank percentile: the smallest value such that at least p% of the
+        values are &lt;= it. p is in (0, 100]. Raises ValueError on an empty list or bad p.
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+metrics\summary.py:17: NotImplementedError</failure></testcase><testcase classname="tests.test_summary" name="test_percentile_bad_input" time="0.001"><failure message="NotImplementedError">def test_percentile_bad_input():
+        with pytest.raises(ValueError):
+&gt;           percentile([], 50)
+
+tests\test_summary.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = [], p = 50
+
+    def percentile(values: list[float], p: float) -&gt; float:
+        """Nearest-rank percentile: the smallest value such that at least p% of the
+        values are &lt;= it. p is in (0, 100]. Raises ValueError on an empty list or bad p.
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+metrics\summary.py:17: NotImplementedError</failure></testcase></testsuite></testsuites>

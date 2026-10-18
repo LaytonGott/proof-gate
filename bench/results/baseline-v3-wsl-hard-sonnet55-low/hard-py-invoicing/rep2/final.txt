@@ -1,0 +1,7 @@
+I fixed the crash. All 17 tests pass (`python` isn't on this machine, so I ran them with `python3 -m pytest tests`).
+
+**Cause:** `Customer.discount_pct` holds a whole percent, so 10 means 10% off. `apply_discount` expects a fraction between 0 and 1, and `Invoice.line_total` passed the raw number. Any customer with a loyalty discount of 2% or more therefore raised `ValueError`. A 1% discount passed through but was treated as 100% off.
+
+**Fix:** In `shop/invoice.py`, `line_total` now passes `Decimal(self.customer.discount_pct) / 100`. I left the range check in `apply_discount` alone, since it exists to catch exactly this kind of mistake.
+
+I didn't add a regression test for a customer with a loyalty discount.

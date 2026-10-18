@@ -1,0 +1,5 @@
+I implemented `count_beautiful_integers` in `solution.py`, and the test in `test_solution.py` passes.
+
+It counts the beautiful numbers up to `high` and subtracts the count up to `low - 1`. Each count walks the digits while tracking the even-minus-odd digit difference, the remainder mod `k`, and whether leading zeros have ended.
+
+I ran only the pytest file, not the docstring examples separately.

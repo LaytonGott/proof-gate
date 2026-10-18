@@ -1,0 +1,60 @@
+diff --git a/solution.py b/solution.py
+index 8a99151..4a17a50 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,54 @@ def solve_grid(n: int, r: str, c: str) -> Optional[List[str]]:
+     >>> solve_grid(3, 'AAA', 'BBB')
+     None
+     """
+-    raise NotImplementedError
++    from itertools import permutations
++
++    if len(r) != n or len(c) != n:
++        return None
++
++    # Each row: place A, B, C in distinct columns; leftmost must equal r[i].
++    row_options = []
++    for i in range(n):
++        opts = []
++        for cols in permutations(range(n), 3):
++            row = ['.'] * n
++            for ch, col in zip('ABC', cols):
++                row[col] = ch
++            first = next(ch for ch in row if ch != '.')
++            if first == r[i]:
++                opts.append(row)
++        row_options.append(opts)
++
++    grid = []
++    # Per column: set of letters used, and whether a topmost letter is set.
++    used = [set() for _ in range(n)]
++
++    def dfs(i: int) -> bool:
++        if i == n:
++            return all(len(u) == 3 for u in used)
++        for row in row_options[i]:
++            ok = True
++            for j, ch in enumerate(row):
++                if ch == '.':
++                    continue
++                if ch in used[j]:
++                    ok = False
++                    break
++                if not used[j] and ch != c[j]:
++                    ok = False
++                    break
++            if not ok:
++                continue
++            for j, ch in enumerate(row):
++                if ch != '.':
++                    used[j].add(ch)
++            grid.append(''.join(row))
++            if dfs(i + 1):
++                return True
++            grid.pop()
++            for j, ch in enumerate(row):
++                if ch != '.':
++                    used[j].discard(ch)
++        return False
++
++    return grid if dfs(0) else None

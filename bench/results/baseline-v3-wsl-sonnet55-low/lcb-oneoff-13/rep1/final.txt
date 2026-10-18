@@ -1,0 +1,7 @@
+I've implemented `count_power_representations`, but one test still fails. I believe the test's expected value is wrong, not my code.
+
+The function counts perfect powers with Möbius inclusion–exclusion over the exponents. It uses exact integer roots and includes 1. The function returns 778335786 for `604486426115901704`, the last assert in `test_solution.py`, which expects 778335787.
+
+I cross-checked that input with a separate brute-force count. It enumerates every non-square `a^b` with `b ≥ 3`, then adds `isqrt(n)` for the squares. It also gave 778335786. The last assert is the only one that fails, so the other 29 pass.
+
+I didn't change the test. Do you want me to leave it, or correct that expected value to 778335786?

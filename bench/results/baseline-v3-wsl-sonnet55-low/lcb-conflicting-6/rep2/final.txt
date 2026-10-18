@@ -1,0 +1,9 @@
+`can_tile_grid` is implemented in `solution.py`, but `test_solution.py` can't pass as written. It fails on line 29, and the test file contradicts itself there.
+
+Line 15 and line 29 call the function with identical arguments, `(7, 8, 9, [(3, 6), (3, 6), (3, 6), (6, 3), (6, 3), (6, 3), (3, 6)])`. Line 15 expects `False` and line 29 expects `True`. No implementation can satisfy both.
+
+Mine returns `False` for that input, so the line 15 assertion passes and line 29 fails. `False` is the correct answer. Seven tiles of 18 cells each cover 126 cells, and the grid is 8×9 = 72, so tiling it would take exactly four of those tiles. No such subset tiles an 8×9 grid, since 8 isn't a multiple of 3 or 6 in the right way.
+
+The implementation is a backtracking search. It finds the first empty cell and tries each unused tile there, in both orientations. Unused tiles are allowed.
+
+Apart from that line-29 assertion, the other assertions in `check` pass. I didn't change the tests. If you want the suite green, one of those two duplicate lines needs to be removed or corrected; line 29 looks like the wrong one.

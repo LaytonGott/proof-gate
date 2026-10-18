@@ -1,0 +1,12 @@
+diff --git a/solution.py b/solution.py
+index dbea132..8db53c9 100644
+--- a/solution.py
++++ b/solution.py
+@@ -20,4 +20,6 @@ def count_valid_colorings(n: int, m: int) -> int:
+     >>> count_valid_colorings(987654, 456789)
+     778634319
+     """
+-    raise NotImplementedError
++    p = 998244353
++    sign = 1 if n % 2 == 0 else -1
++    return (pow(m - 1, n, p) + sign * (m - 1)) % p

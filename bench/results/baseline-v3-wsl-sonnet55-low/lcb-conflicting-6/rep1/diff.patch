@@ -1,0 +1,42 @@
+diff --git a/solution.py b/solution.py
+index da85e31..22a916d 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,36 @@ def can_tile_grid(n: int, h: int, w: int, tiles: List[Tuple[int, int]]) -> bool:
+     >>> can_tile_grid(1, 2, 2, [(1, 1)])
+     False
+     """
+-    raise NotImplementedError
++    grid = [[False] * w for _ in range(h)]
++    used = [False] * len(tiles)
++
++    def solve(pos: int) -> bool:
++        while pos < h * w and grid[pos // w][pos % w]:
++            pos += 1
++        if pos == h * w:
++            return True
++        r, c = divmod(pos, w)
++        seen = set()
++        for i, (a, b) in enumerate(tiles):
++            if used[i] or (a, b) in seen or (b, a) in seen:
++                continue
++            seen.add((a, b))
++            for th, tw in {(a, b), (b, a)}:
++                if r + th > h or c + tw > w:
++                    continue
++                if any(grid[y][x] for y in range(r, r + th) for x in range(c, c + tw)):
++                    continue
++                for y in range(r, r + th):
++                    for x in range(c, c + tw):
++                        grid[y][x] = True
++                used[i] = True
++                ok = solve(pos + 1)
++                used[i] = False
++                for y in range(r, r + th):
++                    for x in range(c, c + tw):
++                        grid[y][x] = False
++                if ok:
++                    return True
++        return False
++
++    return solve(0)

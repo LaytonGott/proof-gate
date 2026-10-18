@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="README precedence: env beats file for every key, port included" time="0.002414" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-hard-sonnet55-low\hard-ts-config-rep2-grade\test\hidden.test.ts"/>
+	<testcase name="file beats defaults for port" time="0.000275" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-hard-sonnet55-low\hard-ts-config-rep2-grade\test\hidden.test.ts"/>
+	<testcase name="port parsing" time="0.000465" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-hard-sonnet55-low\hard-ts-config-rep2-grade\test\hidden.test.ts"/>
+	<testcase name="deep merge semantics" time="0.000389" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-hard-sonnet55-low\hard-ts-config-rep2-grade\test\hidden.test.ts"/>
+	<testcase name="full load merges nested log config across all three layers" time="0.000258" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-hard-sonnet55-low\hard-ts-config-rep2-grade\test\hidden.test.ts"/>
+	<!-- tests 5 -->
+	<!-- suites 0 -->
+	<!-- pass 5 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 158.6044 -->
+</testsuites>

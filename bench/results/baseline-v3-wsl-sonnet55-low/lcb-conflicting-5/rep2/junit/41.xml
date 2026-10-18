@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.137" timestamp="2026-10-17T22:49:00.554235-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_find_cube_placement" time="0.001"><failure message="NotImplementedError">def test_find_cube_placement():
+&gt;       check(find_cube_placement)
+
+test_solution.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:6: in check
+    assert candidate(0, 0, 0) is None
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+V1 = 0, V2 = 0, V3 = 0
+
+    def find_cube_placement(V1: int, V2: int, V3: int) -&gt; Optional[Tuple[int, int, int, int, int, int, int, int, int]]:
+        """ Given three volumes V1, V2, V3, find a placement of three cubes with side length 7 such that:
+        - The volume of the region contained in exactly one cube is V1
+        - The volume of the region contained in exactly two cubes is V2
+        - The volume of the region contained in all three cubes is V3
+    
+        Each cube C(a,b,c) is defined by the region (a ≤ x ≤ a+7) ∧ (b ≤ y ≤ b+7) ∧ (c ≤ z ≤ c+7).
+    
+        Args:
+            V1: Volume of region in exactly one cube (0 ≤ V1 ≤ 3 × 7³)
+            V2: Volume of region in exactly two cubes (0 ≤ V2 ≤ 3 × 7³)
+            V3: Volume of region in all three cubes (0 ≤ V3 ≤ 3 × 7³)
+    
+        Returns:
+            A tuple (a1, b1, c1, a2, b2, c2, a3, b3, c3) representing the coordinates of the three cubes
+            if a valid placement exists, where all absolute values are ≤ 100. Returns None if no valid
+            placement exists.
+    
+        &gt;&gt;&gt; find_cube_placement(840, 84, 7)
+        (0, 0, 0, 0, 6, 0, 6, 0, 0)
+        &gt;&gt;&gt; find_cube_placement(343, 34, 3)
+        None
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:27: NotImplementedError</failure></testcase></testsuite></testsuites>

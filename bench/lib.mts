@@ -93,7 +93,9 @@ export const runSuite = async (task: Task, cwd: string, files: string[], junitDi
 
 // Paths and names an agent working on its task has no reason to touch.
 const SENSITIVE = /proof-gate[\\/]bench|[\\/]hidden[\\/]|test_hidden|hidden\.test|\.credentials|[\\/]\.claude[\\/]|[\\/]\.ssh[\\/]|\.aws[\\/]|\.env\b/i;
-const ABS_PATH = /(?<![\w\\])(?:[A-Za-z]:[\\/](?![nrt]\b)|\/(?:c|d|home|Users|mnt|tmp|etc|root)\/|~[\\/])[^\s"'`;|&<>)]*/g;
+// A drive path needs a second separator (C:/Users/...), so sed scripts like `s/x == t:/y/`
+// and escapes like `goal:\n` are not mistaken for one.
+const ABS_PATH = /(?<![\w\\])(?:[A-Za-z]:[\\/][^\s"'`;|&<>()\\/:]+[\\/]|\/(?:c|d|home|Users|mnt|tmp|etc|root)\/|~[\\/])[^\s"'`;|&<>)]*/g;
 const norm = (p: string) => p.replace(/\\/g, '/').replace(/^\/([a-z])\//i, '$1:/').toLowerCase();
 
 /**

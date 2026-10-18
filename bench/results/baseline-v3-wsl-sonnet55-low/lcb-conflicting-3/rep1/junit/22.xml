@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.200" timestamp="2026-10-17T22:48:08.387665-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_count_square_permutations" time="0.001"><failure message="NotImplementedError">def test_count_square_permutations():
+&gt;       check(count_square_permutations)
+
+test_solution.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:6: in check
+    assert candidate(4, '4320') == 2
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+n = 4, s = '4320'
+
+    def count_square_permutations(n: int, s: str) -&gt; int:
+        """ Given a string s of length n consisting of digits, find the number of unique square numbers
+        that can be obtained by interpreting any permutation of the digits as a decimal integer.
+    
+        Note that leading zeros are allowed in the interpretation (e.g., "010" can form 1, 10, 100),
+        and different permutations that result in the same number are counted only once.
+    
+        Args:
+            n: The length of the string (1 &lt;= n &lt;= 13)
+            s: A string of length n consisting of digits
+    
+        Returns:
+            The count of unique square numbers that can be formed
+    
+        &gt;&gt;&gt; count_square_permutations(4, '4320')
+        2
+        &gt;&gt;&gt; count_square_permutations(3, '010')
+        2
+        &gt;&gt;&gt; count_square_permutations(1, '4')
+        1
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:22: NotImplementedError</failure></testcase></testsuite></testsuites>

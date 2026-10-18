@@ -1,0 +1,11 @@
+`min_operations_to_rearrange` is implemented in `solution.py`, but the test suite still fails on one assertion, so I haven't made it pass.
+
+**Implementation.** It's a breadth-first search over board states of length n+2, with `.` marking an empty cell. Each move takes two adjacent stones and puts them, in order, into the two empty cells. It returns the BFS depth when the board equals `t` followed by two empty cells, or -1 if that state is never reached.
+
+**The failure.** `test_solution.py:16` expects 7 for `(12, 'WBWWWWBWBBBB', 'BBBBBBWWWWWW')`, and my code returns 8. The search is exhaustive over the moves the docstring allows, so 8 is the true minimum under those rules. The other 20 assertions in the file pass when I run them one by one, including all the n=14 cases and the impossible (-1) ones.
+
+**Other rules I tried.** I tried two other rules to get 7, and both broke many of the other cases:
+- The goal counts as reached when the stones read `t` in order, wherever the empty cells end up.
+- The goal also accepts `t` shifted right with the empty cells at the front.
+
+The expected value of 7 on that line looks wrong. I haven't changed the tests, because that's your call. If you want a different rule, tell me what it is. Otherwise I can change that assertion to 8.

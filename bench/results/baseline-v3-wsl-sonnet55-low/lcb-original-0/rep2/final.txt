@@ -1,0 +1,5 @@
+I implemented `count_beautiful_integers` in `solution.py`, and the test in `test_solution.py` passes (1 passed).
+
+It uses a digit DP with memoization. It counts the beautiful numbers up to `high` and subtracts the count up to `low - 1`. The DP tracks the even/odd balance, the remainder mod `k`, whether the number has started (to skip leading zeros), and whether it is still bounded by the limit.
+
+`python` isn't installed here, so I ran the tests with `python3 -m pytest`.

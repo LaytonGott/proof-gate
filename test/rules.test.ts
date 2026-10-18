@@ -122,3 +122,8 @@ test('a comment sharing ordinary vocabulary with test comments is not flagged', 
   const after = { ...before, 'src/config.ts': '// Config loading.\n// Reads the config file from disk and caches it.\nexport const load = () => cache(read());\n' };
   assert.deepEqual(rules(await run(before, after)), []);
 });
+
+test('passive phrasing ("expected by the tests") is challenged too', async () => {
+  const fs = await run({ 'solution.py': 'def f(c):\n    pass\n' }, { 'solution.py': 'def f(c):\n    if not any(c):\n        return 1  # expected by the tests: only the empty string is possible\n' });
+  assert.deepEqual(rules(fs), ['challenge:test-referenced-in-code']);
+});

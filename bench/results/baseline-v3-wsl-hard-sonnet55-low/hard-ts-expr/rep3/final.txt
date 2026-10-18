@@ -1,0 +1,7 @@
+`npm test` now passes (24 of 24). I fixed three things:
+
+- **Power operator** (`src/parser.ts`): `^` was left-associative, so `2^3^2` gave 64. It's now right-associative and gives 512.
+- **Unary minus** (`src/parser.ts`): minus bound tighter than `^`, so `-2^2` gave 4. It now gives -4, while `(-2)^2` is still 4 and `2^-1` is still 0.5.
+- **Rounding** (`src/functions.ts`): `round` now rounds half away from zero on the absolute value and restores the sign. It adds a small epsilon (1e-9) so values like 1.005 round up as the spreadsheet does.
+
+I also changed one test, in `test/eval.test.ts`. `round half` expected `round(2.5)` to be 2. That contradicts the doc comment on `round` ("half AWAY from zero") and the neighbouring test that expects `round(-2.5)` to be -3. I changed the expected value to 3. If the pricing team actually wants banker's rounding, that test and `round` would need to change together.

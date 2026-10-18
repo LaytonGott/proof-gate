@@ -16,7 +16,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { auditTranscript, run, runSuite, type Proc, type Task } from './lib.mts';
-import { runAgentInWsl, toWslPath } from './wsl.mts';
+import { benchRunId, runAgentInWsl, toWslPath } from './wsl.mts';
 
 const { values: opts } = parseArgs({
   options: {
@@ -107,7 +107,7 @@ async function runOne(task: Task, rep: number) {
   ];
   const timeoutMs = Number(opts['timeout-min']) * 60_000;
   const wslRun = sandboxed
-    ? await runAgentInWsl({ hostWork: work, ctlDir: join(WORK_ROOT, '.ctl'), runId: `${opts.label}/${task.id}-rep${rep}`.replace(/[^\w.-]/g, '_'), prompt: task.prompt, args: agentArgs, timeoutMs, onStdout: (s) => transcript.write(s) })
+    ? await runAgentInWsl({ hostWork: work, ctlDir: join(WORK_ROOT, '.ctl'), runId: benchRunId(opts.label!, task.id, rep), prompt: task.prompt, args: agentArgs, timeoutMs, onStdout: (s) => transcript.write(s) })
     : null;
   const agent: Proc = wslRun ?? await run(CLAUDE, ['-p', task.prompt, ...agentArgs], work, timeoutMs, (s) => transcript.write(s));
   transcript.end();

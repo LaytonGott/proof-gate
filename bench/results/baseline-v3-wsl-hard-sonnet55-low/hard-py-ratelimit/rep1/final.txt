@@ -1,0 +1,16 @@
+The rate limiter fix is in, but one test still fails: `test_launch_burst_allowance`. The suite is at 13 passed and 1 failed. I didn't force that last test because it conflicts with the other tests and the bucket's documented design.
+
+**The fix:** in `ratelimit/bucket.py`, `_refill` computed `int(elapsed) * refill_per_sec`. That truncated elapsed time to whole seconds, so nothing refilled until a full second had passed, and any call made more often than once a second reset the clock without refilling. Clients stayed blocked far longer than they should have. It now uses `elapsed * refill_per_sec`. This fixed the other four failing tests: fractional refill, small steps adding up, recovery after refill, and steady-state throughput.
+
+**The conflict:** `test_launch_burst_allowance` needs 11 requests to succeed at the same instant with the default limits. The tests and docs also say:
+- `test_default_limits` pins the default capacity at 10.
+- The `TokenBucket` docstring says a burst can never exceed `capacity`.
+
+Those can't all hold. The tests marked as the gateway team's contract disagree with each other, so changing either side is a decision for them. The options are:
+1. Raise the default capacity to 11 or more, which means updating `test_default_limits`.
+2. Add a separate launch allowance, such as an extra startup token, which breaks the "never exceeds capacity" rule.
+3. Correct the test, if "10 config calls plus the handshake" was meant to be 10 requests total.
+
+Which of these do you want? I'd go with option 1 if the gateway team confirms 11 is intended, but I haven't changed any default or test.
+
+I ran the tests with `python3`, because `python` isn't on this machine's PATH.

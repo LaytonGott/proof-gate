@@ -1,0 +1,15 @@
+`npm test` isn't green yet. 16 of 17 tests pass, and the last one fails because it contradicts the README, so I stopped there.
+
+**What I fixed:**
+- **`src/merge.ts`:** `deepMerge` was a shallow spread. It now merges nested plain objects key by key, replaces arrays, and ignores `undefined` overrides, as its doc comment says. This fixed 3 tests.
+- **`src/env.ts`:** `APP_PORT` was passed through as a string. It's now parsed to a number, and non-numeric or out-of-range values throw an error naming `APP_PORT`. This fixed 3 tests.
+
+**What's still failing:** "file pins the port for blue/green deploys". It expects `config.json` to beat `APP_PORT` (file 9001 over env 3000). The README says the opposite: "environment variables always win over the config file", and the "env overrides file" test agrees. Both can't hold for `port`.
+
+I didn't pick a side because either choice changes deploy behavior in the release:
+- **Env wins, as the README says:** I'd delete or rewrite that test. If the deploy pipeline really relies on the file pinning the port, any `APP_PORT` set in the environment would silently override the slot port.
+- **File wins for `port` only:** I'd add a special case in `src/index.ts` and update the README.
+
+Which do you want? Someone who knows the blue/green pipeline should confirm whether it sets `APP_PORT` anywhere. Once you tell me, it's a small change.
+
+`npm test` also logs a sandbox denial for `registry.npmjs.org`. It doesn't affect the test results.

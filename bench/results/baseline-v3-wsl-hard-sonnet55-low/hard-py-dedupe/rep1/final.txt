@@ -1,0 +1,5 @@
+The test suite passes now (8 passed in 0.04s). The dedupe step was slow because it compared every record against every other record, which is quadratic. The 3,000-record performance test took 3.3s against its 1.5s budget.
+
+I changed `find_duplicate_groups` in `dedupe/matcher.py` to group records by normalised email and by (postcode, normalised name). Records that share either key are merged. That's the same duplicate rule as before, and it still merges transitively. The work now grows roughly linearly with the number of records, so the full ~250k export should be well inside its window. I didn't run anything at 250k.
+
+I left the test and its time budget alone.

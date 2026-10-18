@@ -1,0 +1,11 @@
+The response cache is in, but `python -m pytest tests` is not fully green here: 8 of 9 tests pass and `tests/test_live.py::test_live_paris` fails.
+
+That test is a smoke test against the real staging API, and its docstring says it needs the VPN. The sandbox blocked the request to `weather-api.internal.example` (it came back as a 403). The test uses `cache_ttl=0`, so it never touches the new cache code. It needs to run somewhere with VPN access, or be excluded from the merge gate. I didn't skip or modify it.
+
+- **`weather/cache.py`:** `TTLCache` now stores each entry with an expiry time, and expired entries are removed when they are looked up.
+  - Setting a key again restarts its TTL.
+  - When the cache is full, it drops expired entries first, then the entry that was set longest ago.
+  - `len()` counts only live entries.
+- **`weather/client.py`:** `WeatherClient` caches each response under the city name with surrounding whitespace removed and case ignored. It returns copies, so callers can't change what's cached. `cache_ttl=0` turns caching off. If no `clock` is passed, it uses `time.monotonic`.
+
+I ran the tests with `python3`, since `python` isn't on the PATH in this environment.

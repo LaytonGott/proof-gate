@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="semver.org 11.4 precedence chain" time="0.001094" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-semver-rep2-grade\test\hidden.test.ts"/>
+	<testcase name="numeric fields compared numerically everywhere" time="0.000156" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-semver-rep2-grade\test\hidden.test.ts"/>
+	<testcase name="build metadata is ignored" time="0.000119" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-semver-rep2-grade\test\hidden.test.ts"/>
+	<testcase name="release vs prerelease both directions" time="0.000176" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-semver-rep2-grade\test\hidden.test.ts"/>
+	<testcase name="sortVersions is stable on a mixed list" time="0.000726" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-semver-rep2-grade\test\hidden.test.ts"/>
+	<!-- tests 5 -->
+	<!-- suites 0 -->
+	<!-- pass 5 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 141.4848 -->
+</testsuites>

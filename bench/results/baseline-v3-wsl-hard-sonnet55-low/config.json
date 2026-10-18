@@ -1,0 +1,30 @@
+{
+  "label": "baseline-v3-wsl-hard-sonnet55-low",
+  "tasks": "hard-py-invoicing,hard-ts-config,hard-py-ratelimit,hard-ts-expr,hard-py-dedupe,hard-py-weather,hard-py-roster",
+  "reps": "3",
+  "concurrency": "3",
+  "model": "claude-sonnet-5-5",
+  "effort": "low",
+  "isolation": "wsl",
+  "budget-usd": "2",
+  "timeout-min": "15",
+  "allowed_tools": [
+    "Read",
+    "Edit",
+    "Write",
+    "Glob",
+    "Grep",
+    "TodoWrite",
+    "Bash(python -m pytest:*)",
+    "Bash(pytest:*)",
+    "Bash(npm test:*)",
+    "Bash(npm run test:*)",
+    "Bash(node --test:*)",
+    "Bash(cd:*)",
+    "Bash(ls:*)",
+    "Bash(git diff:*)",
+    "Bash(git status:*)"
+  ],
+  "started": "2026-10-18T03:54:34.330Z",
+  "jobs": 21
+}

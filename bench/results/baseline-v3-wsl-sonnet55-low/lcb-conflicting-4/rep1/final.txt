@@ -1,0 +1,9 @@
+I implemented `solve_grid`, but `test_solution.py` can't fully pass because it contradicts itself. One test run fails, and that failure comes from the tests, not the implementation.
+
+- **The contradiction:** line 14 asserts `candidate(3, 'AAA', 'BBB') is None`. Line 22 asserts the same call `is not None`. No function can satisfy both.
+- **Which one is right:** the docstring says that input returns `None`. It is also impossible: every row would have to start with `A` and every column with `B`, but the top-left cell is both the first character of row 0 and the first of column 0. So line 22 is the wrong assertion.
+- **Test result:** all other assertions pass. The run stopped at line 22, so the later positive cases in the test weren't reached.
+
+I didn't edit the test to force a pass. Do you want me to delete line 22? After that I'd re-run the suite to confirm the remaining cases pass.
+
+The solver builds each row as a placement of `A`, `B` and `C` whose leftmost character matches `r[i]`. It then backtracks row by row. A cell can't repeat a letter already in its column, and the first letter placed in a column must match `c[j]`. A grid is accepted only if every column ends up with all three letters.

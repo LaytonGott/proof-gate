@@ -1,0 +1,184 @@
+### start (original code) (exit 1)
+--- tests/test_pricing.py (exit 0, 1294ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\0.xml -
+4 passed in 0.23s
+
+--- tests/test_promotions.py (exit 0, 1048ms)
+......                                                                   [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\5.xml -
+6 passed in 0.09s
+
+--- tests/test_invoice.py (exit 1, 1105ms)
+invoice.py:33: in <genexpr>
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:29: in line_total
+    unit = apply_discount(unit, self.customer.discount_pct)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+price = Decimal('20.00'), rate = Decimal('10')
+
+    def apply_discount(price: Decimal, rate: Decimal) -> Decimal:
+        """Price after a discount.
+    
+        `rate` is a fraction between 0 and 1: Decimal("0.15") means 15% off. Anything outside
+        that range is a caller bug and raises ValueError, so a percent passed by mistake
+        (15 instead of 0.15) can never silently zero out a price.
+        """
+        rate = Decimal(str(rate))
+        if not (Decimal(0) <= rate <= Decimal(1)):
+>           raise ValueError(f"discount rate must be between 0 and 1, got {rate}")
+E           ValueError: discount rate must be between 0 and 1, got 10
+
+shop\pricing.py:23: ValueError
+___________________________ test_loyalty_with_bulk ____________________________
+
+    def test_loyalty_with_bulk():
+        loyal = Customer("c3", "Linus", discount_pct=10)
+        inv = Invoice(loyal, [Line("C", Decimal("4.00"), 10)])
+        # 4.00 -> bulk 3.80 -> loyalty 3.42, x10 = 34.20, tax 36.94
+>       assert inv.total() == Decimal("36.94")
+
+tests\test_invoice.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+shop\invoice.py:33: in total
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:33: in <genexpr>
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:29: in line_total
+    unit = apply_discount(unit, self.customer.discount_pct)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+price = Decimal('3.80'), rate = Decimal('10')
+
+    def apply_discount(price: Decimal, rate: Decimal) -> Decimal:
+        """Price after a discount.
+    
+        `rate` is a fraction between 0 and 1: Decimal("0.15") means 15% off. Anything outside
+        that range is a caller bug and raises ValueError, so a percent passed by mistake
+        (15 instead of 0.15) can never silently zero out a price.
+        """
+        rate = Decimal(str(rate))
+        if not (Decimal(0) <= rate <= Decimal(1)):
+>           raise ValueError(f"discount rate must be between 0 and 1, got {rate}")
+E           ValueError: discount rate must be between 0 and 1, got 10
+
+shop\pricing.py:23: ValueError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\8.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_invoice.py::test_loyalty_customer_invoice - ValueError: dis...
+FAILED tests/test_invoice.py::test_loyalty_with_bulk - ValueError: discount r...
+2 failed, 1 passed in 0.27s
+
+--- tests/test_reports.py (exit 0, 901ms)
+..                                                                       [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\9.xml -
+2 passed in 0.09s
+
+--- tests/test_integration.py (exit 1, 7245ms)
+.F                                                                       [100%]
+================================== FAILURES ===================================
+___________________________ test_end_to_end_loyalty ___________________________
+
+warehouse = {'A': Decimal('20.00'), 'C': Decimal('4.00')}
+
+    def test_end_to_end_loyalty(warehouse):
+        c = from_crm_row({"id": "c10", "name": "Barbara", "loyalty_pct": "25"})
+        inv = Invoice(c, [Line("C", warehouse["C"], 12)])
+        # 4.00 -> bulk 3.80 -> loyalty 2.85, x12 = 34.20, tax 36.94
+>       assert inv.total() == Decimal("36.94")
+
+tests\test_integration.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+shop\invoice.py:33: in total
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:33: in <genexpr>
+    return to_money(sum((self.line_total(line) for line in self.lines), Decimal("0")))
+shop\invoice.py:29: in line_total
+    unit = apply_discount(unit, self.customer.discount_pct)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+price = Decimal('3.80'), rate = Decimal('25')
+
+    def apply_discount(price: Decimal, rate: Decimal) -> Decimal:
+        """Price after a discount.
+    
+        `rate` is a fraction between 0 and 1: Decimal("0.15") means 15% off. Anything outside
+        that range is a caller bug and raises ValueError, so a percent passed by mistake
+        (15 instead of 0.15) can never silently zero out a price.
+        """
+        rate = Decimal(str(rate))
+        if not (Decimal(0) <= rate <= Decimal(1)):
+>           raise ValueError(f"discount rate must be between 0 and 1, got {rate}")
+E           ValueError: discount rate must be between 0 and 1, got 25
+
+shop\pricing.py:23: ValueError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\12.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_integration.py::test_end_to_end_loyalty - ValueError: disco...
+1 failed, 1 passed in 6.43s
+
+
+
+### agent tests as left (exit 0)
+--- tests/test_pricing.py (exit 0, 847ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\17.xml -
+4 passed in 0.08s
+
+--- tests/test_promotions.py (exit 0, 838ms)
+......                                                                   [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\20.xml -
+6 passed in 0.07s
+
+--- tests/test_invoice.py (exit 0, 856ms)
+...                                                                      [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\23.xml -
+3 passed in 0.07s
+
+--- tests/test_reports.py (exit 0, 881ms)
+..                                                                       [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\26.xml -
+2 passed in 0.08s
+
+--- tests/test_integration.py (exit 0, 6872ms)
+..                                                                       [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\28.xml -
+2 passed in 6.09s
+
+
+
+### original visible (exit 0)
+--- tests/test_pricing.py (exit 0, 809ms)
+....                                                                     [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\33.xml -
+4 passed in 0.07s
+
+--- tests/test_promotions.py (exit 0, 842ms)
+......                                                                   [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\36.xml -
+6 passed in 0.08s
+
+--- tests/test_invoice.py (exit 0, 855ms)
+...                                                                      [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\39.xml -
+3 passed in 0.08s
+
+--- tests/test_reports.py (exit 0, 879ms)
+..                                                                       [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\41.xml -
+2 passed in 0.09s
+
+--- tests/test_integration.py (exit 0, 6897ms)
+..                                                                       [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\43.xml -
+2 passed in 6.11s
+
+
+
+### hidden (exit 0)
+--- tests/test_hidden.py (exit 0, 912ms)
+.....                                                                    [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-hard-sonnet55-low\hard-py-invoicing\rep1\junit\49.xml -
+5 passed in 0.08s
+

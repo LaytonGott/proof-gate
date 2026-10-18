@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.190" timestamp="2026-10-17T22:51:28.933582-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_count_ways_to_stair" time="0.001"><failure message="NotImplementedError">def test_count_ways_to_stair():
+&gt;       check(count_ways_to_stair)
+
+test_solution.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:5: in check
+    assert candidate(0) == 2
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+k = 0
+
+    def count_ways_to_stair(k: int) -&gt; int:
+        """ Alice starts on stair 1 and wants to reach stair k. She has a jump value starting at 0.
+        From stair i, she can perform two types of operations:
+        1. Go down to stair i-1 (cannot be used consecutively or on stair 0)
+        2. Go up to stair i + 2^jump, then increment jump by 1
+    
+        Return the total number of ways Alice can reach stair k.
+        Note that Alice can reach stair k multiple times and continue operations.
+    
+        Args:
+            k: The target stair number (0 &lt;= k &lt;= 10^9)
+    
+        Returns:
+            The number of distinct ways to reach stair k
+    
+        &gt;&gt;&gt; count_ways_to_stair(0)
+        2
+        &gt;&gt;&gt; count_ways_to_stair(1)
+        4
+        &gt;&gt;&gt; count_ways_to_stair(512)
+        1
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:23: NotImplementedError</failure></testcase></testsuite></testsuites>

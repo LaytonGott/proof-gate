@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="basic" time="0.001364" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-slugify-rep2\test\slugify.test.ts"/>
+	<testcase name="accents and whitespace" time="0.000276" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-slugify-rep2\test\slugify.test.ts"/>
+	<testcase name="punctuation runs collapse" time="0.001798" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-slugify-rep2\test\slugify.test.ts" failure="Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'rock-roll'&#10;- 'rock--roll'&#10;        ^&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'rock-roll'&#10;- 'rock--roll'&#10;        ^">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
++ actual - expected
+
++ 'rock-roll'
+- 'rock--roll'
+        ^
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'rock-roll'
+  - 'rock--roll'
+          ^
+  
+      at TestContext.&lt;anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/baseline-v3-wsl-sonnet55-low/own-ts-slugify-rep2/test/slugify.test.ts:14:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'rock-roll',
+    expected: 'rock--roll',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="max length cuts at a word boundary" time="0.000169" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-slugify-rep2\test\slugify.test.ts"/>
+	<testcase name="no boundary means hard cut" time="0.000143" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\baseline-v3-wsl-sonnet55-low\own-ts-slugify-rep2\test\slugify.test.ts"/>
+	<!-- tests 5 -->
+	<!-- suites 0 -->
+	<!-- pass 4 -->
+	<!-- fail 1 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 167.0062 -->
+</testsuites>

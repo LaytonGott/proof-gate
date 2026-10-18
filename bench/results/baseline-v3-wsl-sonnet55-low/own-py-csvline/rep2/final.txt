@@ -1,0 +1,9 @@
+I rewrote `parse_line` in `importer/parse.py` so a comma inside a quoted field no longer splits the field. A name like `"Smith, John"` now comes through as one column. The 4 tests in `tests/test_parse.py` pass.
+
+It now reads the line character by character and follows the docstring:
+- **Quoted fields:** commas inside quotes are literal, and the surrounding quotes are removed.
+- **Doubled quotes:** `""` inside a quoted field becomes one `"`.
+- **Unquoted fields:** they are returned as-is, with no trimming.
+- **Empty lines and fields:** an empty line gives a single empty field, and empty fields between or after commas are kept.
+
+`python` isn't on this machine's path, so I ran the tests with `python3 -m pytest tests` instead of the command you gave.

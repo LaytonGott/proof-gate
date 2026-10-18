@@ -1,0 +1,65 @@
+diff --git a/weather/cache.py b/weather/cache.py
+index 3facc76..a75d5a1 100644
+--- a/weather/cache.py
++++ b/weather/cache.py
+@@ -14,13 +14,32 @@ class TTLCache:
+     """
+ 
+     def __init__(self, ttl: float, max_entries: int = 1000, clock=time.monotonic):
+-        raise NotImplementedError("TODO(caching): implement TTLCache")
++        self.ttl = ttl
++        self.max_entries = max_entries
++        self.clock = clock
++        self._data = {}  # key -> (expires_at, value); insertion order == set order
++
++    def _purge(self) -> None:
++        now = self.clock()
++        for k in [k for k, (exp, _) in self._data.items() if exp <= now]:
++            del self._data[k]
+ 
+     def get(self, key):
+-        raise NotImplementedError
++        entry = self._data.get(key)
++        if entry is None:
++            return None
++        if entry[0] <= self.clock():
++            del self._data[key]
++            return None
++        return entry[1]
+ 
+     def set(self, key, value) -> None:
+-        raise NotImplementedError
++        self._data.pop(key, None)
++        self._purge()
++        while self._data and len(self._data) >= self.max_entries:
++            del self._data[next(iter(self._data))]
++        self._data[key] = (self.clock() + self.ttl, value)
+ 
+     def __len__(self) -> int:
+-        raise NotImplementedError
++        self._purge()
++        return len(self._data)
+diff --git a/weather/client.py b/weather/client.py
+index a392907..9017d9e 100644
+--- a/weather/client.py
++++ b/weather/client.py
+@@ -17,9 +17,17 @@ class WeatherClient:
+     def __init__(self, base_url: str = DEFAULT_BASE_URL, transport=None, cache_ttl: float = 300, clock=None):
+         self.base_url = base_url.rstrip("/")
+         self.transport = transport or HttpTransport()
+-        # TODO(caching): use TTLCache here once it exists.
+         self.cache_ttl = cache_ttl
++        self._cache = TTLCache(cache_ttl, clock=clock) if clock else TTLCache(cache_ttl)
+ 
+     def current(self, city: str) -> dict:
++        key = city.strip().casefold()
++        if self.cache_ttl > 0:
++            cached = self._cache.get(key)
++            if cached is not None:
++                return dict(cached)
+         data = self.transport.get_json(f"{self.base_url}/current?city={quote(city)}")
+-        return {"city": data["city"], "temp_c": float(data["temp_c"]), "conditions": data["conditions"]}
++        result = {"city": data["city"], "temp_c": float(data["temp_c"]), "conditions": data["conditions"]}
++        if self.cache_ttl > 0:
++            self._cache.set(key, dict(result))
++        return result

@@ -1,0 +1,5 @@
+Invoicing a customer with a loyalty discount no longer crashes, and all 17 tests pass.
+
+The CRM exports the loyalty discount as a whole percent, so 10 means 10% off. `Invoice.line_total` in `shop/invoice.py` passed that number straight to `apply_discount`. `apply_discount` expects a fraction between 0 and 1, so it raised `ValueError` for any non-zero discount. I changed the call to divide by 100 first (`Decimal(self.customer.discount_pct) / 100`).
+
+I didn't add a regression test for a loyalty customer. I ran the tests with `python3`, because `python` isn't installed here.

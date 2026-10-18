@@ -1,0 +1,13 @@
+`min_operations_to_rearrange` is implemented in `solution.py`, but `test_solution.py` still fails on one assertion, so the tests don't pass yet.
+
+The function does a breadth-first search over board states, using `.` for the two empty cells. A move takes two adjacent stones to the two empty cells in the same order. The goal is `t` in cells 1..n with the two empty cells at the end. It returns -1 if the goal is unreachable.
+
+I checked every assertion in the test file one by one. All of them pass except one:
+
+`min_operations_to_rearrange(12, 'WBWWWWBWBBBB', 'BBBBBBWWWWWW')` returns 8, but the test expects 7.
+
+The search is exhaustive, so 8 is the true minimum under the rules in the docstring. I tried two other readings of the rules to see if either gives 7:
+- **Final stones anywhere:** letting the final stones sit at any offset breaks other tests, such as the n=14 case on line 13.
+- **Reversed order:** allowing the pair to land in reversed order gives 8 as well. It would also make `'BW' -> 'WB'` solvable, but the tests expect -1 there.
+
+So that one expected value looks wrong, or it relies on a rule the docstring doesn't state. I haven't changed the test or bent the implementation to force a pass. If you can confirm the intended rule or the correct value, I can adjust either one.

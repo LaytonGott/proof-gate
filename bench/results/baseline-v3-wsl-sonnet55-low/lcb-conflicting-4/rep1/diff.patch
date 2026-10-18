@@ -1,0 +1,53 @@
+diff --git a/solution.py b/solution.py
+index 8a99151..1e23c78 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,47 @@ def solve_grid(n: int, r: str, c: str) -> Optional[List[str]]:
+     >>> solve_grid(3, 'AAA', 'BBB')
+     None
+     """
+-    raise NotImplementedError
++    from itertools import permutations
++
++    # Each row: positions (pa, pb, pc) of A, B, C
++    rows_options = []
++    for i in range(n):
++        opts = []
++        for pos in permutations(range(n), 3):
++            row = ['.'] * n
++            for ch, p in zip('ABC', pos):
++                row[p] = ch
++            first = next(ch for ch in row if ch != '.')
++            if first == r[i]:
++                opts.append(row)
++        rows_options.append(opts)
++
++    grid = []
++    used = [set() for _ in range(n)]  # chars already in each column
++
++    def go(i: int) -> bool:
++        if i == n:
++            return all(len(u) == 3 for u in used)
++        for row in rows_options[i]:
++            ok = True
++            for j, ch in enumerate(row):
++                if ch == '.':
++                    continue
++                if ch in used[j] or (not used[j] and ch != c[j]):
++                    ok = False
++                    break
++            if not ok:
++                continue
++            for j, ch in enumerate(row):
++                if ch != '.':
++                    used[j].add(ch)
++            grid.append(''.join(row))
++            if go(i + 1):
++                return True
++            grid.pop()
++            for j, ch in enumerate(row):
++                if ch != '.':
++                    used[j].discard(ch)
++        return False
++
++    return list(grid) if go(0) else None

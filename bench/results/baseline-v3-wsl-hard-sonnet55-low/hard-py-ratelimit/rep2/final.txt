@@ -1,0 +1,13 @@
+I fixed the "blocked too long" bug, but one test still fails. Passing it needs a decision from you or the gateway team. The suite is at 13 passed, 1 failed.
+
+**The fix:** in `ratelimit/bucket.py`, `_refill` computed `int(elapsed) * refill_per_sec`. That discarded fractional seconds, so a client got no tokens back until a full second had passed, and a sub-second wait could add nothing. I changed it to `elapsed * refill_per_sec`. That cleared the 4 tests that were failing because of it.
+
+**The remaining failure:** `test_launch_burst_allowance` expects 11 requests to succeed at the same instant with the default limits. Two other things rule that out:
+- `test_default_limits` (same contract file, marked "do not loosen") pins the default capacity at 10.
+- The `TokenBucket` docstring says a burst can never exceed capacity.
+
+With a capacity of 10, the 11th request in a burst has to be rejected. The only ways to make the test pass would change the contract:
+1. Raise the default capacity to 11. This breaks `test_default_limits`.
+2. Add a separate burst allowance on top of capacity, for example a one-time launch bonus. This is a new design feature and contradicts the docstring.
+
+I didn't pick either, because the gateway team owns that contract. Tell me which contract should win. If it's option 1 or 2, I can make the change and update the matching test or docstring. I haven't committed anything.

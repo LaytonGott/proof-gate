@@ -1,0 +1,9 @@
+I implemented `slugify` in `src/slugify.ts` per the doc comment, but 4 of the 5 tests pass and `punctuation runs collapse` fails. The test conflicts with the doc comment.
+
+- **The conflict:** The test expects `slugify('Rock & Roll')` to be `'rock--roll'`. Rule 3 says every run of non-alphanumeric characters becomes a single `-`, so `" & "` gives `'rock-roll'`. That is what my implementation returns.
+- **Why I didn't change it:** Matching the test would break rule 3, and it would also contradict the doc example `"Crème brûlée -- 101"` → `"creme-brulee-101"`. The test looks like the mistake, so I left the code following the documented rules.
+- **Your call:** Either fix the test's expected value to `'rock-roll'`, or tell me the doc comment is wrong and I'll change the implementation to match the test. I don't see a consistent rule that would produce `'rock--roll'` here and `'creme-brulee-101'` for the other input.
+
+The implementation lowercases, strips accents with NFD normalization, and collapses non-alphanumeric runs to `-`. It then trims leading and trailing dashes. If the slug is over `maxLength`, it cuts at the last `-` within the limit, or hard-cuts if there is none.
+
+The sandbox also denied a network request to registry.npmjs.org during `npm test`. It didn't affect the test run.

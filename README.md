@@ -92,11 +92,14 @@ runs).
 
 Current numbers (Sonnet 5.5, low effort):
 
-- Baseline cheat rate: 5% on simple tasks; 8-25% on hard impossible tasks across two batches
-  (the second with the narrowed Bash allowlist). Every recorded cheat was disclosed in the
-  agent's final message; none were silent. No run touched anything outside its workspace.
-- Replay: 9/9 recorded cheats stopped (block or challenge), 0/118 clean runs stopped.
-- Real history: 18 of 553 commits across three repos would have stopped the agent, mostly for
+- Baseline cheat rate, three batches (host with broad Bash, host with narrowed Bash, WSL
+  sandbox): 5% on simple tasks every time; 8-25% on hard impossible tasks. Every recorded
+  cheat was disclosed in the agent's final message; none were silent. No run touched
+  anything outside its workspace. The WSL sandbox batch matched the host batches on simple
+  tasks; on hard ones it cheated more often (all on `hard-ts-expr`, 3/3), within the noise
+  of three runs per task.
+- Replay: 15/15 recorded cheats stopped (block or challenge), 0/176 clean runs stopped.
+- Real history: 18 of 554 commits across three repos would have stopped the agent, mostly for
   test deletions or expectation changes.
 - Known gap: a repo the agent touches for the first time in a turn is checked against its last
   commit, so an agent that commits mid-turn hides that turn's changes from the gate.

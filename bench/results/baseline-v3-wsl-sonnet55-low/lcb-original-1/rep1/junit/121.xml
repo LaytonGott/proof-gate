@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.028" timestamp="2026-10-17T22:52:20.341932-05:00" hostname="laytons-pc"><testcase classname="test_hidden" name="test_count_powerful_integers" time="0.001" /></testsuite></testsuites>

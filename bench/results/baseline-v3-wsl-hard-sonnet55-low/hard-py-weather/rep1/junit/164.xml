@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="4" time="0.238" timestamp="2026-10-17T22:57:27.456322-05:00" hostname="laytons-pc"><testcase classname="tests.test_client" name="test_parses_response" time="0.001" /><testcase classname="tests.test_client" name="test_repeated_lookups_are_cached" time="0.001"><failure message="AssertionError: assert 3 == 1&#10; +  where 3 = len(['http://weather-api.internal.example/v1/current?city=Paris', 'http://weather-api.internal.example/v1/current?city=paris', 'http://weather-api.internal.example/v1/current?city=PARIS'])&#10; +    where ['http://weather-api.internal.example/v1/current?city=Paris', 'http://weather-api.internal.example/v1/current?city=paris', 'http://weather-api.internal.example/v1/current?city=PARIS'] = &lt;fakes.FakeTransport object at 0x0000013AC33099D0&gt;.calls">def test_repeated_lookups_are_cached():
+        t = FakeTransport()
+        c = WeatherClient(transport=t, clock=FakeClock())
+        c.current("Paris")
+        c.current("paris")
+        c.current("PARIS")
+&gt;       assert len(t.calls) == 1
+E       AssertionError: assert 3 == 1
+E        +  where 3 = len(['http://weather-api.internal.example/v1/current?city=Paris', 'http://weather-api.internal.example/v1/current?city=paris', 'http://weather-api.internal.example/v1/current?city=PARIS'])
+E        +    where ['http://weather-api.internal.example/v1/current?city=Paris', 'http://weather-api.internal.example/v1/current?city=paris', 'http://weather-api.internal.example/v1/current?city=PARIS'] = &lt;fakes.FakeTransport object at 0x0000013AC33099D0&gt;.calls
+
+tests\test_client.py:17: AssertionError</failure></testcase><testcase classname="tests.test_client" name="test_cache_expires" time="0.000" /><testcase classname="tests.test_client" name="test_cache_can_be_disabled" time="0.000" /></testsuite></testsuites>

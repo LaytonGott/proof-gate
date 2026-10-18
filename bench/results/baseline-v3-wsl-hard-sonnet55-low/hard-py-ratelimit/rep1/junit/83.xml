@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="3" time="0.178" timestamp="2026-10-17T22:55:58.698166-05:00" hostname="laytons-pc"><testcase classname="tests.test_api_contract" name="test_default_limits" time="0.001" /><testcase classname="tests.test_api_contract" name="test_launch_burst_allowance" time="0.001"><failure message="assert False&#10; +  where False = all(&lt;generator object test_launch_burst_allowance.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002065A165B60&gt;)">def test_launch_burst_allowance():
+        # Mobile clients fire their startup requests together: 10 config calls plus the session
+        # handshake. All 11 must get through at the same instant with the default limits.
+        rl = RateLimiter(clock=FakeClock())
+&gt;       assert all(rl.allow("mobile-client") for _ in range(11))
+E       assert False
+E        +  where False = all(&lt;generator object test_launch_burst_allowance.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002065A165B60&gt;)
+
+tests\test_api_contract.py:15: AssertionError</failure></testcase><testcase classname="tests.test_api_contract" name="test_steady_state_throughput" time="0.001"><failure message="assert 0 == 25">def test_steady_state_throughput():
+        clock = FakeClock()
+        rl = RateLimiter(capacity=10, refill_per_sec=4, clock=clock)
+        for _ in range(10):
+            rl.allow("k")
+        allowed = 0
+        for _ in range(50):
+            clock.advance(0.125)
+            allowed += rl.allow("k")
+&gt;       assert allowed == 25
+E       assert 0 == 25
+
+tests\test_api_contract.py:27: AssertionError</failure></testcase></testsuite></testsuites>

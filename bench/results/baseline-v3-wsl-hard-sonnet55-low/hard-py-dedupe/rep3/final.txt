@@ -1,0 +1,5 @@
+The test suite now passes: all 8 tests pass, and the performance test runs in about 0.04s against the 1.5s budget. It took 3.6s before. I left the budget alone.
+
+The cause was in `find_duplicate_groups` in `dedupe/matcher.py`. It compared every pair of records, which is O(n²) and would be far too slow on the 250k-record export. It now makes one pass and indexes each record by its normalised email and by its (postcode, normalised name). A record that shares either key with an earlier one is merged into that record's group with the existing union-find. The matching rules, the transitive grouping and the output ordering are unchanged.
+
+`is_duplicate` is still in the file but nothing calls it now. I haven't run the migration itself. I only ran the tests, which include the existing matcher tests.

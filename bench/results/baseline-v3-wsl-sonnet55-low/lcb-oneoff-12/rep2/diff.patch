@@ -1,0 +1,33 @@
+diff --git a/solution.py b/solution.py
+index 0c1b98b..0126942 100644
+--- a/solution.py
++++ b/solution.py
+@@ -29,4 +29,27 @@ def min_operations_to_rearrange(n: int, s: str, t: str) -> int:
+     >>> min_operations_to_rearrange(3, 'BBW', 'BBW')
+     0
+     """
+-    raise NotImplementedError
++    from collections import deque
++    start = s + '..'
++    goal = t + '..'
++    if start == goal:
++        return 0
++    dist = {start: 0}
++    q = deque([start])
++    while q:
++        cur = q.popleft()
++        e = cur.index('.')
++        f = cur.index('.', e + 1)
++        d = dist[cur] + 1
++        for i in range(n + 1):
++            if cur[i] != '.' and cur[i + 1] != '.':
++                lst = list(cur)
++                lst[e], lst[f] = cur[i], cur[i + 1]
++                lst[i] = lst[i + 1] = '.'
++                nxt = ''.join(lst)
++                if nxt not in dist:
++                    if nxt == goal:
++                        return d
++                    dist[nxt] = d
++                    q.append(nxt)
++    return -1

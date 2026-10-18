@@ -1,0 +1,32 @@
+diff --git a/solution.py b/solution.py
+index 7a74f3e..020692b 100644
+--- a/solution.py
++++ b/solution.py
+@@ -24,4 +24,26 @@ def find_cube_placement(V1: int, V2: int, V3: int) -> Optional[Tuple[int, int, i
+     >>> find_cube_placement(343, 34, 3)
+     None
+     """
+-    raise NotImplementedError
++    n = 7
++    offs = range(-n, n + 1)
++
++    def ov(*starts):
++        return max(0, min(starts) + n - max(starts))
++
++    # per-axis options: (offset2, offset3, l12, l13, l23, l123), first cube at 0
++    axis = [(b, c, ov(0, b), ov(0, c), ov(b, c), ov(0, b, c)) for b in offs for c in offs]
++    for b1 in axis:
++        for b2 in axis:
++            t12 = b1[5] * b2[5]
++            if t12 > V3 or (V3 and t12 == 0):
++                continue
++            for b3 in axis:
++                if t12 * b3[5] != V3:
++                    continue
++                p = (b1[2] * b2[2] * b3[2] + b1[3] * b2[3] * b3[3] + b1[4] * b2[4] * b3[4])
++                if p - 3 * V3 != V2:
++                    continue
++                if 3 * n ** 3 - 2 * p + 3 * V3 != V1:
++                    continue
++                return (0, 0, 0, b1[0], b2[0], b3[0], b1[1], b2[1], b3[1])
++    return None

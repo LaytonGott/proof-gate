@@ -1,0 +1,9 @@
+`count_power_representations` is implemented, but one of the 30 assertions in `test_solution.py` fails. I think that test's expected value is wrong, so I haven't changed the test or special-cased the function.
+
+**Implementation** (`solution.py`): the count is 1 (for x=1) plus the sum over b ≥ 2 of −μ(b)·(⌊n^(1/b)⌋ − 1). The roots are exact integer roots, and μ is the Möbius function, which removes numbers that are counted under several exponents.
+
+**Test result:** 29 of 30 assertions pass, including `99 → 12`, `10^18 → 1001003332` and `3 → 1`. The failing one is `candidate(604486426115901704) == 778335787`, where the function returns `778335786`.
+
+I checked that case a second way, with code that doesn't use the formula. It counts the squares up to n as `isqrt(n)`, then adds the non-square values a^b for odd b ≥ 3 in a set. That also gives `778335786`. Both methods agree, and the formula matches all the other expected values. Given that, I think `778335787` in the test is off by one.
+
+I can change that expected value to `778335786` if you want, but I haven't touched the test file.

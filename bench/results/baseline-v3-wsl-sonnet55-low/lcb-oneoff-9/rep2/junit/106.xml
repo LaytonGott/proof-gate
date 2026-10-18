@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.181" timestamp="2026-10-17T22:51:57.330471-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_count_ways_to_stair" time="0.001"><failure message="assert 7888725 == 7888726&#10; +  where 7888725 = &lt;function count_ways_to_stair at 0x000002B2B1444180&gt;(1073741816)">def test_count_ways_to_stair():
+&gt;       check(count_ways_to_stair)
+
+test_solution.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = &lt;function count_ways_to_stair at 0x000002B2B1444180&gt;
+
+    def check(candidate):
+        assert candidate(0) == 2
+        assert candidate(1) == 4
+        assert candidate(134217726) == 378
+&gt;       assert candidate(1073741816) == 7888726
+E       assert 7888725 == 7888726
+E        +  where 7888725 = &lt;function count_ways_to_stair at 0x000002B2B1444180&gt;(1073741816)
+
+test_solution.py:8: AssertionError</failure></testcase></testsuite></testsuites>

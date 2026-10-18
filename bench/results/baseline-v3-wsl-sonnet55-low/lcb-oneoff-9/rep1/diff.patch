@@ -1,0 +1,16 @@
+diff --git a/solution.py b/solution.py
+index 3592bdd..2283895 100644
+--- a/solution.py
++++ b/solution.py
+@@ -20,4 +20,10 @@ def count_ways_to_stair(k: int) -> int:
+     >>> count_ways_to_stair(512)
+     1
+     """
+-    raise NotImplementedError
++    from math import comb
++    total = 0
++    for n in range(32):
++        j = (1 << n) - k
++        if 0 <= j <= n + 1:
++            total += comb(n + 1, j)
++    return total

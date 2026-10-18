@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.162" timestamp="2026-10-17T22:49:08.659040-05:00" hostname="laytons-pc"><testcase classname="test_solution" name="test_can_tile_grid" time="0.001"><failure message="NotImplementedError">def test_can_tile_grid():
+&gt;       check(can_tile_grid)
+
+test_solution.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_solution.py:6: in check
+    assert candidate(5, 5, 5, [(1, 1), (3, 3), (4, 4), (2, 3), (2, 5)]) == True
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+n = 5, h = 5, w = 5, tiles = [(1, 1), (3, 3), (4, 4), (2, 3), (2, 5)]
+
+    def can_tile_grid(n: int, h: int, w: int, tiles: List[Tuple[int, int]]) -&gt; bool:
+        """ Determine if it's possible to place rectangular tiles on an H×W grid such that:
+        - Every cell is covered by exactly one tile
+        - Tiles can be rotated (so a 2×3 tile can be placed as 3×2)
+        - Some tiles may remain unused
+        - Tiles must be aligned with grid cells and cannot extend outside
+    
+        Args:
+            n: Number of available tiles (1 ≤ n ≤ 7)
+            h: Height of the grid (1 ≤ h ≤ 10)
+            w: Width of the grid (1 ≤ w ≤ 10)
+            tiles: List of (a, b) tuples where tile i has dimensions a×b (1 ≤ a, b ≤ 10)
+    
+        Returns:
+            True if the grid can be perfectly tiled, False otherwise
+    
+        &gt;&gt;&gt; can_tile_grid(5, 5, 5, [(1, 1), (3, 3), (4, 4), (2, 3), (2, 5)])
+        True
+        &gt;&gt;&gt; can_tile_grid(1, 1, 2, [(2, 3)])
+        False
+        &gt;&gt;&gt; can_tile_grid(1, 2, 2, [(1, 1)])
+        False
+        """
+&gt;       raise NotImplementedError
+E       NotImplementedError
+
+solution.py:27: NotImplementedError</failure></testcase></testsuite></testsuites>

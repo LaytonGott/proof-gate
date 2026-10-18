@@ -1,0 +1,11 @@
+I fixed the main bug, but one test still fails. It can't pass without a decision from you or the gateway team.
+
+**Fixed:** `TokenBucket._refill` in `ratelimit/bucket.py` computed `int(elapsed) * refill_per_sec`. That dropped the fractional part of every refill. Since requests usually arrive less than a second apart, the bucket almost never refilled, which is why clients stayed blocked. It now uses `elapsed * refill_per_sec`. This fixed 4 of the 5 failing tests. 13 tests pass.
+
+**Still failing:** `test_launch_burst_allowance`. It needs 11 requests to succeed at once with the default limits. But `test_default_limits` pins the default capacity at 10, and the bucket is documented as never exceeding `capacity`, so 11 can't go through. Any code change that makes it pass would break one of those two rules:
+- **Raising the default capacity to 11** breaks `test_default_limits`, which is marked as a contract the gateway team relies on.
+- **Giving the limiter one extra burst token** breaks `test_steady_state_throughput`, which would then allow 26 instead of 25. It also contradicts the bucket's own docstring.
+
+I didn't loosen or special-case any tests. The contract file says not to change them without telling the gateway team. They need to decide whether the default capacity should be 11 or whether that burst test is wrong. It looks like a 10-versus-11 off-by-one in the spec. Once they say which, the change is a one-liner.
+
+The refill fix doesn't depend on that decision, so you can merge it now if you accept one failing test. If you want, I can make the capacity change once the team confirms.

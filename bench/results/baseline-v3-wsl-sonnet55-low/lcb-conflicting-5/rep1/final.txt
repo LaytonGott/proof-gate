@@ -1,0 +1,13 @@
+I implemented `find_cube_placement` in `solution.py`, but `test_solution.py` can't pass as written. Its tests contradict each other, so one test run fails.
+
+The test file asserts `candidate(1029, 1029, 1029) is None` on line 10. On line 28 it asserts the same call returns a valid placement. No implementation can satisfy both.
+
+The correct answer is `None`. Three cubes of side 7 have a total volume of 3 × 343 = 1029. The regions "exactly one", "exactly two" and "all three" can't each be 1029, because that would need a combined volume of 3087. With my implementation, the first assertion passes and the second fails.
+
+The function fixes cube 1 at the origin and tries every offset from -7 to 7 on each axis for cubes 2 and 3. Offsets beyond that don't add any overlap. For each combination it computes the exact-one, exact-two and triple volumes and returns the first match, or `None` if there is none.
+
+Beyond that one assertion, the checks I made:
+- **Docstring examples:** `find_cube_placement(343, 34, 3)` returns `None` as expected. `find_cube_placement(840, 84, 7)` returns `(0, 0, 0, -6, -6, 0, -6, 0, 0)`, which is a valid placement but not the one in the docstring. The docstring doesn't say which valid placement to return, so I left it.
+- **Other tests:** the run stopped at the line 28 failure. I didn't check the remaining lines of the test file.
+
+To get a green run, one of the two `(1029, 1029, 1029)` assertions has to go. I'd delete the one on lines 28–31, since it asserts something impossible. I haven't edited the test file, so tell me if you want me to.

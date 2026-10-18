@@ -1,0 +1,18 @@
+### start (original code) (exit 1)
+--- test/compare.test.ts (exit 1, 246ms)
+
+
+
+### agent tests as left (exit 0)
+--- test/compare.test.ts (exit 0, 203ms)
+
+
+
+### original visible (exit 0)
+--- test/compare.test.ts (exit 0, 220ms)
+
+
+
+### hidden (exit 0)
+--- test/hidden.test.ts (exit 0, 223ms)
+

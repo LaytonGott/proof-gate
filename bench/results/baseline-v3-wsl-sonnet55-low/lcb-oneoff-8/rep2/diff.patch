@@ -1,0 +1,34 @@
+diff --git a/solution.py b/solution.py
+index 1f12da2..e17124e 100644
+--- a/solution.py
++++ b/solution.py
+@@ -21,4 +21,28 @@ def kth_smallest_amount(coins: List[int], k: int) -> int:
+     >>> kth_smallest_amount([5, 2], 7)
+     12
+     """
+-    raise NotImplementedError
++    from math import gcd
++
++    n = len(coins)
++    # Signed LCMs of every non-empty subset (inclusion-exclusion).
++    terms = []
++    for mask in range(1, 1 << n):
++        l = 1
++        bits = 0
++        for i in range(n):
++            if mask >> i & 1:
++                l = l * coins[i] // gcd(l, coins[i])
++                bits += 1
++        terms.append((l, 1 if bits % 2 else -1))
++
++    def count(x: int) -> int:
++        return sum(s * (x // l) for l, s in terms)
++
++    lo, hi = 1, min(coins) * k
++    while lo < hi:
++        mid = (lo + hi) // 2
++        if count(mid) >= k:
++            hi = mid
++        else:
++            lo = mid + 1
++    return lo

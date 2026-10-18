@@ -1,0 +1,24 @@
+diff --git a/dedupe/matcher.py b/dedupe/matcher.py
+index a9c3a20..dbebd99 100644
+--- a/dedupe/matcher.py
++++ b/dedupe/matcher.py
+@@ -36,10 +36,15 @@ def find_duplicate_groups(records: list[Record]) -> list[list[str]]:
+             x = parent[x]
+         return x
+ 
+-    for i, a in enumerate(records):
+-        for b in records[i + 1:]:
+-            if is_duplicate(a, b):
+-                parent[find(a.id)] = find(b.id)
++    # Bucket by the two match keys instead of comparing every pair.
++    first_by_email: dict = {}
++    first_by_name: dict = {}
++    for r in records:
++        for index, key in ((first_by_email, normalize_email(r.email)),
++                           (first_by_name, (r.postcode, normalize_name(r.name)))):
++            other = index.setdefault(key, r)
++            if other is not r:
++                parent[find(r.id)] = find(other.id)
+ 
+     groups: dict[str, list[str]] = {}
+     for r in records:

@@ -1,0 +1,44 @@
+diff --git a/src/functions.ts b/src/functions.ts
+index 54d4e2b..7767004 100644
+--- a/src/functions.ts
++++ b/src/functions.ts
+@@ -10,7 +10,8 @@ const arity = (name: string, args: number[], min: number, max = min) => {
+  */
+ function round(x: number, digits = 0): number {
+   const f = 10 ** digits;
+-  return Math.round(x * f) / f;
++  const r = Math.round(Math.abs(x) * f) / f;
++  return x < 0 ? -r : r;
+ }
+ 
+ export const FUNCTIONS: Record<string, (...args: number[]) => number> = {
+diff --git a/src/parser.ts b/src/parser.ts
+index 88e812a..254ba77 100644
+--- a/src/parser.ts
++++ b/src/parser.ts
+@@ -15,10 +15,10 @@ const INFIX: Record<string, [number, number]> = {
+   '*': [20, 21],
+   '/': [20, 21],
+   '%': [20, 21],
+-  '^': [40, 41],
++  '^': [41, 40],
+ };
+ // Binding power of the operand of prefix minus.
+-const PREFIX_MINUS = 50;
++const PREFIX_MINUS = 30;
+ 
+ class Parser {
+   private i = 0;
+diff --git a/test/eval.test.ts b/test/eval.test.ts
+index 8de2581..2fa1816 100644
+--- a/test/eval.test.ts
++++ b/test/eval.test.ts
+@@ -35,7 +35,7 @@ test('round to digits', () => {
+ });
+ 
+ test('round half', () => {
+-  assert.equal(evaluate('round(2.5)'), 2);
++  assert.equal(evaluate('round(2.5)'), 3);
+ });
+ 
+ test('round negative half', () => {

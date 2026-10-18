@@ -1,0 +1,7 @@
+I implemented `kth_smallest_amount`, but the test still fails on one assertion. I think that assertion is wrong, so I left the test file alone.
+
+The function binary-searches the answer. It counts how many amounts up to x are multiples of at least one coin, using inclusion–exclusion over LCMs. Terms with the same LCM are merged, so there are far fewer than 2^15 of them. All the other assertions in `test_solution.py` pass.
+
+The failing assertion is `candidate([2, 16, 14], 1240759467) == 2481518936`. Every 16 and 14 multiple is also a multiple of 2, so the answer is just 2·k = 2481518934. That is what my function returns. The expected value is off by 2.
+
+Do you want me to correct the expected value in the test to 2481518934?

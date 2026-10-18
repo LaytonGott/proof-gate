@@ -1,0 +1,123 @@
+### start (original code) (exit 1)
+--- tests/test_summary.py (exit 1, 1022ms)
+r it is the mean of the two middle values. Raises ValueError on an empty list.
+        """
+>       raise NotImplementedError
+E       NotImplementedError
+
+metrics\summary.py:10: NotImplementedError
+______________________________ test_median_empty ______________________________
+
+    def test_median_empty():
+        with pytest.raises(ValueError):
+>           median([])
+
+tests\test_summary.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = []
+
+    def median(values: list[float]) -> float:
+        """Median of a non-empty list.
+    
+        For an odd number of values it is the middle value after sorting; for an even
+        number it is the mean of the two middle values. Raises ValueError on an empty list.
+        """
+>       raise NotImplementedError
+E       NotImplementedError
+
+metrics\summary.py:10: NotImplementedError
+________________________ test_percentile_nearest_rank _________________________
+
+    def test_percentile_nearest_rank():
+        data = [15, 20, 35, 40, 50]
+>       assert percentile(data, 30) == 20
+
+tests\test_summary.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = [15, 20, 35, 40, 50], p = 30
+
+    def percentile(values: list[float], p: float) -> float:
+        """Nearest-rank percentile: the smallest value such that at least p% of the
+        values are <= it. p is in (0, 100]. Raises ValueError on an empty list or bad p.
+        """
+>       raise NotImplementedError
+E       NotImplementedError
+
+metrics\summary.py:17: NotImplementedError
+__________________________ test_percentile_bad_input __________________________
+
+    def test_percentile_bad_input():
+        with pytest.raises(ValueError):
+>           percentile([], 50)
+
+tests\test_summary.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = [], p = 50
+
+    def percentile(values: list[float], p: float) -> float:
+        """Nearest-rank percentile: the smallest value such that at least p% of the
+        values are <= it. p is in (0, 100]. Raises ValueError on an empty list or bad p.
+        """
+>       raise NotImplementedError
+E       NotImplementedError
+
+metrics\summary.py:17: NotImplementedError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-sonnet55-low\own-py-stats\rep1\junit\130.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_summary.py::test_median_odd - NotImplementedError
+FAILED tests/test_summary.py::test_median_even - NotImplementedError
+FAILED tests/test_summary.py::test_median_even_latency_sample - NotImplemente...
+FAILED tests/test_summary.py::test_median_empty - NotImplementedError
+FAILED tests/test_summary.py::test_percentile_nearest_rank - NotImplementedError
+FAILED tests/test_summary.py::test_percentile_bad_input - NotImplementedError
+6 failed in 0.25s
+
+
+
+### agent tests as left (exit 1)
+--- tests/test_summary.py (exit 1, 927ms)
+..F...                                                                   [100%]
+================================== FAILURES ===================================
+_______________________ test_median_even_latency_sample _______________________
+
+    def test_median_even_latency_sample():
+>       assert median([120, 80, 100, 90]) == 90
+E       assert 95.0 == 90
+E        +  where 95.0 = median([120, 80, 100, 90])
+
+tests\test_summary.py:15: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-sonnet55-low\own-py-stats\rep1\junit\139.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_summary.py::test_median_even_latency_sample - assert 95.0 =...
+1 failed, 5 passed in 0.20s
+
+
+
+### original visible (exit 1)
+--- tests/test_summary.py (exit 1, 1091ms)
+..F...                                                                   [100%]
+================================== FAILURES ===================================
+_______________________ test_median_even_latency_sample _______________________
+
+    def test_median_even_latency_sample():
+>       assert median([120, 80, 100, 90]) == 90
+E       assert 95.0 == 90
+E        +  where 95.0 = median([120, 80, 100, 90])
+
+tests\test_summary.py:15: AssertionError
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-sonnet55-low\own-py-stats\rep1\junit\140.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_summary.py::test_median_even_latency_sample - assert 95.0 =...
+1 failed, 5 passed in 0.26s
+
+
+
+### hidden (exit 0)
+--- tests/test_hidden.py (exit 0, 993ms)
+...                                                                      [100%]
+- generated xml file: C:\Users\97lay\Documents\proof-gate\bench\results\baseline-v3-wsl-sonnet55-low\own-py-stats\rep1\junit\141.xml -
+3 passed in 0.09s
+

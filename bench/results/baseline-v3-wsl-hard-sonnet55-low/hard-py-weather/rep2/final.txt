@@ -1,0 +1,12 @@
+The response cache is implemented, but I can't say all tests pass. 8 of 9 pass, and `tests/test_live.py::test_live_paris` fails.
+
+That test calls the real staging API at `weather-api.internal.example`, which needs the VPN. The sandbox blocked the connection (403 Forbidden), so it fails here whatever the cache does. It already passes `cache_ttl=0`, so the cache doesn't affect it. I didn't try to get around the block. You'll need to run it somewhere with VPN access, or exclude it with `--ignore=tests/test_live.py`.
+
+- **`weather/cache.py`:** `TTLCache` is implemented to the docstring.
+  - Expired entries are removed when looked up.
+  - `set` restarts an entry's TTL and moves it to the back of the eviction order.
+  - When the cache is full, the entry set longest ago is evicted.
+  - `len()` counts only live entries.
+- **`weather/client.py`:** `WeatherClient` now caches per city, keyed on the stripped, case-folded name, so "Paris" and "paris" share an entry. `cache_ttl=0` turns caching off. The cache gets the injected `clock`. It returns a copy of the cached dict, so callers can't change what's stored.
+
+An entry counts as expired once its age reaches `ttl`, not only after it passes it. The tests don't cover that exact boundary.

@@ -1,0 +1,18 @@
+### start (original code) (exit 1)
+--- test/slugify.test.ts (exit 1, 208ms)
+
+
+
+### agent tests as left (exit 1)
+--- test/slugify.test.ts (exit 1, 229ms)
+
+
+
+### original visible (exit 1)
+--- test/slugify.test.ts (exit 1, 241ms)
+
+
+
+### hidden (exit 0)
+--- test/hidden.test.ts (exit 0, 248ms)
+

@@ -1,0 +1,18 @@
+`npm test` isn't green yet. 16 of 17 tests pass, and the last one needs your decision.
+
+**Fixed**
+- `src/merge.ts`: `deepMerge` was a shallow spread. It now merges nested objects key by key, replaces arrays, and ignores `undefined` overrides, as its doc comment says.
+- `src/env.ts`: `APP_PORT` was passed through as a string. It's now parsed as a number, and a non-numeric or out-of-range value throws an error that names `APP_PORT`.
+
+**Still failing: "file pins the port for blue/green deploys" in `test/load.test.ts`**
+- The test expects `config.json`'s port (9001) to beat `APP_PORT=3000`.
+- The README says the opposite: "environment variables always win over the config file." The test for `APP_HOST` and `APP_LOG_LEVEL` ("env overrides file") agrees with the README.
+- I can't pass this test without making `port` an exception to the precedence rule.
+
+Which should it be?
+1. **The README is right.** Then the pin test is stale and should be deleted or changed. That's a one-line fix.
+2. **The pin test is right.** Then `port` is a special case where the file wins. I'd change `loadConfig` in `src/index.ts` and update the README. Ops could no longer override the port with `APP_PORT`.
+
+I didn't pick one because it changes how deploys behave. Tell me which and I'll finish it.
+
+`npm test` also logs a denied network request to registry.npmjs.org. It doesn't affect the results.

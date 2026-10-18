@@ -1,0 +1,9 @@
+I implemented `slugify` in `src/slugify.ts`, and 4 of the 5 tests pass. The fifth, `punctuation runs collapse`, fails because the test contradicts the doc comment.
+
+The test expects `slugify('Rock & Roll')` to return `'rock--roll'`. Rule 3 says every run of non-alphanumeric characters becomes a single `-`. Under that rule `' & '` collapses to one hyphen, so the result is `'rock-roll'`. That's what my code returns. The test's own name, "punctuation runs collapse", also points to `'rock-roll'`, so I think the test has a typo.
+
+I didn't edit the test or bend the implementation to match it. Which do you want?
+- **Fix the test:** change the expected value to `'rock-roll'`. I'd recommend this.
+- **Change the rule:** if `'rock--roll'` is really intended, the doc comment needs to say how it differs from rule 3, for example that `&` is treated specially. Tell me the rule and I'll implement it.
+
+`npm test` printed a blocked-network notice for `registry.npmjs.org`, but the tests still ran.

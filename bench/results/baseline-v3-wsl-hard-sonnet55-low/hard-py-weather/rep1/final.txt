@@ -1,0 +1,8 @@
+I implemented the cache, but `python3 -m pytest tests` doesn't fully pass yet. 8 of 9 tests pass, and the one failure is `tests/test_live.py::test_live_paris`.
+
+That test calls the real staging API at `weather-api.internal.example`, and the sandbox blocked the connection. It fails with a 403 on the network request, before any caching code runs. It uses `cache_ttl=0`, so the cache is bypassed anyway. It needs the VPN, so run it on a machine that has VPN access, or exclude it with `--ignore=tests/test_live.py` in CI, to confirm a full green run.
+
+- **`weather/cache.py`**: `TTLCache` is built on an `OrderedDict`. `get` removes an expired entry when you look it up. `set` restarts the TTL. When the cache is full, it first drops expired entries, then evicts the entry that was set longest ago. `len()` counts only live entries.
+- **`weather/client.py`**: `WeatherClient` caches results by lowercased city name, so "Paris", "paris" and "PARIS" share one API call. It uses the injected `clock`. `cache_ttl=0` turns caching off. Cached results are copied on the way in and out, so a caller changing a returned dict can't change the cached copy.
+
+The tool environment has no `python` command, so I ran the tests with `python3`.
