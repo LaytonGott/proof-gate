@@ -52,7 +52,7 @@ Requires Node 24+ (runs the TypeScript sources directly).
 LiveCodeBench variants plus hand-written multi-file tasks under deadline pressure), graded
 against hidden tests.
 
-- `node bench/run.mts --label <name> --tasks all --reps 2 [--plugin-dir .] [--isolation wsl]`: run agents
+- `node bench/run.mts --label <name> --tasks all --reps 2 [--plugin-dir .] [--isolation host]`: run agents
 - `node bench/scripts/summarize.mts <label>`: cheat / regression / honest-success rates
 - `node bench/replay.mts <label...>`: replay recorded runs through the gate offline
 - `node bench/replay-git.mts <repo...>`: false-alarm check on real commit history
@@ -62,9 +62,9 @@ against hidden tests.
 
 Agents run code: the tests they write and run are arbitrary programs. Two modes:
 
-- `--isolation host` (default) runs agents on this machine as you. File tools stay in a temp
+- `--isolation host` runs agents on this machine as you. File tools stay in a temp
   workspace and Bash is limited to test commands, but this is **not a security boundary**.
-- `--isolation wsl` runs each agent inside WSL2 under Claude Code's Bash sandbox
+- `--isolation wsl` (default) runs each agent inside WSL2 under Claude Code's Bash sandbox
   (`bench/wsl.mts`). The workspace is copied into WSL; the agent's commands can write only
   there, cannot read `/mnt` (the Windows drives, so the grader's hidden tests are out of
   reach), the WSL home (credentials), other runs or the control files, get no network, and

@@ -3,11 +3,13 @@
 // Usage:
 //   node bench/run.mts --label baseline-v1 --tasks lcb-conflicting-0,lcb-oneoff-3 [--reps 2]
 //     [--concurrency 2] [--model claude-sonnet-5-5] [--budget-usd 2] [--timeout-min 15]
+//     [--plugin-dir <dir>] [--isolation wsl|host]
 //   --tasks all     every folder under bench/tasks
 //
-// Each run gets a fresh git repo in the OS temp dir, a clean environment (no user
-// settings, plugins, hooks or MCP servers), and a fixed tool allowlist. Results land in
-// bench/results/<label>/<task>/rep<k>/.
+// Each run gets a fresh git repo, a clean environment (no user settings, plugins, hooks or
+// MCP servers) and a fixed tool allowlist. By default the agent runs inside WSL2 under
+// Claude Code's Bash sandbox (wsl.mts); --isolation host runs it on this machine instead.
+// Grading always happens on the host. Results land in bench/results/<label>/<task>/rep<k>/.
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync, createWriteStream } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -28,9 +30,9 @@ const { values: opts } = parseArgs({
     'timeout-min': { type: 'string', default: '15' },
     // Load a Claude Code plugin (e.g. this repo, for the gated condition).
     'plugin-dir': { type: 'string' },
-    // host (default): run agents on this machine. wsl: run them in WSL2 under Claude Code's
-    // Bash sandbox (see wsl.mts), the only mode that is an actual isolation boundary.
-    isolation: { type: 'string', default: 'host' },
+    // wsl (default): run agents in WSL2 under Claude Code's Bash sandbox (see wsl.mts), the
+    // only mode that is an actual isolation boundary. host: run them on this machine as you.
+    isolation: { type: 'string', default: 'wsl' },
   },
 });
 if (!opts.label || !opts.tasks) {
