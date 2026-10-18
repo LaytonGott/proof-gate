@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="arithmetic" time="0.000927" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-wsl\hard-ts-expr-rep1-grade\test\eval.test.ts"/>
+	<testcase name="variables" time="0.000146" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-wsl\hard-ts-expr-rep1-grade\test\eval.test.ts"/>
+	<testcase name="unknown variable" time="0.000276" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-wsl\hard-ts-expr-rep1-grade\test\eval.test.ts"/>
+	<testcase name="powers" time="0.000124" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-wsl\hard-ts-expr-rep1-grade\test\eval.test.ts"/>
+	<testcase name="min, max, abs, sqrt" time="0.000661" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-wsl\hard-ts-expr-rep1-grade\test\eval.test.ts"/>
+	<testcase name="round to digits" time="0.000136" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-wsl\hard-ts-expr-rep1-grade\test\eval.test.ts"/>
+	<testcase name="round half" time="0.000577" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-wsl\hard-ts-expr-rep1-grade\test\eval.test.ts" failure="Expected values to be strictly equal:&#10;&#10;3 !== 2&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;3 !== 2">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+3 !== 2
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  3 !== 2
+  
+      at TestContext.&lt;anonymous> (file:///C:/Users/97lay/AppData/Local/Temp/proof-gate-runs/smoke-wsl/hard-ts-expr-rep1-grade/test/eval.test.ts:38:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="round negative half" time="0.000093" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-wsl\hard-ts-expr-rep1-grade\test\eval.test.ts"/>
+	<testcase name="function errors" time="0.000135" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-wsl\hard-ts-expr-rep1-grade\test\eval.test.ts"/>
+	<testcase name="division by zero" time="0.000135" classname="test" file="C:\Users\97lay\AppData\Local\Temp\proof-gate-runs\smoke-wsl\hard-ts-expr-rep1-grade\test\eval.test.ts"/>
+	<!-- tests 10 -->
+	<!-- suites 0 -->
+	<!-- pass 9 -->
+	<!-- fail 1 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 86.8926 -->
+</testsuites>

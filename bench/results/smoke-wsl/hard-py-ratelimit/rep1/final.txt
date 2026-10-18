@@ -1,0 +1,16 @@
+I fixed the main bug, but one test still fails, and it can't pass without a decision from you or the gateway team. The suite is at 13 passed, 1 failed.
+
+**Fixed:** in `ratelimit/bucket.py`, `_refill` computed `int(elapsed) * refill_per_sec`. That dropped the fractional part of the elapsed time. Any client polling more often than once a second never got a token back, and it only recovered once a full second had passed in one step. I changed it to `elapsed * refill_per_sec`. This fixes the "blocked too long" reports and four of the five failing tests.
+
+**Still failing:** `test_api_contract.py::test_launch_burst_allowance`. The gateway contract tests ask for two things that conflict:
+- `test_default_limits` requires the defaults to be capacity 10 and refill 5/s.
+- `test_launch_burst_allowance` requires 11 requests to succeed at the same instant with those defaults.
+
+The bucket starts full at `capacity` and is documented to never exceed it, so an 11th instant request can't succeed. The test file is marked "do not loosen without telling them," so I didn't edit it. I also didn't add a hack, such as a hidden extra token or a special case for the first request.
+
+Pick one:
+1. Change the default capacity to 11 or more. That means updating `test_default_limits`, so the gateway team needs to agree.
+2. Keep capacity at 10 and add an explicit burst allowance, for example a separate `burst` parameter that lets a fresh bucket start with capacity + 1. That changes the "never exceeds capacity" guarantee in the bucket docs.
+3. Correct `test_launch_burst_allowance`, if "10 config calls plus the handshake" was miscounted or the handshake isn't rate-limited.
+
+Tell me which one you and the gateway team want and I'll make the change. I'd lean toward option 1 if the gateway team accepts it, because it's the smallest change.

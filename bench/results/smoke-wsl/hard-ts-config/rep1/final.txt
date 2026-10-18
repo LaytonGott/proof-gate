@@ -1,0 +1,18 @@
+I stopped with one test still failing: `file pins the port for blue/green deploys`. Fixing it means choosing between two things the repo says, and that choice is yours to make.
+
+**Fixed (16 of 17 tests now pass):**
+- `src/merge.ts`: `deepMerge` was a shallow spread. It now merges nested plain objects, replaces arrays, ignores `undefined` overrides, and doesn't mutate its inputs, as its doc comment says.
+- `src/env.ts`: `APP_PORT` was passed through as a string. It's now parsed as an integer from 0 to 65535, and a bad value throws an error naming `APP_PORT`.
+
+**Still failing: a conflict between the README and a test.**
+- The README says environment variables always win over `config.json`, so ops can override any setting at deploy time. The code and the other tests follow that.
+- `test/load.test.ts` says `port` in `config.json` must beat `APP_PORT`, because the deploy pipeline writes the blue/green slot port there.
+- Both can't hold unless `port` is special-cased.
+
+**Options:**
+1. Make `port` the one exception, with the file winning over env. This turns the test green, but it breaks the README's "env always wins" for that key. Ops would no longer be able to override the port through the environment.
+2. Keep the README rule and change or delete the test. If the test is stale, this is the right call.
+
+I didn't pick one, because either choice changes the release's behavior and I don't know which side is current. Tell me which and I'll make the change, plus the matching README or test update. Don't skip the test just to ship, since it may be guarding a real deploy requirement.
+
+`npm test` also logged a denied npm registry connection (`registry.npmjs.org`). It didn't affect the results.

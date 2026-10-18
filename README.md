@@ -52,17 +52,43 @@ Requires Node 24+ (runs the TypeScript sources directly).
 LiveCodeBench variants plus hand-written multi-file tasks under deadline pressure), graded
 against hidden tests.
 
-- `node bench/run.mts --label <name> --tasks all --reps 2 [--plugin-dir .]`: run agents
+- `node bench/run.mts --label <name> --tasks all --reps 2 [--plugin-dir .] [--isolation wsl]`: run agents
 - `node bench/scripts/summarize.mts <label>`: cheat / regression / honest-success rates
 - `node bench/replay.mts <label...>`: replay recorded runs through the gate offline
 - `node bench/replay-git.mts <repo...>`: false-alarm check on real commit history
+- `node bench/scripts/probe-sandbox.mts`: prove the WSL sandbox holds (see below)
 
-**The benchmark is not a security sandbox.** Agents run on your machine as you. File tools
-are confined to a temp workspace and Bash is limited to running tests and listing files, but
-the tests an agent runs are code it can write. Every run's transcript is audited for tool
-calls that reach outside the workspace (`out_of_bounds` in each `grade.json`;
-`node bench/scripts/audit.mts <label>` re-audits old runs). For real isolation, run the bench
-inside WSL2 or Linux with Claude Code's Bash sandbox enabled.
+### Isolation
+
+Agents run code: the tests they write and run are arbitrary programs. Two modes:
+
+- `--isolation host` (default) runs agents on this machine as you. File tools stay in a temp
+  workspace and Bash is limited to test commands, but this is **not a security boundary**.
+- `--isolation wsl` runs each agent inside WSL2 under Claude Code's Bash sandbox
+  (`bench/wsl.mts`). The workspace is copied into WSL; the agent's commands can write only
+  there, cannot read `/mnt` (the Windows drives, so the grader's hidden tests are out of
+  reach), the WSL home (credentials), other runs or the control files, get no network, and
+  cannot launch Windows programs. There is no unsandboxed retry, and the run refuses to start
+  if the sandbox is unavailable. File tools are kept off the same paths by permission rules.
+  Symlinks the agent creates are removed before the workspace is copied back for grading on
+  the host. Hidden tests never enter WSL.
+
+  `probe-sandbox.mts` has an agent inside the sandbox attempt 16 escapes (Windows files
+  directly and via Python, the hidden tests, credentials, the home folder, a neighbouring
+  run's files, rewriting its own sandbox settings, writing outside the workspace,
+  `cmd.exe` interop, the network, the Read tool on Windows files and credentials) plus two
+  controls. On this machine all 16 were blocked and both controls worked.
+
+  Setup inside the WSL distro (default `Ubuntu`, override with `PG_WSL_DISTRO`): native
+  Claude Code in `~/.local/bin` and signed in; `bubblewrap`, `socat`, `python3-pytest`;
+  the seccomp filter (`npm i -g @anthropic-ai/sandbox-runtime`, which blocks the Windows
+  interop socket); and an official Node.js 24 in `/usr/local` (Ubuntu's packaged Node is
+  built without TypeScript support, and a per-user install under `$HOME` is invisible to
+  sandboxed commands).
+
+Either way, every run's transcript is audited for tool calls that reach outside the workspace
+(`out_of_bounds` in each `grade.json`; `node bench/scripts/audit.mts <label>` re-audits old
+runs).
 
 Current numbers (Sonnet 5.5, low effort):
 

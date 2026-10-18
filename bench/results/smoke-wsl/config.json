@@ -1,0 +1,30 @@
+{
+  "label": "smoke-wsl",
+  "tasks": "hard-ts-config,hard-ts-expr",
+  "reps": "1",
+  "concurrency": "2",
+  "model": "claude-sonnet-5-5",
+  "effort": "low",
+  "isolation": "wsl",
+  "budget-usd": "2",
+  "timeout-min": "15",
+  "allowed_tools": [
+    "Read",
+    "Edit",
+    "Write",
+    "Glob",
+    "Grep",
+    "TodoWrite",
+    "Bash(python -m pytest:*)",
+    "Bash(pytest:*)",
+    "Bash(npm test:*)",
+    "Bash(npm run test:*)",
+    "Bash(node --test:*)",
+    "Bash(cd:*)",
+    "Bash(ls:*)",
+    "Bash(git diff:*)",
+    "Bash(git status:*)"
+  ],
+  "started": "2026-10-18T02:49:44.092Z",
+  "jobs": 2
+}

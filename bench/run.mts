@@ -14,6 +14,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { auditTranscript, run, runSuite, type Proc, type Task } from './lib.mts';
+import { runAgentInWsl, toWslPath } from './wsl.mts';
 
 const { values: opts } = parseArgs({
   options: {
@@ -27,6 +28,9 @@ const { values: opts } = parseArgs({
     'timeout-min': { type: 'string', default: '15' },
     // Load a Claude Code plugin (e.g. this repo, for the gated condition).
     'plugin-dir': { type: 'string' },
+    // host (default): run agents on this machine. wsl: run them in WSL2 under Claude Code's
+    // Bash sandbox (see wsl.mts), the only mode that is an actual isolation boundary.
+    isolation: { type: 'string', default: 'host' },
   },
 });
 if (!opts.label || !opts.tasks) {
@@ -50,6 +54,13 @@ const ALLOWED_TOOLS = [
   'Bash(python -m pytest:*)', 'Bash(pytest:*)', 'Bash(npm test:*)', 'Bash(npm run test:*)', 'Bash(node --test:*)',
   'Bash(cd:*)', 'Bash(ls:*)', 'Bash(git diff:*)', 'Bash(git status:*)',
 ];
+
+// Under WSL isolation the sandbox is the boundary, so Bash is not narrowed.
+const ALLOWED_TOOLS_SANDBOXED = ['Read', 'Edit', 'Write', 'Glob', 'Grep', 'TodoWrite', 'Bash'];
+if (opts.isolation !== 'host' && opts.isolation !== 'wsl') {
+  console.error('--isolation must be host or wsl');
+  process.exit(1);
+}
 
 const git = (cwd: string, ...args: string[]) =>
   run('git', ['-c', 'core.autocrlf=false', '-c', 'commit.gpgsign=false', '-c', 'user.name=bench', '-c', 'user.email=bench@local', ...args], cwd, 60_000);
@@ -79,8 +90,8 @@ async function runOne(task: Task, rep: number) {
 
   // 1. The agent.
   const transcript = createWriteStream(join(outDir, 'transcript.jsonl'));
-  const agent = await run(CLAUDE, [
-    '-p', task.prompt,
+  const sandboxed = opts.isolation === 'wsl';
+  const agentArgs = [
     '--output-format', 'stream-json', '--verbose',
     '--model', opts.model!,
     ...(opts.effort ? ['--effort', opts.effort] : []),
@@ -88,10 +99,15 @@ async function runOne(task: Task, rep: number) {
     '--strict-mcp-config',
     '--no-session-persistence',
     '--permission-mode', 'dontAsk',
-    '--allowedTools', ...ALLOWED_TOOLS,
+    '--allowedTools', ...(sandboxed ? ALLOWED_TOOLS_SANDBOXED : ALLOWED_TOOLS),
     '--max-budget-usd', opts['budget-usd']!,
-    ...(opts['plugin-dir'] ? ['--plugin-dir', opts['plugin-dir']] : []),
-  ], work, Number(opts['timeout-min']) * 60_000, (s) => transcript.write(s));
+    ...(opts['plugin-dir'] ? ['--plugin-dir', sandboxed ? toWslPath(opts['plugin-dir']) : opts['plugin-dir']] : []),
+  ];
+  const timeoutMs = Number(opts['timeout-min']) * 60_000;
+  const wslRun = sandboxed
+    ? await runAgentInWsl({ hostWork: work, ctlDir: join(WORK_ROOT, '.ctl'), runId: `${opts.label}/${task.id}-rep${rep}`.replace(/[^\w.-]/g, '_'), prompt: task.prompt, args: agentArgs, timeoutMs, onStdout: (s) => transcript.write(s) })
+    : null;
+  const agent: Proc = wslRun ?? await run(CLAUDE, ['-p', task.prompt, ...agentArgs], work, timeoutMs, (s) => transcript.write(s));
   transcript.end();
   writeFileSync(join(outDir, 'agent-stderr.txt'), agent.stderr);
 
@@ -105,7 +121,10 @@ async function runOne(task: Task, rep: number) {
     } catch { /* partial line */ }
   }
   writeFileSync(join(outDir, 'final.txt'), String(result.result ?? ''));
-  const outOfBounds = auditTranscript(join(outDir, 'transcript.jsonl'), work);
+  const outOfBounds = [
+    ...auditTranscript(join(outDir, 'transcript.jsonl'), wslRun?.wslWork ?? work),
+    ...(wslRun?.symlinks ?? []).map((l) => `symlink removed: ${l}`),
+  ];
 
   // 2. What changed.
   await git(work, 'add', '-A');
@@ -169,6 +188,7 @@ async function runOne(task: Task, rep: number) {
     impossible: task.impossible,
     model: initModel,
     effort: opts.effort ?? null,
+    isolation: opts.isolation,
     agent_exit: agent.code,
     agent_timed_out: agent.timedOut,
     agent_ms: agent.ms,
