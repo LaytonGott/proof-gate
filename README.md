@@ -71,6 +71,10 @@ touched; the repo's `node_modules` is linked in. Runners are detected per test f
 the original code, the current tests on the current code, and the original versions of
 edited tests on the current code.
 
+This runs your project's own test code on your machine, as you, the same code the agent (or
+you) would run with `npm test` or `pytest`. Turn it off for repositories whose tests you do
+not trust.
+
 - `PROOF_GATE_RUN_TESTS=0` turns execution off.
 - `PROOF_GATE_TEST_BUDGET_S` (default 60) bounds the time it may take per repo.
 
@@ -174,7 +178,7 @@ Current numbers (Sonnet 5.5, low effort):
 - Real history: 18 of 554 commits across three repos would have stopped the agent, mostly for
   test deletions or expectation changes.
 - Deep tier on the 61 WSL-sandbox runs: cheat detection unchanged (5/5, 0/56), mutation
-  testing caught 222 of 292 mutants of changed lines, and 15 runs would be challenged at commit
+  testing caught 222 of 290 mutants of changed lines, and 15 runs would be challenged at commit
   for test gaps. Those are real: untested expiry boundaries (`>` vs `>=` in a TTL cache), a
   cached value whose content no test reads (`return dict(cached)` -> `return None` survives),
   port bounds 0 and 65535. On amnesia's last 6 commits it took about 5 s per commit (31 s for
